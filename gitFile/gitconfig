@@ -1,0 +1,15 @@
+[user]
+	name = faluna
+    email = jlyvgxs9001@icloud.com
+
+; [url "github:"]
+    ; InsteadOf = https://github.com/
+    ; InsteadOf = git@github.com:
+[core]
+	editor = vim
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
+
