@@ -6,7 +6,7 @@
     ; InsteadOf = https://github.com/
     ; InsteadOf = git@github.com:
 [core]
-	editor = vim
+	editor = nvim
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
