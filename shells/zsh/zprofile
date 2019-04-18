@@ -79,4 +79,8 @@ export PATH=$PATH:$NODEBREW_ROOT/current/bin
 PYLIB3_ROOT=$HOME/Library/Python/3.7
 export PATH=$PATH:$PYLIB3_ROOT/bin
 
+# set cargo path
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# set XDG_CONFIG_HOME
+export XDG_CONFIG_HOME=~/.config

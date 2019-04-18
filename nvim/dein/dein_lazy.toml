@@ -4,35 +4,37 @@ repo = 'Shougo/denite.nvim'
 on_cmd = 'Denite'
 hook_source = '''
     " denite/insert モードの時は，C- で移動できるようにする
-    call denite#custom#map('insert', "<C-j>", '<denite:move_to_next_line')
-    call denite#custom#map('insert', "<C-k>", '<denite:move_to_previous_line>')
+"    call denite#custom#map('insert', "<C-j>", '<denite:move_to_next_line')
+"    call denite#custom#map('insert', "<C-k>", '<denite:move_to_previous_line>')
  
     " tabopenやvsplitのキーバインドを割り当て
-    call denite#custom#map('insert', "<C-t>", '<denite:do_action:tabopen>')
-    call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>'>)
-    call denite#custom#map('normal', "v", '<denite:do_action:vsplit>')
+"    call denite#custom#map('insert', "<C-t>", '<denite:do_action:tabopen>')
+"    call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>')
+"    call denite#custom#map('normal', "v", '<denite:do_action:vsplit>')
  
     " jjでdenite/insertを抜けるようにする
-    call denite#custom#map('insert', 'jj', '<denite:enter_momde:normal>')
+"    call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>')
+    source ~/.config/nvim/plugins/denite.plug
 '''
 
 # deoplete
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
 hook_source = '''
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#auto_complete_delay = 0
-"    let g:deoplete#auto_completion_start_length = 1
-"    let g:deoplete#enable_camel_case = 0
-"    let g:deoplete#enable_ignore_case = 0
-"    let g:deoplete#enable_refresh_always = 0
-    let g:deoplete#enable_smart_case = 1
-    let g:deoplete#enable_buffer_path = 1
-"    let g:deoplete#max_list = 10000
+"    let g:deoplete#enable_at_startup = 1
+"    let g:deoplete#auto_complete_delay = 0
+ "    let g:deoplete#auto_completion_start_length = 1
+ "    let g:deoplete#enable_camel_case = 0
+ "    let g:deoplete#enable_ignore_case = 0
+ "    let g:deoplete#enable_refresh_always = 0
+"    let g:deoplete#enable_smart_case = 1
+"    let g:deoplete#enable_buffer_path = 1
+ "    let g:deoplete#max_list = 10000
 
-    inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \   "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+"    inoremap <expr><tab> pumvisible() ? "\<C-n>" :
+"        \ neosnippet#expandable_or_jumpable() ?
+"        \   "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
+    source ~/.config/nvim/plugins/deoplete.plug
 '''
 on_i = 1
 on_event = 'InsertCharPre'
@@ -48,17 +50,18 @@ repo = 'Shougo/neco-syntax'
 repo = 'Shougo/neosnippet'
 hook_source = '''
     " Plugin key-mappings
-    let g:neosnippet#enable_completed_snippet = 1
-    imap <C-k> <Plug>(neosnippet_expand_or_jump)
-    smap <C-k> <Plug>(neosnippet_expand_or_jump)
-    xmap <C-k> <Plug>(neosnippet_expand_target)
+"    let g:neosnippet#enable_completed_snippet = 1
+"    imap <C-k> <Plug>(neosnippet_expand_or_jump)
+"    smap <C-k> <Plug>(neosnippet_expand_or_jump)
+"    xmap <C-k> <Plug>(neosnippet_expand_target)
     " SuperTab like snippets behavior
-    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
         \ "/<Plug>(neosnippet_expand_or_jump)": "\<TAB>"
     " For conceal markers
-    if has('conceal')
-        set conceallevel=2 concealcursor=niv
-    endif
+"    if has('conceal')
+"        set conceallevel=2 concealcursor=niv
+"    endif
+    source ~/.config/nvim/plugins/neosnippet.plug
 '''
 on_i = 1
 on_ft = ['snippet']
@@ -96,22 +99,23 @@ hook_source = '''
     " Syntasticの設定
 
     " 構文エラー行に「>>」を表示
-    let g:syntastic_enable_signs = 1
+"    let g:syntastic_enable_signs = 1
     " 他のVimプラグインと競合するのを防ぐ
-    let g:syntastic_always_populate_loc_list = 1
+"    let g:syntastic_always_populate_loc_list = 1
     " 構文エラーリストを非表示
-    let g:syntastic_auto_loc_list = 0
+"    let g:syntastic_auto_loc_list = 0
     " ファイルを開いた時に構文エラーチェックを実行する
-    let g:syntastic_check_on_open = 1
+"    let g:syntastic_check_on_open = 1
     " 「:wq」で終了する時も構文エラーチェックする
-    let g:syntastic_check_on_wq = 1
+"    let g:syntastic_check_on_wq = 1
 
     " Javascript用. 構文エラーチェックにESLintを使用
-    let g:syntastic_javascript_checkers=['eslint']
+"    let g:syntastic_javascript_checkers=['eslint']
     " Javascript以外は構文エラーチェックをしない
-    let g:syntastic_mode_map = { 'mode': 'passive'
-                               \ 'active_filetypes': ['Javascript'],
-                               \ 'passive_filetypes': [] }
+"    let g:syntastic_mode_map = { 'mode': 'passive'
+"                               \ 'active_filetypes': ['Javascript'],
+"                               \ 'passive_filetypes': [] }
+    source ~/.config/nvim/plugins/syntastic.plug
 '''
 
 # gitの操作
@@ -153,19 +157,20 @@ hook_source = '''
     \}
 
     " 各ツールの実行オプションを変更してPythonパスを固定
-    let g:ale_python_flake8_executable = g:python3_host_prog
-    let g:ale_python_flake8_options = '-m flake8'
-    let g:ale_python_autopep8_executable = g:python3_host_prog
-    let g:ale_python_autopep8_options = '-m autopep8'
-    let g:ale_pythonisort_executable = g:python3_host_prog
-    let g:ale_python_isort_options = '-m isort'
-    let g:ale_python_black_executable = g:python3_host_prog
-    let g:ale_python_black_options = '-m black'
+"    let g:ale_python_flake8_executable = g:python3_host_prog
+"    let g:ale_python_flake8_options = '-m flake8'
+"    let g:ale_python_autopep8_executable = g:python3_host_prog
+"    let g:ale_python_autopep8_options = '-m autopep8'
+"    let g:ale_pythonisort_executable = g:python3_host_prog
+"    let g:ale_python_isort_options = '-m isort'
+"    let g:ale_python_black_executable = g:python3_host_prog
+"    let g:ale_python_black_options = '-m black'
 
     "ついでにFixを事項するマッピングしとく
-    nmap <silent> <Leader>x <Plug>(ale_fix)
+"    nmap <silent> <Leader>x <Plug>(ale_fix)
     " ファイル保存時に自動的にFixするオプションもあるのでお好みで
-    let g:ale_fix_on_save = 1
+"    let g:ale_fix_on_save = 1
+    source ~/.config/nvim/plugins/ale.plug
 '''
 
 # 自動でpep8に準じてインデント
@@ -212,28 +217,29 @@ on_ft = ['matlab']
 repo = 'mattn/emmet-vim'
 on_ft = ['css', 'html', 'javascript']
 hook_source = '''
-    let g:user_emmet_mode = 'iv'
-    let g:user_emmet_leader_key = '<C-y>'
-    let g:use_emmet_complete_tag = 1
-    let g:user_emmet_settings = {
-        \ 'variables' : {
-        \   'lang' : 'ja',
-        \ },
-        \ 'html' : {
-        \   'filters' : 'html',
-        \ },
-        \ 'css' : {
-        \   'filters' : 'fc',
-        \ },
-        \ 'php' : {
-        \   'extends' : 'html',
-        \   'filters' : 'html',
-        \ },
-        \}
-    augroup EmmitVim
-        autocmd!
-        autocmd FileType * let g:user_emmet_settings.indentation = '        '[:&tabstop]
-    augroup END
+"    let g:user_emmet_mode = 'iv'
+"    let g:user_emmet_leader_key = '<C-y>'
+"    let g:use_emmet_complete_tag = 1
+"    let g:user_emmet_settings = {
+"        \ 'variables' : {
+"        \   'lang' : 'ja',
+"        \ },
+"        \ 'html' : {
+"        \   'filters' : 'html',
+"        \ },
+"        \ 'css' : {
+"        \   'filters' : 'fc',
+"        \ },
+"        \ 'php' : {
+"        \   'extends' : 'html',
+"        \   'filters' : 'html',
+"        \ },
+"        \}
+"    augroup EmmitVim
+"        autocmd!
+"        autocmd FileType * let g:user_emmet_settings.indentation = '        '[:&tabstop]
+"    augroup END
+    source ~/.config/nvim/plugins/emmet-vim.plug
 '''
 
 # CSS3 syntax
@@ -264,16 +270,17 @@ hook_source = '''
     "-------------
     "sass
     "-------------
-    ""{{{
-    let g:sass_compile_auto = 1
-    let g:sass_compile_cdloop = 5
-    let g:sass+_compile_cssdir = ['css', 'stylesheet']
-    let g:sass_compile_file = ['scss', 'sass']
-    let g:sass_started_dirs = []
-
-    autocmd FileType less, sass setlocal sw=2 sts=2 ts=2 et
-    au! BufWritePost * SassCompile
-    "}}}
+"    ""{{{
+"    let g:sass_compile_auto = 1
+"    let g:sass_compile_cdloop = 5
+"    let g:sass+_compile_cssdir = ['css', 'stylesheet']
+"    let g:sass_compile_file = ['scss', 'sass']
+"    let g:sass_started_dirs = []
+"
+"    autocmd FileType less, sass setlocal sw=2 sts=2 ts=2 et
+"    au! BufWritePost * SassCompile
+"    "}}}
+    source ~/.config/nvim/plugins/sass-compile.plug
 '''
 
 # tern for vim
@@ -325,15 +332,16 @@ hook_source = '''
     " let g:deoplete#sources#ternjs#in_leteral = 0
 
     " Add extra filetypes
-    let g:deoplete#sources#ternjs#filetypes = [
-        \ 'jsx',
-        \ 'javascript.jsx',
-        \ 'vue',
-        \ '...'
-        \ ]
+"    let g:deoplete#sources#ternjs#filetypes = [
+"        \ 'jsx',
+"        \ 'javascript.jsx',
+"        \ 'vue',
+"        \ '...'
+"        \ ]
     " Use tern_for_vim.
-     let g:tern#command = ["tern"]
-     let g:tern#arguments = ["--persistent"]
+"     let g:tern#command = ["tern"]
+"     let g:tern#arguments = ["--persistent"]
+    source ~/.config/nvim/plugins/sass-compile.plug
 '''
 
 # javascriptの自動補完part2
@@ -375,12 +383,13 @@ repo = 'sebastianmarkow/deoplete-rust'
 on_ft = 'rust'
 depends = ['deoplete.nvim']
 hook_source = '''
-    let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-    let g:deoplete#sources#rust#show_duplicates=1
-    let g:deoplete#sources#rust#disable_keymap=1
-    nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
-    nmap <buffer> K <plug>DeopleteRustShowDocumentation
+"    let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
+"    let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
+"    let g:deoplete#sources#rust#show_duplicates=1
+"    let g:deoplete#sources#rust#disable_keymap=1
+"    nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
+"    nmap <buffer> K <plug>DeopleteRustShowDocumentation
+    source ~/.config/nvim/plugins/deoplete-rust.plug
 '''
 
 # prettier
@@ -390,10 +399,11 @@ build = 'npm install'
 on_ft = ['javascript', 'typescript', 'vue', 'css', 'css', 'scss', 'json', 'markdown', 'javascript.jsx']
 hook_source = '''
     " @formatアノテーションを持ったファイルの自動フォーマットを無効にする
-    let g:prettier#autoformat = 0
+"    let g:prettier#autoformat = 0
 
     " Prettierのパースエラーをquickfixに表示しない
-    let g:prettier#quickfix_enabled = 0
+"    let g:prettier#quickfix_enabled = 0
 
-    autocmd BufWritePre *.js,*.ts,*.jsx,*.vue,*.css,*.scss,*.json,*.md PrettierAsync
+"    autocmd BufWritePre *.js,*.ts,*.jsx,*.vue,*.css,*.scss,*.json,*.md PrettierAsync
+    source ~/.config/nvim/plugins/vim-prettier.plug
     '''
