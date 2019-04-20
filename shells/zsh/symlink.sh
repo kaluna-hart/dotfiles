@@ -1,9 +1,9 @@
-#!/usr/bin/zsh
+#!/bin/bash
 
 setopt EXTENDED_GLOB
-for rcfile in ./^README.md(.N); do
+for rcfile in "${HOME}"/dotfiles/shells/zsh/^symlink.sh(.N); do
   if [ ! -h "${ZDOTDIR:-$HOME}/.${rcfile:t}" ]
   then
-    ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+    ln -s "dotfiles/shells/zsh/${rcfile:t}" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
   fi
 done

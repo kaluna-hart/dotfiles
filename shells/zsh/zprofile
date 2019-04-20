@@ -62,25 +62,19 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-# set pyenv 
-# PYENV_ROOT=~/.pyenv
-# export PATH=$PATH:$PYENV_ROOT/bin
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
-# open blender by terminal
-alias blender=/Applications/Blender/blender.app/Contents/MacOS/blender
-
-# set nodebrew
-NODEBREW_ROOT=$HOME/.nodebrew
-export PATH=$PATH:$NODEBREW_ROOT/current/bin
-
-# set Python Library Path
-PYLIB3_ROOT=$HOME/Library/Python/3.7
-export PATH=$PATH:$PYLIB3_ROOT/bin
-
 # set cargo path
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # set XDG_CONFIG_HOME
 export XDG_CONFIG_HOME=~/.config
+
+# set anyenv path
+if [ -d ${HOME}./anyenv ] ; then
+  export PATH="$HOME/.anyenv/bin:$PATH"
+  eval "$(anyenv init -)"
+  for D in `ls $HOME/.anyenv/envs`
+  do
+    export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
+  done
+
+fi

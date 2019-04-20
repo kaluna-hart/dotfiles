@@ -1,6 +1,6 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 if [ ! -h "$HOME/.gitconfig" ]
 then
-  ls -s "./gitconfig" "$HOME/.gitconfig"
+  ln -s "dotfiles/gitFile/gitconfig" "$HOME/.gitconfig"
 fi

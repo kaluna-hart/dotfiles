@@ -10,8 +10,6 @@ set ruler
 "行番号表示
 set number
 
-"色
-set background=dark
 
 "行番号の色や現在行の設定
 autocmd ColorScheme * highlight LineNr ctermfg=12
@@ -183,6 +181,12 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
+
+"色
+set background=dark
+" colorscheme iceberg
+colorscheme angr
+syntax on
 
 " nerdtree起動,<C-a>
 " nnoremap <silent><C-a> :NERDTreeToggle<CR>

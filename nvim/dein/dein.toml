@@ -6,9 +6,9 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 hook_post_update = '''
-    " let cmd = 'make'
-    " let g:dein#plugin.build = cmd
-    source ~/.config/nvim/plugins/vimproc.plug
+     let cmd = 'make'
+     let g:dein#plugin.build = cmd
+"    source plugins/vimproc.plug
 '''
 
 # snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
@@ -21,22 +21,23 @@ repo = 'Shougo/neosnippet-snippets'
 repo = 'vim-airline/vim-airline'
 depends = ['vim-airline-themes']
 hook_add = '''
-"    " パワーライン
-"    let g:airline_powerline_fonts = 1
-""    " カラーテーマ指定
-"    let g:airline_theme = 'angr'
+    " パワーライン
+    let g:airline_powerline_fonts = 1
+    " カラーテーマ指定
+    let g:airline_theme = 'angr'
+"    let g:airline_theme = 'iceberg'
     " タブバー
-"    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#enabled = 1
 
     "virtualenvを認識しているか確認用に，現在activateされているvirtuenvを表示
-"    let g:airline#extensions#virtualenv#enabled = 1
+    let g:airline#extensions#virtualenv#enabled = 1
     " gitのHEADから変更した行の+-を非表示
     " let g:airline#extensions#hunks#enabled = 0
     " Lintツールによるエラー, 警告を表示
-"    let g:airline#extensions#ale#enabled = 1
-"    let g:airline#extensions#ale#error_symbol = 'E:'
-"    let g:airline#extensions#ale#warning_symbol = 'W:'
-    source ~/.config/nvim/plugins/vim-airline.plug
+    let g:airline#extensions#ale#enabled = 1
+    let g:airline#extensions#ale#error_symbol = 'E:'
+    let g:airline#extensions#ale#warning_symbol = 'W:'
+"    source plugins/vim-airline.plug
 '''
 
 [[plugins]]
@@ -49,6 +50,10 @@ repo = 'zacanger/angr.vim'
 #vim color theme 'iceberg'
 [[plugins]]
 repo = 'cocopon/iceberg.vim'
+
+#vim color theme 'hybrid'
+[[plugins]]
+repo = 'w0ng/vim-hybrid'
 
 # vim-devicons
 [[plugins]]
@@ -107,15 +112,15 @@ repo = 'ctrlpvim/ctrlp.vim'
 repo = 'LeafCage/yankround.vim'
 hook_add = '''
     " キーマッピング
-"    nmap p <Plug>(yankround-p)
-"    nmap P <Plug>(yankround-P)
-"    nmap <expr><C-m> yankround#is_active() ? "\<Plug>(yankround-prev)" : "A<CR><ESC>"
-"    nmap <expr><C-n> yankround#is_active() ? "\<Plug>(yankround-next)" : ":NERDTreeToggle<CR>"
+    nmap p <Plug>(yankround-p)
+    nmap P <Plug>(yankround-P)
+    nmap <expr><C-m> yankround#is_active() ? "\<Plug>(yankround-prev)" : "A<CR><ESC>"
+    nmap <expr><C-n> yankround#is_active() ? "\<Plug>(yankround-next)" : ":NERDTreeToggle<CR>"
     " 履歴取得数
-"    let g:yankround_max_history = 50
+    let g:yankround_max_history = 50
     " 履歴一覧(kien/ctrllp.vim)
-"    nnoremap <silent>g<C-p> :<C-u>CtrlPYankRound<CR>
-    source ~/.config/nvim/plugins/yankround.plug
+    nnoremap <silent>g<C-p> :<C-u>CtrlPYankRound<CR>
+"    source plugins/yankround.plug
 '''
 
 [[plugins]]
