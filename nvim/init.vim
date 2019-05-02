@@ -5,11 +5,19 @@ scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
+" mapping leader
+let mapleader = "\<Space>"
+
+" set fonts
+set guifont=Ricty\ Discord\ with-all-icons\ Regular
+
 "カーソル位置表示
 set ruler
 "行番号表示
 set number
 
+" クリップボード共有
+set clipboard=unnamed
 
 "行番号の色や現在行の設定
 autocmd ColorScheme * highlight LineNr ctermfg=12
@@ -89,9 +97,9 @@ noremap <S-l> $
 inoremap <silent> ;' <esc>
 
 "ノーマルモードのまま改行
-nnoremap <CR> A<CR><ESC>
+" nnoremap <CR> A<CR><ESC>
 "ノーマルモードのままスペース
-nnoremap <space> i<space><esc>
+" nnoremap <space> i<space><esc>
 
 "rだけでリドゥ
 nnoremap r <C-r>
@@ -200,12 +208,16 @@ let g:python_host_prog = expand('/usr/local/bin/python2')
 " appear " for json
 autocmd Filetype json setl conceallevel=0
 
-" *.m is FILETYPE "matlab"
-au BufRead,BufNewFile *.m setfiletype matlab
-
 " command line 補完
 set wildmode=list,full
 
 inoremap <C-l> <C-x><C-o>
 
 nnoremap <ESC><ESC> :noh<CR>
+
+" create tmuxline
+let g:tmuxline_preset = 'righteous'
+let g:tmuxline_theme = 'iceberg'
+
+" fzf
+" set rtp+=/usr/local/opt/fzf

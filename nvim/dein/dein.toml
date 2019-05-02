@@ -2,42 +2,16 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-# vimproc, 非同期処理
-[[plugins]]
-repo = 'Shougo/vimproc.vim'
-hook_post_update = '''
-     let cmd = 'make'
-     let g:dein#plugin.build = cmd
-"    source plugins/vimproc.plug
-'''
-
 # snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
-
 
 # vim-airline
 [[plugins]]
 repo = 'vim-airline/vim-airline'
 depends = ['vim-airline-themes']
 hook_add = '''
-    " パワーライン
-    let g:airline_powerline_fonts = 1
-    " カラーテーマ指定
-    let g:airline_theme = 'angr'
-"    let g:airline_theme = 'iceberg'
-    " タブバー
-    let g:airline#extensions#tabline#enabled = 1
-
-    "virtualenvを認識しているか確認用に，現在activateされているvirtuenvを表示
-    let g:airline#extensions#virtualenv#enabled = 1
-    " gitのHEADから変更した行の+-を非表示
-    " let g:airline#extensions#hunks#enabled = 0
-    " Lintツールによるエラー, 警告を表示
-    let g:airline#extensions#ale#enabled = 1
-    let g:airline#extensions#ale#error_symbol = 'E:'
-    let g:airline#extensions#ale#warning_symbol = 'W:'
-"    source plugins/vim-airline.plug
+  source ~/.config/nvim/dein/plugins/vim-airline.plug.vim
 '''
 
 [[plugins]]
@@ -63,65 +37,32 @@ hook_add = '''
     let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 '''
 
-# 括弧の差し替え, 追加, 削除
-[[plugins]]
-repo = 'tpope/vim-surround'
-
-#コメント化，コメント解除,gc{motion}
-[[plugins]]
-repo = 'tpope/vim-commentary'
-
-# NERDTree, <C-a>で起動
+# NERDTree, <C-n>で起動
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 
 [[plugins]]
 repo = 'Xuyuanp/nerdtree-git-plugin'
 
-# vim-ref
-[[plugins]]
-repo = 'thinca/vim-ref'
-
-# vim-refを拡張
-[[plugins]]
-repo = 'mojako/ref-sources.vim'
-hook_source = '''
-    " ↲マニュアルのパス設定
-    let g:ref_jquery_doc_path = $HOME . '/.cache/dein/repos/github.com/mustardamus/jqapi'
-    let g:ref_javascript_doc_path = $HOME . '/.cache/dein/repos/github.com/tokuhirom/jsref/htdocs'
-'''
-
-# jQueryのマニュアル
-[[plugins]]
-repo = 'mustardamus/jqapi'
-
-# javascriptのマニュアル
-[[plugins]]
-repo = 'tokuhirom/jsref'
-
-# 
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
-#<C-p>でファイル検索など
-[[plugins]]
-repo = 'ctrlpvim/ctrlp.vim'
-
 # yank履歴を遡る,ペースト後, ctrl+nで遡る,反対はctrl+p
 [[plugins]]
 repo = 'LeafCage/yankround.vim'
 hook_add = '''
-    " キーマッピング
-    nmap p <Plug>(yankround-p)
-    nmap P <Plug>(yankround-P)
-    nmap <expr><C-m> yankround#is_active() ? "\<Plug>(yankround-prev)" : "A<CR><ESC>"
-    nmap <expr><C-n> yankround#is_active() ? "\<Plug>(yankround-next)" : ":NERDTreeToggle<CR>"
-    " 履歴取得数
-    let g:yankround_max_history = 50
-    " 履歴一覧(kien/ctrllp.vim)
-    nnoremap <silent>g<C-p> :<C-u>CtrlPYankRound<CR>
-"    source plugins/yankround.plug
+  source ~/.config/nvim/dein/plugins/yankround.plug.vim
+'''
+# Lnaguage Client
+[[plugins]]
+repo = 'autozimu/LanguageClient-neovim'
+rev = 'next'
+build = 'bash install.sh'
+hook_add = '''
+   source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
 '''
 
+# コメント化，コメント解除，gc{motion}
 [[plugins]]
-repo = 'Yggdroot/indentLine'
+repo = 'tpope/vim-commentary'
+
+# defx vimfiler
+# [[plugins]]
+# repo = 'Shougo/defx.nvim'

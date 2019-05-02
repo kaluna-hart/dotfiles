@@ -18,5 +18,5 @@ let g:user_emmet_settings = {
   \}
 augroup EmmitVim
   autocmd!
-  autocmd FileType * let g:user_emmet_settings.indentation = ''[:&tabstop]
+  autocmd FileType * let g:user_emmet_settings.indentation = '  '[:&tabstop]
 augroup END

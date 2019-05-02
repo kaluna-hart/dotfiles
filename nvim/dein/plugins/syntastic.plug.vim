@@ -14,6 +14,6 @@ let g:syntastic_check_on_wq = 1
 " Javascript用．構文エラーチェックにESLintを使用
 let g:syntastic_javascript_checkers=['eslint']
 " Javascript以外は構文エラーチェックをしない
-let g:syntastic_mode_map = { 'mode': passive
+let g:syntastic_mode_map = { 'mode': 'passive'
                            \ 'active_filetypes': ['Javascript'],
                            \ 'passive_filetypes': [] }

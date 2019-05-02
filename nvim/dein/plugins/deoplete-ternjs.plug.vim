@@ -22,8 +22,7 @@
 " Determines whether the result set will be sorted. Default: 1
 " let g:deoplete#sources#ternjs#sort = 0
 
-" When disabled, only the text before the given position is considered
-part of the word. When enabled (the default), the whole variable name that the cursor is on will be included. Default: 1
+" When disabled, only the text before the given position is considered part of the word. When enabled (the default), the whole variable name that the cursor is on will be included. Default: 1
 " let g:deoplete#sources#ternjs#expand_word_forward = 0
 
 " Whether to ignore the properties of Object.prototype unless they have been spelled out by at least two characters. Default: 1

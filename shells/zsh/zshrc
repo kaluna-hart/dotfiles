@@ -33,9 +33,6 @@ alias th=touch
 # sudo の後のコマンドでエイリアスを有効にするらしい
 alias sudo='sudo '
 
-# コマンドラインから起動
-alias xcode='open -a /Applications/Xcode.app'
-
 # クリップボードにコピー
 alias pb='pbcopy <'
 alias -g C='| pbcopy' #個人的にこれがクソ便利です
@@ -45,8 +42,6 @@ alias -g G='| grep'
 
 # 設定ファイルをどっからでもすぐ開く
 alias -g zrc='~/.zshrc'
-alias -g vrc='~/.vimrc'
-alias -g gvrc='~/.gvimrc'
 
 # git関連お好みで
 alias g=git
@@ -77,3 +72,8 @@ fi
 # 追加補完を有効
 autoload -Uz compinit
 compinit
+
+# fzf config
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_CTRL_T_COMMAND="rg --files --hidden --follow --glob '!.git/*' 2>/dev/null"
+export FZF_CTRL_T_OPTS='--preview "bat --color=always --style=header,grid --line-range :100 {}"'

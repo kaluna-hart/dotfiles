@@ -78,3 +78,16 @@ if [ -d ${HOME}./anyenv ] ; then
   done
 
 fi
+
+# To enable auto-actimation, pyenv-virtualenv
+if which pyenv-virtualenv-init > /dev/null; then
+  eval "$(pyenv virtualenv-init -)";
+fi
+
+# fzf function
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '#/\.*' -prune \
+    -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}

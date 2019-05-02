@@ -1,122 +1,49 @@
+#file type
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+
 # denite
 [[plugins]]
 repo = 'Shougo/denite.nvim'
 on_cmd = 'Denite'
-hook_source = '''
-    " denite/insert モードの時は，C- で移動できるようにする
-    call denite#custom#map('insert', "<C-j>", '<denite:move_to_next_line')
-    call denite#custom#map('insert', "<C-k>", '<denite:move_to_previous_line>')
- 
-    " tabopenやvsplitのキーバインドを割り当て
-    call denite#custom#map('insert', "<C-t>", '<denite:do_action:tabopen>')
-    call denite#custom#map('insert', "<C-v>", '<denite:do_action:vsplit>')
-    call denite#custom#map('normal', "v", '<denite:do_action:vsplit>')
- 
-    " jjでdenite/insertを抜けるようにする
-    call denite#custom#map('insert', 'jj', '<denite:enter_mode:normal>')
-"    source plugins/denite.plug
+depends = 'neomru.vim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/denite-add.plug.vim
 '''
+hook_post_source = '''
+    source ~/.config/nvim/dein/plugins/denite-post.plug.vim
+'''
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+
+[[plugins]]
+repo = 'Shougo/neoyank.vim'
+depends = 'denite.nvim'
 
 # deoplete
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-hook_source = '''
-    let g:deoplete#enable_at_startup = 1
-    let g:deoplete#auto_complete_delay = 0
- "    let g:deoplete#auto_completion_start_length = 1
- "    let g:deoplete#enable_camel_case = 0
- "    let g:deoplete#enable_ignore_case = 0
- "    let g:deoplete#enable_refresh_always = 0
-    let g:deoplete#enable_smart_case = 1
-    let g:deoplete#enable_buffer_path = 1
- "    let g:deoplete#max_list = 10000
-
-    inoremap <expr><tab> pumvisible() ? "\<C-n>" :
-        \ neosnippet#expandable_or_jumpable() ?
-        \   "\<Plug>(neosnippet_expand_or_jump)" : "\<tab>"
-"    source plugins/deoplete.plug
+build = ':UpdateRemotePlugins'
+depends = 'context_filetype.vim'
+on_event = 'InsertEnter'
+hook_add = '''
+    source ~/.config/nvim/dein/plugins/deoplete.plug.vim
 '''
-on_i = 1
+
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
 on_event = 'InsertCharPre'
-
-# 補完用ソース
-[[plugins]]
-repo = 'Shougo/neco-vim'
-
-[[plugins]]
-repo = 'Shougo/neco-syntax'
-
-[[plugins]]
-repo = 'Shougo/neosnippet'
-hook_source = '''
-    " Plugin key-mappings
-    let g:neosnippet#enable_completed_snippet = 1
-    imap <C-k> <Plug>(neosnippet_expand_or_jump)
-    smap <C-k> <Plug>(neosnippet_expand_or_jump)
-    xmap <C-k> <Plug>(neosnippet_expand_target)
-    " SuperTab like snippets behavior
-    smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-        \ "/<Plug>(neosnippet_expand_or_jump)": "\<TAB>"
-    " For conceal markers
-    if has('conceal')
-        set conceallevel=2 concealcursor=niv
-    endif
-"    source plugins/neosnippet.plug
-'''
-on_i = 1
 on_ft = ['snippet']
-depends = ['neosnippet-snippets']
-
-# deoppet 
-[[plugins]]
-repo = 'Shougo/deoppet.nvim'
-
-[[plugins]]
-repo = 'davidhalter/jedi-vim'
-on_ft = 'python'
-hood_source = '''
-    let g:jedi#completions_enabled = 0
-
-'''
-
-[[plugins]]
-repo = 'zchee/deoplete-jedi'
-on_i = 1
-on_ft = 'python'
-hook_source= '''
-    let g:deopelte#sources#jedi#python_path = '/usr/local/bin/python3'
+depends = ['context_filetype.vim', 'neosnippet-snippets']
+hook_source = '''
+    source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
 '''
 
 # auto close
 [[plugins]]
 repo = 'cohama/lexima.vim'
 on_i = 1
-
-# syntax check
-[[plugins]]
-repo = 'scrooloose/syntastic'
-hook_source = '''
-    " Syntasticの設定
-
-    " 構文エラー行に「>>」を表示
-    let g:syntastic_enable_signs = 1
-    " 他のVimプラグインと競合するのを防ぐ
-    let g:syntastic_always_populate_loc_list = 1
-    " 構文エラーリストを非表示
-    let g:syntastic_auto_loc_list = 0
-    " ファイルを開いた時に構文エラーチェックを実行する
-    let g:syntastic_check_on_open = 1
-    " 「:wq」で終了する時も構文エラーチェックする
-    let g:syntastic_check_on_wq = 1
-
-    " Javascript用. 構文エラーチェックにESLintを使用
-    let g:syntastic_javascript_checkers=['eslint']
-    " Javascript以外は構文エラーチェックをしない
-    let g:syntastic_mode_map = { 'mode': 'passive'
-                               \ 'active_filetypes': ['Javascript'],
-                               \ 'passive_filetypes': [] }
-    source plugins/syntastic.plug
-'''
 
 # gitの操作
 [[plugins]]
@@ -130,14 +57,6 @@ hook_add = '''
     let g:gitgutter_highlight_lines = 0
 '''
 
-# 細かい整形
-[[plugins]]
-repo = 'junegunn/vim-easy-align'
-hook_add = '''
-    "enterで整形設定に行くようにする
-    vmap <Enter> <Plug>(EasyAlign)
-'''
-
 # .コマンドでリピート可
 [[plugins]]
 repo = 'tpope/vim-repeat'
@@ -145,265 +64,84 @@ repo = 'tpope/vim-repeat'
 #非同期コードチェッカー
 [[plugins]]
 repo = 'w0rp/ale'
-hook_source = '''
-    " flake8をlinterとして登録
-    let g:ale_linters = {
-    \ 'python': ['flake8'],
-    \}
-    
-    " 各ツールをFixerとして登録
-    let g:ale_fixers = {
-    \ 'python': ['autopep8', 'black', 'isort'],
-    \}
-
-    " 各ツールの実行オプションを変更してPythonパスを固定
-    let g:ale_python_flake8_executable = g:python3_host_prog
-    let g:ale_python_flake8_options = '-m flake8'
-    let g:ale_python_autopep8_executable = g:python3_host_prog
-    let g:ale_python_autopep8_options = '-m autopep8'
-    let g:ale_pythonisort_executable = g:python3_host_prog
-    let g:ale_python_isort_options = '-m isort'
-    let g:ale_python_black_executable = g:python3_host_prog
-    let g:ale_python_black_options = '-m black'
-
-    "ついでにFixを事項するマッピングしとく
-    nmap <silent> <Leader>x <Plug>(ale_fix)
-    " ファイル保存時に自動的にFixするオプションもあるのでお好みで
-    let g:ale_fix_on_save = 1
-"    source plugins/ale.plug
+hook_add = '''
+    source ~/.config/nvim/dein/plugins/ale.plug.vim
 '''
-
-# 自動でpep8に準じてインデント
-[[plugins]]
-repo = 'hynek/vim-python-pep8-indent'
-on_ft = ['python']
-on_i = 1
-
-# =の前後に自動でスペースを入れる. またキーを押す回数で入力が変わる
-[[plugins]]
-repo = 'kana/vim-smartchr.git'
-on_ft = ['python']
-on_i = 1
-hook_source = '''
-    augroup my_augroup
-        au FileType python inoremap <expr> = smartchr#loop(' = ', ' == ', '=')
-    augroup END
-'''
-
-# plugin for json
-[[plugins]]
-repo = 'elzr/vim-json'
-hook_source = '''
-    let g:vim_json_syntax_conceal = 0
-'''
-
-# Solidity syntax
-[[plugins]]
-repo = 'tomlion/vim-solidity'
-on_ft = ['solidity']
-
-# go syntax
-[[plugins]]
-repo = 'fatih/vim-go'
-on_ft = ['go']
-
-# matlab plugin
-[[plugins]]
-repo = 'daeyun/vim-matlab'
-on_ft = ['matlab']
 
 # html/CSS入力補助プラグイン
 [[plugins]]
 repo = 'mattn/emmet-vim'
 on_ft = ['css', 'html', 'javascript']
 hook_source = '''
-    let g:user_emmet_mode = 'iv'
-    let g:user_emmet_leader_key = '<C-y>'
-    let g:use_emmet_complete_tag = 1
-    let g:user_emmet_settings = {
-        \ 'variables' : {
-        \   'lang' : 'ja',
-        \ },
-        \ 'html' : {
-        \   'filters' : 'html',
-        \ },
-        \ 'css' : {
-        \   'filters' : 'fc',
-        \ },
-        \ 'php' : {
-        \   'extends' : 'html',
-        \   'filters' : 'html',
-        \ },
-        \}
-    augroup EmmitVim
-        autocmd!
-        autocmd FileType * let g:user_emmet_settings.indentation = '        '[:&tabstop]
-    augroup END
-"    source plugins/emmet-vim.plug
+    source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
 '''
 
-# CSS3 syntax
+
+# tmuxline
 [[plugins]]
-repo = 'hail2u/vim-css3-syntax'
-on_ft = ['css']
+repo = 'edkolev/tmuxline.vim'
+ hook_source = '''
+  source ~/.config/nvim/dein/plugins/tmuxline.plug.vim
+ '''
 
-# javascript syntax
+# 括弧の差し替え，追加，削除
 [[plugins]]
-repo = 'othree/yajs.vim'
-on_ft = ['javascript', 'javascript.jsx']
+repo = 'tpope/vim-surround'
 
-#javascriptハイライト
+# インデントライン
 [[plugins]]
-repo = 'MaxMEllon/vim-jsx-pretty'
-on_ft = ['javascript', 'javascript.jsx']
+repo = 'Yggdroot/indentLine'
 
-# html5 syntax
-[[plugins]]
-repo = 'othree/html5.vim'
-on_ft = ['html', 'htm']
-
-# sass, scssの色付け，インデント，自動コンパイル
-[[plugins]]
-repo = 'AtsushiM/sass-compile.vim'
-on_ft = ['sass', 'scss']
-hook_source = '''
-    "-------------
-    "sass
-    "-------------
-    ""{{{
-    let g:sass_compile_auto = 1
-    let g:sass_compile_cdloop = 5
-    let g:sass+_compile_cssdir = ['css', 'stylesheet']
-    let g:sass_compile_file = ['scss', 'sass']
-    let g:sass_started_dirs = []
-
-    autocmd FileType less, sass setlocal sw=2 sts=2 ts=2 et
-    au! BufWritePost * SassCompile
-    "}}}
-"    source plugins/sass-compile.plug
-'''
-
-# tern for vim
-[[plugins]]
-repo = 'ternjs/tern_for_vim'
-build = 'npm install'
-
-# javascriptの自動補完
-[[plugins]]
-repo = 'carlitux/deoplete-ternjs'
-on_i = 1
-on_ft = ['javascript']
-# build = 'npm install -g tern'
-hook_source = '''
-    " Set bin if you have many instalations
-    " let g:deoplete#sources#ternjs#tern_bin = '/usr/local/bin/tern'
-    " let g:deoplete#sources#ternjs#timeout = 1
-
-    " Whether to include the types of the completions in result data. Default: 0
-    " let g:deoplete#sources#ternjs#types = 1
-
-    " Whether to include the distance (in scopes for variables, in prototypes for properties) between the completions and the origin position in the result data. Default: 0
-    " let g:deoplete#sources#ternjs#depths = 1
-
-    " Whether to include documentation strings (if found) in the result data. Default: 0
-    " let g:deoplete#sources#ternjs#docs = 1
-
-    " When on, only completions that match the current word at the given point will be returned. Turn thes off to get all results, so that you can filter on the client side. Default: 1
-    " let g:deoplete#sources#ternjs#filter = 0
-
-    " Whether to use a case-insensitive compare between the current word and potential completions. Default: 0
-    " let g:deoplete#sources#ternjs#case_insensitive = 1
-    " When completing a property and no completions are found, Tern will use some heuristics to try and return some properties anyway. Set this to 0 to turn that off. Default: 1
-    " let g:deoplete#sources#ternjs#guess = 0
-
-    " Determines whether the result set will be sorted. Default: 1
-    " let g:deoplete#sources#ternjs#sort = 0
-
-    " When disabled, only the text before the given position is considered part of the word. When enabled (the default), the whole variable name that the cursor is on will be included. Default: 1
-    " let g:deoplete#sources#ternjs#expand_word_forward = 0
-
-    " Whether to ignore the properties of Object.prototype unless they have been spelled out by at least two characters. Default: 1
-    " let g:deoplete#sources#ternjs#omit_object_prototype = 0
-
-    " Whether to include Javascript keywords when completing something that is not aproperty. Default: 0
-    " let g:deoplete#sources#ternjs#include_keywords = 1
-
-    " If completions should be returned when inside a literal. Default: 1
-    " let g:deoplete#sources#ternjs#in_leteral = 0
-
-    " Add extra filetypes
-    let g:deoplete#sources#ternjs#filetypes = [
-        \ 'jsx',
-        \ 'javascript.jsx',
-        \ 'vue',
-        \ '...'
-        \ ]
-    " Use tern_for_vim.
-     let g:tern#command = ["tern"]
-     let g:tern#arguments = ["--persistent"]
-"    source plugins/sass-compile.plug
-'''
-
-# javascriptの自動補完part2
-# [[plugins]]
-# repo = 'carlitux/deoplete-flow'
-# hook_source = '''
-#     "Add extra filetypes
-# let g:deoplete#sources#flow#filetypes = [
-    # \ 'jsx',
-    # \ 'javascript.jsx',
-    # \ 'vue',
-    # \ '...'
-    # \ ]
-# '''
-
-# htmlとxmlで自動で閉じるタグを入力する
-[[plugins]]
-repo = 'alvan/vim-closetag'
-hook_source = '''
-    let g:closetag_filenames = '*.html, *.vue'
-'''
-
-# vim内にターミナルを開く
-# [[plugins]]
-# repo = 'kassio/neoterm'
-
-# rust plugins
+# plugins for rust
 [[plugins]]
 repo = 'rust-lang/rust.vim'
 on_ft = 'rust'
-hook_source = '''
-    let g:rustfmt_autosave = 1
-'''
-# :RustRun
-# :RustFmt
-
-[[plugins]]
-repo = 'sebastianmarkow/deoplete-rust'
-on_ft = 'rust'
-depends = ['deoplete.nvim']
-hook_source = '''
-    let g:deoplete#sources#rust#racer_binary='~/.cargo/bin/racer'
-    let g:deoplete#sources#rust#rust_source_path='~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-    let g:deoplete#sources#rust#show_duplicates=1
-    let g:deoplete#sources#rust#disable_keymap=1
-    nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
-    nmap <buffer> K <plug>DeopleteRustShowDocumentation
-"    source plugins/deoplete-rust.plug
+hook_add = '''
+  let g:rustfmt_autosave = 1
 '''
 
-# prettier
+# precious
 [[plugins]]
-repo = 'prettier/vim-prettier'
-build = 'npm install'
-on_ft = ['javascript', 'typescript', 'vue', 'css', 'css', 'scss', 'json', 'markdown', 'javascript.jsx']
-hook_source = '''
-    " @formatアノテーションを持ったファイルの自動フォーマットを無効にする
-    let g:prettier#autoformat = 0
+repo = 'osyo-manga/vim-precious'
+depends = 'context_filetype.vim'
 
-    " Prettierのパースエラーをquickfixに表示しない
-    let g:prettier#quickfix_enabled = 0
+#fzf
+ [[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+merged = 0
 
-    autocmd BufWritePre *.js,*.ts,*.jsx,*.vue,*.css,*.scss,*.json,*.md PrettierAsync
-"    source plugins/vim-prettier.plug
-    '''
+#     " Prettierのパースエラーをquickfixに表示しない
+#     let g:prettier#quickfix_enabled = 0
+
+#     autocmd BufWritePre *.js,*.ts,*.jsx,*.vue,*.css,*.scss,*.json,*.md PrettierAsync
+# "    source plugins/vim-prettier.plug
+#     '''
+
+# tmuxline
+[[plugins]]
+repo = 'edkolev/tmuxline.vim'
+# hook_source = '''
+  # let g:tmuxline_preset = {
+    # \ 'a'  : '#S',
+    # \ 'c'  : ['#(whoami)'],
+    # \ 'win' : ['#I', '#W'],
+    # \ 'cwin' : ['#I', '#W', '#F'],
+    # \ 'x'  : ['#{battery_percentage} #{battery_icon}', '#{cpu_percentage} #{cpu_icon}'],
+    # \ 'y'  : ['%a', '%R', '#(ansiweather -l Niigata-shi -w false -h false -p false -a false -s true | cut -d \" \" -f6,7,8,9)'],
+    # \ 'z'  : '#H',
+    # \ 'options'  : {'status-justify':'left'}}
+  # let g:tmuxline_theme = 'angr'
+# '''
+
+# fzf.vim
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = 'fzf'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/fzf.plug.vim
+  command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
+    \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
+ '''

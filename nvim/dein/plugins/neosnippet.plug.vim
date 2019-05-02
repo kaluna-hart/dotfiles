@@ -1,3 +1,5 @@
+" snippets directory
+let g:neosnippet#snippets_directory = '$XDG_CONFIG_HOME/nvim/snippets'
 " Plugin key-mappings
 let g:neosnippet#enable_completed_snippet = 1
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
