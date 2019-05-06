@@ -5,7 +5,19 @@ let g:LanguageClient_serverCommands = {
   \ 'cpp' : ['clangd'],
   \ 'rust'  : ['rustup', 'run', 'stable', 'rls'],
   \ 'python'  : ['pyls'],
-  \}
+  \ 'julia' : ['/Applications/Julia-1.1.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
+  \ using LanguageServer;
+  \ using Pkg;
+  \ import StaticLint;
+  \ import SymbolServer;
+  \ env_path = dirname(Pkg.Types.Context().env.project_file);
+  \ debug = false;
+  \
+  \ server = LanguageServer.LanguageServerInstance(stdin, stdout, debug, env_path, "", Dict());
+  \ server.runlinter = true;
+  \ run(server);
+  \ '],
+  \ }
 
 augroup LanguageClient_config
   autocmd!

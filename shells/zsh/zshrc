@@ -5,7 +5,7 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
-# Source Prezto.
+# # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
@@ -52,6 +52,9 @@ alias gc='git commit -m'
 alias gl='git log --oneline'
 alias gs='git status -sb'
 
+#ctags override
+# alias ctags='/usr/local/bin/ctags'
+alias ctags="`brew --prefix`/bin/ctags"
 
 # 設定即反映
 alias sz='source ~/.zshrc' #これもクソ便利です
@@ -73,7 +76,5 @@ fi
 autoload -Uz compinit
 compinit
 
-# fzf config
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_CTRL_T_COMMAND="rg --files --hidden --follow --glob '!.git/*' 2>/dev/null"
-export FZF_CTRL_T_OPTS='--preview "bat --color=always --style=header,grid --line-range :100 {}"'
+# source fzf config
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

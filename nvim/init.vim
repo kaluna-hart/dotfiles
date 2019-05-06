@@ -20,10 +20,9 @@ set number
 set clipboard=unnamed
 
 "行番号の色や現在行の設定
-autocmd ColorScheme * highlight LineNr ctermfg=12
-highlight CursorLineNr ctermbg=4 ctermfg=0
+" autocmd ColorScheme * highlight LineNr ctermfg=12
 set cursorline
-highlight clear CursorLine
+" highlight clear CursorLine
 
 "オートインデント
 set autoindent
@@ -60,6 +59,10 @@ set wrapscan
 "置換の時gオプションをデフォルトで有効にする
 set gdefault
 
+" set ctags
+set tags=./tags;$HOME
+nnoremap <C-]> g<C-]>
+inoremap <C-]> <ESC>g<C-]>
 
 "不可視文字の設定
 set list
@@ -221,3 +224,24 @@ let g:tmuxline_theme = 'iceberg'
 
 " fzf
 " set rtp+=/usr/local/opt/fzf
+
+
+highlight Normal ctermbg=NONE guibg=NONE
+highlight NonText ctermbg=NONE guibg=NONE
+highlight SpecialKey ctermbg=NONE guibg=NONE
+highlight EndOfBuffer ctermbg=NONE guibg=NONE 
+highlight LineNr ctermbg=NONE ctermfg=12
+highlight Folded ctermbg=NONE
+highlight CursorLineNr ctermbg=NONE guibg=NONE
+highlight Normal ctermbg=NONE
+highlight Normal ctermbg=NONE
+highlight CursorLine ctermbg=NONE guibg=NONE
+highlight CursorLineNr ctermbg=NONE ctermfg=195
+highlight SignColumn ctermbg=NONE
+" highlight TabLineFill ctermbg=NONE ctermfg=NONE
+" highlight StatusLine ctermbg=NONE ctermfg=NONE
+" highlight WildMenu ctermbg=NONE
+" highlight ModeMsg ctermbg=NONE
+" highlight airline_tabfill ctermbg=NONE guibg=NONE
+" highlight airline_tabsel ctermbg=NONE
+

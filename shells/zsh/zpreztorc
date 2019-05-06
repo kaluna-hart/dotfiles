@@ -48,8 +48,8 @@ zstyle ':prezto:load' pmodule \
 # Autosuggestions
 #
 
-# Set the query found color.
-# zstyle ':prezto:module:autosuggestions:color' found ''
+# Set the query found color.6
+zstyle ':prezto:module:autosuggestions:color' found 'fg=6'
 
 #
 # Completions

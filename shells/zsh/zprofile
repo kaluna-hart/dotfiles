@@ -79,10 +79,24 @@ if [ -d ${HOME}./anyenv ] ; then
 
 fi
 
+# go path
+if [ -d ${HOME}/go ] ; then
+  export GOPATH="$HOME/go"
+  for D in `ls $GOPATH`
+  do
+    export PATH="$GOPATH/$D/bin:$PATH"
+  done
+
+fi
+
 # To enable auto-actimation, pyenv-virtualenv
 if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)";
 fi
+
+# fzf config
+#
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # fzf function
 fd() {
@@ -91,3 +105,4 @@ fd() {
     -o -type d -print 2> /dev/null | fzf +m) &&
   cd "$dir"
 }
+

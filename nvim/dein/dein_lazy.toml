@@ -145,3 +145,19 @@ hook_add = '''
     \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
     \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
  '''
+
+# julia plugins
+# [[plugins]]
+# repo = 'JuliaEditorSupport/julia-vim'
+# on_ft = 'julia'
+# hook_add = '''
+  # source ~/.config/nvim/dein/plugins/julia-vim.plug.vim
+# '''
+
+# matlab plugin
+[[plugins]]
+repo = 'MortenStabenau/matlab-vim'
+on_ft = 'matlab'
+hook_add = '''
+  let g:matlab_panel_size = 50
+'''
