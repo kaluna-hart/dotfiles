@@ -10,5 +10,7 @@ then
   ln -s "../dotfiles/nvim" "${XDG_CONFIG_HOME:-$HOME/.config}/nvim"
 fi
 
+./alacritty/symlink.sh
+
 # zsh rcfiles symlink script
 zsh ./shells/zsh/symlink.sh
