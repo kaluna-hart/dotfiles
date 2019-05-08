@@ -12,5 +12,6 @@ fi
 
 ./alacritty/symlink.sh
 
+./fzf/symlink.sh
 # zsh rcfiles symlink script
 zsh ./shells/zsh/symlink.sh
