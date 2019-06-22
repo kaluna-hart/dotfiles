@@ -17,6 +17,7 @@ let g:LanguageClient_serverCommands = {
   \ server.runlinter = true;
   \ run(server);
   \ '],
+  \ 'dart' : ['dart_language_server'],
   \ }
 
 augroup LanguageClient_config
@@ -32,3 +33,5 @@ nnoremap <silent> [LangClient]h :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> [LangClient]d :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> [LangClient]r :call LanguageClient_textDocument_rename()<CR>
 nnoremap <silent> [LangClient]f :call LanguageClient_textDocument_formatting()<CR>
+nnoremap <silent> [LangClient]e :call LanguageClient#explainErrorAtPoint()<CR>
+nnoremap <silent> [LangClient]s :call LanguageClient_statusLine()<CR>

@@ -67,3 +67,28 @@ repo = 'tpope/vim-commentary'
 # [[plugins]]
 # repo = 'Shougo/defx.nvim'
 
+# 括弧の差し替え，追加，削除
+[[plugins]]
+repo = 'tpope/vim-surround'
+
+# indent line
+[[plugins]]
+repo = 'Yggdroot/indentLine'
+
+#fzf
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --bin'
+merged = '0'
+
+# fzf.vim
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = 'fzf'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/fzf.plug.vim
+  command! -bang -nargs=* Rg
+    \ call fzf#vim#grep(
+    \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
+    \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
+ '''

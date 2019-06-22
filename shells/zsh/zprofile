@@ -89,14 +89,23 @@ if [ -d ${HOME}/go ] ; then
 
 fi
 
+if [ -d ${HOME}/.pub-cache ] ; then
+  export PUB_CACHE_PATH="$HOME/.pub-cache"
+  export PATH="$PATH":"$PUB_CACHE_PATH/bin"
+fi
+
+if [ -d ${HOME}/flutter ] ; then
+  export FLUTTER_PATH="$HOME/flutter"
+  export PATH="$PATH":"$FLUTTER_PATH/bin"
+fi
+
 # To enable auto-actimation, pyenv-virtualenv
 if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)";
 fi
 
 # fzf config
-#
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # fzf function
 fd() {
