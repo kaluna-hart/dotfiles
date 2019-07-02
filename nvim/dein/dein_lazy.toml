@@ -31,11 +31,12 @@ hook_add = '''
     source ~/.config/nvim/dein/plugins/deoplete.plug.vim
 '''
 
+# snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
 on_event = 'InsertCharPre'
 on_ft = ['snippet']
-depends = ['context_filetype.vim', 'neosnippet-snippets']
+depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
 hook_source = '''
     source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
 '''
@@ -65,7 +66,7 @@ repo = 'tpope/vim-repeat'
 # [[plugins]]
 # repo = 'w0rp/ale'
 # hook_add = '''
-    # source ~/.config/nvim/dein/plugins/ale.plug.vim
+#     source ~/.config/nvim/dein/plugins/ale.plug.vim
 # '''
 
 # html/CSS入力補助プラグイン
@@ -147,10 +148,28 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/dart-vim-plugin.plug.vim
 '''
 
-## flutter plugin for neovim
+# flutter plugin for neovim
 [[plugins]]
 repo = 'thosakwe/vim-flutter'
 on_ft = 'dart'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-flutter.plug.vim
+'''
+
+# save nvim session and restore nvim session
+[[plugins]]
+repo = 'tpope/vim-obsession'
+
+# vim quickrun
+[[plugins]]
+repo = 'thinca/vim-quickrun'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/vim-quickrun.plug.vim
+'''
+
+# function signature
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/echodoc.plug.vim
 '''

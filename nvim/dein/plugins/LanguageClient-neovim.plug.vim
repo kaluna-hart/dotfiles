@@ -29,9 +29,15 @@ augroup END
 let g:LanguageClient_autoStart = 1
 nnoremap [LnagClient] <Nop>
 nmap <leader>l [LangClient]
-nnoremap <silent> [LangClient]h :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> [LangClient]d :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> [LangClient]r :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent> [LangClient]f :call LanguageClient_textDocument_formatting()<CR>
+nnoremap <silent> [LangClient]h :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> [LangClient]d :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> [LangClient]r :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent> [LangClient]f :call LanguageClient#textDocument_formatting()<CR>
 nnoremap <silent> [LangClient]e :call LanguageClient#explainErrorAtPoint()<CR>
-nnoremap <silent> [LangClient]s :call LanguageClient_statusLine()<CR>
+nnoremap <silent> [LangClient]t :call LanguageClient#textDocument_typeDefinition()<CR>
+nnoremap <silent> [LangClient]x :call LanguageClient#textDocument_references()<CR>
+nnoremap <silent> [LangClient]a :call LanguageClient_workspace_applyEdit()<CR>
+nnoremap <silent> [LangClient]c :call LanguageClient#textDocument_completion()<CR>
+nnoremap <silent> [LangClient]s :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <silent> [LangClient]m :call LanguageClient_contextMenu()<CR>
+" nnoremap <silent> [LangClient]

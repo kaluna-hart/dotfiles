@@ -4,4 +4,7 @@ nnoremap [fzf]f :<C-u>Files<CR>
 nnoremap [fzf]g :<C-u>GFiles<CR>
 nnoremap [fzf]G :<C-u>GFiles?<CR>
 nnoremap [fzf]b :<C-u>Buffers<CR>
+nnoremap [fzf]t :<C-u>Tags<CR>
 
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'

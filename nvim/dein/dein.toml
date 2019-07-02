@@ -2,9 +2,13 @@
 [[plugins]]
 repo = 'Shougo/dein.vim'
 
-# snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
+# snippets
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+
+# extra snippets
+[[plugins]]
+repo = 'honza/vim-snippets'
 
 # vim-airline
 [[plugins]]
@@ -88,7 +92,7 @@ depends = 'fzf'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/fzf.plug.vim
   command! -bang -nargs=* Rg
-    \ call fzf#vim#grep(
-    \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
-    \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
- '''
+  \ call fzf#vim#grep(
+  \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
+'''

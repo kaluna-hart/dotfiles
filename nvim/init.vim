@@ -209,7 +209,7 @@ let g:python3_host_prog = expand('/usr/local/bin/python3')
 let g:python_host_prog = expand('/usr/local/bin/python2')
 
 " appear " for json
-" autocmd Filetype json setl conceallevel=0
+autocmd Filetype json setl conceallevel=0
 
 " command line 補完
 set wildmode=list,full
@@ -223,8 +223,7 @@ let g:tmuxline_preset = 'righteous'
 let g:tmuxline_theme = 'iceberg'
 
 " fzf
-" set rtp+=/Users/faluna/.cache/dein/repos/github.com/junegunn/fzf/bin/fzf
-" set rtp+=/Users/faluna/.fzf/bin/fzf
+" set rtp+=/usr/local/opt/fzf
 
 
 highlight Normal ctermbg=NONE guibg=NONE
@@ -245,3 +244,4 @@ highlight SignColumn ctermbg=NONE
 " highlight ModeMsg ctermbg=NONE
 " highlight airline_tabfill ctermbg=NONE guibg=NONE
 " highlight airline_tabsel ctermbg=NONE
+
