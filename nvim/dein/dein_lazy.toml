@@ -155,6 +155,9 @@ on_ft = 'dart'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-flutter.plug.vim
 '''
+# hook_post_source = '''
+  # source ~/.config/nvim/dein/plugins/vim-flutter.post.plug.vim
+# '''
 
 # save nvim session and restore nvim session
 [[plugins]]

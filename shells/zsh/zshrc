@@ -78,3 +78,10 @@ compinit
 
 # source fzf config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# source z.sh
+[ -f ~/.ghq/github.com/rupa/z/z.sh ] && source ~/.ghq/github.com/rupa/z/z.sh
+
+# fzf-z-search() keybind
+zle -N fzf-z-search
+bindkey '^f' fzf-z-search
