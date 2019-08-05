@@ -3,7 +3,8 @@ let g:neosnippet#enable_complete_done = 1
 let g:neosnippet#enable_snipmate_compatibility = 1
 
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory = '~/.cache/dein/repos/github.com/honza/vim-snippets/snippets, $XDG_CONFIG_HOME/nvim/snippets'
+let g:neosnippet#snippets_directory = '~/.snippets'
+" let g:neosnippet#snippets_directory = '~/.cache/dein/repos/github.com/honza/vim-snippets/snippets, $XDG_CONFIG_HOME/nvim/snippets'
 " Plugin key-mappings
 let g:neosnippet#enable_completed_snippet = 1
 imap <C-k> <Plug>(neosnippet_expand_or_jump)

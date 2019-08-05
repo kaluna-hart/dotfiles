@@ -36,7 +36,8 @@ hook_add = '''
 repo = 'Shougo/neosnippet.vim'
 on_event = 'InsertCharPre'
 on_ft = ['snippet']
-depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
+depends = ['context_filetype.vim', 'neosnippet-snippets']
+# depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
 hook_source = '''
     source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
 '''
@@ -72,7 +73,7 @@ repo = 'tpope/vim-repeat'
 # html/CSS入力補助プラグイン
 [[plugins]]
 repo = 'mattn/emmet-vim'
-on_ft = ['css', 'html', 'javascript']
+on_ft = ['css', 'html', 'javascript', 'javascript.jsx']
 hook_source = '''
     source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
 '''
@@ -133,12 +134,12 @@ hook_add = '''
 # '''
 
 # matlab plugin
-[[plugins]]
-repo = 'MortenStabenau/matlab-vim'
-on_ft = 'matlab'
-hook_add = '''
-  let g:matlab_panel_size = 50
-'''
+# [[plugins]]
+# repo = 'MortenStabenau/matlab-vim'
+# on_ft = 'matlab'
+# hook_add = '''
+#   let g:matlab_panel_size = 50
+# '''
 
 # dart plugin
 [[plugins]]
@@ -155,24 +156,57 @@ on_ft = 'dart'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-flutter.plug.vim
 '''
-# hook_post_source = '''
-  # source ~/.config/nvim/dein/plugins/vim-flutter.post.plug.vim
-# '''
 
 # save nvim session and restore nvim session
 [[plugins]]
 repo = 'tpope/vim-obsession'
 
 # vim quickrun
-[[plugins]]
-repo = 'thinca/vim-quickrun'
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/vim-quickrun.plug.vim
-'''
+# [[plugins]]
+# repo = 'thinca/vim-quickrun'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/vim-quickrun.plug.vim
+# '''
 
 # function signature
+# [[plugins]]
+# repo = 'Shougo/echodoc.vim'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
+# '''
+
+# syntax plugins for javascript and javascript.jsx
 [[plugins]]
-repo = 'Shougo/echodoc.vim'
+repo = 'pangloss/vim-javascript'
+on_ft = ['javascript', 'javascript.jsx']
+
+# syntax plugins packages for javascript and javascript.jsx 
+[[plugins]]
+repo = 'mxw/vim-jsx'
+on_ft = ['javascript', 'javascript.jsx']
+depends = 'vim-javascript'
+
+# Lnaguage Client
+[[plugins]]
+repo = 'autozimu/LanguageClient-neovim'
+rev = 'next'
+on_ft = ['rust', 'dart', 'python']
+build = 'bash install.sh'
 hook_add = '''
-  source ~/.config/nvim/dein/plugins/echodoc.plug.vim
+   source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
+'''
+
+# auto linter and fixer
+[[plugins]]
+repo = 'dense-analysis/ale'
+on_ft = ['javascript', 'javascript.jsx']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/ale.plug.vim
+'''
+
+# tagbar
+[[plugins]]
+repo = 'majutsushi/tagbar'
+hook_add = '''
+  nnoremap <silent> m :TagbarToggle<CR>
 '''

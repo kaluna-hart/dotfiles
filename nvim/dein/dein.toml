@@ -7,8 +7,8 @@ repo = 'Shougo/dein.vim'
 repo = 'Shougo/neosnippet-snippets'
 
 # extra snippets
-[[plugins]]
-repo = 'honza/vim-snippets'
+# [[plugins]]
+# repo = 'honza/vim-snippets'
 
 # vim-airline
 [[plugins]]
@@ -30,8 +30,8 @@ repo = 'zacanger/angr.vim'
 repo = 'cocopon/iceberg.vim'
 
 #vim color theme 'hybrid'
-[[plugins]]
-repo = 'w0ng/vim-hybrid'
+# [[plugins]]
+# repo = 'w0ng/vim-hybrid'
 
 # vim-devicons
 [[plugins]]
@@ -54,14 +54,15 @@ repo = 'LeafCage/yankround.vim'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/yankround.plug.vim
 '''
-# Lnaguage Client
-[[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
-build = 'bash install.sh'
-hook_add = '''
-   source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
-'''
+
+# [[plugins]]
+# repo = 'autozimu/LanguageClient-neovim'
+# rev = 'next'
+# on_ft = ['rust', 'dart', 'python']
+# build = 'bash install.sh'
+# hook_add = '''
+#    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
+# '''
 
 # コメント化，コメント解除，gc{motion}
 [[plugins]]
@@ -96,3 +97,15 @@ hook_add = '''
   \   'rg --line-number --no-heading '.shellescape(<q-args>), 0,
   \   fzf#vim#with_preview({'options': '--exact --reverse'}, 'right:50%:wrap'))
 '''
+
+# shell interface for NeoVim
+# [[plugins]]
+# repo = 'Shougo/deol.nvim'
+
+# auto linter and fixer
+# [[plugins]]
+# repo = 'dense-analysis/ale'
+# on_ft = ['javascript', 'javascript.jsx']
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/ale.plug.vim
+# '''

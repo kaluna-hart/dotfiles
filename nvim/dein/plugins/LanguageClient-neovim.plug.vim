@@ -18,7 +18,10 @@ let g:LanguageClient_serverCommands = {
   \ run(server);
   \ '],
   \ 'dart' : ['dart_language_server'],
+  \ 'javascript': ['javascript-typescript-stdio'],
+  \ 'javascript.jsx': ['javascript-typescript-stdio'],
   \ }
+  " \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
 
 augroup LanguageClient_config
   autocmd!
@@ -26,7 +29,7 @@ augroup LanguageClient_config
   autocmd User LanguageClientStopped setlocal signcolumn=auto
 augroup END
 
-let g:LanguageClient_autoStart = 1
+let g:LanguageClient_autoStart = 2
 nnoremap [LnagClient] <Nop>
 nmap <leader>l [LangClient]
 nnoremap <silent> [LangClient]h :call LanguageClient#textDocument_hover()<CR>

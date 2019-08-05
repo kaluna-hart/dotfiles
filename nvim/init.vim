@@ -233,10 +233,11 @@ highlight EndOfBuffer ctermbg=NONE guibg=NONE
 highlight LineNr ctermbg=NONE ctermfg=12
 highlight Folded ctermbg=NONE
 highlight CursorLineNr ctermbg=NONE guibg=NONE
+highlight Normal ctermbg=NONE
+highlight Normal ctermbg=NONE
 highlight CursorLine ctermbg=NONE guibg=NONE
 highlight CursorLineNr ctermbg=NONE ctermfg=195
 highlight SignColumn ctermbg=NONE
-"
 " highlight TabLineFill ctermbg=NONE ctermfg=NONE
 " highlight StatusLine ctermbg=NONE ctermfg=NONE
 " highlight WildMenu ctermbg=NONE
