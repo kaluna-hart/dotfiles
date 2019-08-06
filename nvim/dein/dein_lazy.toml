@@ -178,19 +178,33 @@ repo = 'tpope/vim-obsession'
 # syntax plugins for javascript and javascript.jsx
 [[plugins]]
 repo = 'pangloss/vim-javascript'
-on_ft = ['javascript', 'javascript.jsx']
+on_ft = ['javascript', 'typescript']
 
 # syntax plugins packages for javascript and javascript.jsx 
+# [[plugins]]
+# repo = 'mxw/vim-jsx'
+# on_ft = ['javascript', 'javascript.jsx']
+# depends = 'vim-javascript'
+
+# syntax plugins for typescript
 [[plugins]]
-repo = 'mxw/vim-jsx'
-on_ft = ['javascript', 'javascript.jsx']
-depends = 'vim-javascript'
+repo = 'leafgarland/typescript-vim'
+on_ft = ['typescript']
+
+# syntax plugin for typescript jsx
+[[plugins]]
+repo = 'MaxMEllon/vim-jsx-pretty'
+on_ft = ['typescript', 'javascript']
+hook_add = '''
+  let g:vim_jsx_pretty_highlight_close_tag = 1
+  let g:vim_jsx_pretty_colorful_config = 1
+'''
 
 # Lnaguage Client
 [[plugins]]
 repo = 'autozimu/LanguageClient-neovim'
 rev = 'next'
-on_ft = ['rust', 'dart', 'python']
+on_ft = ['rust', 'dart', 'python', 'sh']
 build = 'bash install.sh'
 hook_add = '''
    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
@@ -199,7 +213,7 @@ hook_add = '''
 # auto linter and fixer
 [[plugins]]
 repo = 'dense-analysis/ale'
-on_ft = ['javascript', 'javascript.jsx']
+on_ft = ['javascript', 'typescript']
 hook_add = '''
   source ~/.config/nvim/dein/plugins/ale.plug.vim
 '''

@@ -1,20 +1,32 @@
-" flake8をlinterとして登録
+" linterを登録
 " let g:ale_linters = {
-"  \ 'python': ['flake8'],
+"  \ 'typescript': [''],
+"  \ 'javascript': ['javascript-typescript-stdio'],
 "  \}
+
+ " \ 'typescript': ['eslint'],
+
+" 各ツールをFixerとして登録
+" let g:ale_fixers = {
+"   \ 'javascript' : ['prettier-eslint'],
+"   \ 'typescript' : ['prettier', 'eslint'],
+"   \}
 
 " 各ツールをFixerとして登録
 let g:ale_fixers = {}
-" let g:ale_fixers['javascript'] = ['prettier-eslint']
-let g:ale_fixers['javascript'] = ['prettier-eslint', 'prettier']
+let g:ale_fixers['javascript'] = ['prettier-eslint']
+let g:ale_fixers['typescript'] = ['prettier', 'eslint']
+" " let g:ale_fixers['typescript'] = ['prettier-eslint', 'prettier']
+" " let g:ale_fixers['javascript.jsx'] = ['prettier-eslint']
 " let g:ale_fixers['javascript.jsx'] = ['prettier-eslint']
-let g:ale_fixers['javascript.jsx'] = ['prettier-eslint', 'prettier']
+" let g:ale_fixers['typescript.jsx'] = ['prettier-eslint', 'prettier']
 " let g:ale_fixers = {
 " \ 'python': ['autopep8', 'black', 'isort'],
 " \}
 
 " ローカルの設定ファイルを考慮
 let g:ale_javascript_prettier_use_local_config = 1
+let g:ale_typescript_prettier_use_local_config = 1
 
 " 各ツールの実行オプションを変更してPythonパスを固定
 " let g:ale_python_flake8_executable = g:python3_host_prog
