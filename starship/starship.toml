@@ -1,0 +1,94 @@
+# Don't print a new line at the start of the prompt
+# add_newline = false
+
+# Replace the "❯" symbol in the prompt with "➜"
+# [character]      # The name of the module we are confguring is "character"
+# symbol = "➜"     # The "symbol" segment is being set to "➜"
+
+# Disable the package module, hiding it from the prompt completely
+# [package]
+# disabled = true
+
+# Overwrite a default_prompt_order and  use custom prompt_order
+# prompt_order=["rust","line_break","package","line_break","character"]
+
+# [battery]
+# full_symbol = "🔋"
+# charging_symbol = "⚡️"
+# discharging_symbol = "💀"
+
+# [character]
+# symbol = "➜"
+# error_symbol = "✗"
+# use_symbol_for_status = true
+
+# [cmd_duration]
+# min_time = 4
+
+
+# [directory]
+# truncation_length = 8
+
+# [git_branch]
+# symbol = "🌱 "
+# truncation_length = "4"
+# truncation_symbol = ""
+
+# [git_state]
+# progress_divider = " of "
+# cherry_pick = "🍒 PICKING"
+
+# [git_status]
+# conflicted = "🏳"
+# ahead = "🏎💨"
+# behind = "😰"
+# diverged = "😵"
+# untracked = "🤷‍"
+# stashed = "📦"
+# modified = "📝"
+# staged = "➕"
+# renamed = "👅"
+# deleted = "🗑"
+
+# [golang]
+# symbol = "🏎💨 "
+
+# [hostname]
+# ssh_only = false
+# prefix = "⟪"
+# suffix = "⟫"
+# disabled = false
+
+# [jobs]
+# symbol = "+ "
+# threshold = 4
+
+# [line_break]
+# disabled = true
+
+# [nix_shell]
+# disabled = true
+# use_name = true
+# impure_msg = "impure shell"
+# pure_msg = "pure shell"
+
+
+# [nodejs]
+# symbol = "🤖 "
+
+# [package]
+# symbol = "🎁 "
+
+# [python]
+# symbol = "👾 "
+# pyenv_version_name = true
+# pyenv_prefix = "foo "
+
+# [ruby]
+# symbol = "🔺 "
+
+[rust]
+symbol = "⚙️ "
+
+# [username]
+# disabled = true

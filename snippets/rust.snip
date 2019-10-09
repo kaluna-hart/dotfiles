@@ -1,0 +1,12 @@
+#data
+snippet     pubenum
+abbr        pub enum
+options     head
+  pub enum ${1} {
+    ${0:TARGET}
+  }
+
+# statements
+snippet     letm
+abbr        let mut
+    let mut ${1:TARGET} = ${2};${3}

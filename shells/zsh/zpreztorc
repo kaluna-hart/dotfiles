@@ -37,13 +37,13 @@ zstyle ':prezto:load' pmodule \
   'completion' \
   'syntax-highlighting' \
   'autosuggestions' \
-  'prompt' \
   'git' \
   'tmux' \
   'osx' \
   'history-substring-search' \
   'archive' \
 
+# 'prompt' \
 #
 # Autosuggestions
 #

@@ -15,3 +15,18 @@ fi
 ./fzf/symlink.sh
 # zsh rcfiles symlink script
 zsh ./shells/zsh/symlink.sh
+
+zsh ./ctags/symlink.sh
+
+./tmux/symlink.sh
+
+# starship.toml symlink
+if [ ! -h "${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml" ]
+then
+  ln -s "../dotfiles/starship/starship.toml" "${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml"
+fi
+
+# for snippets file
+if [ ! -h "$HOME/.snippets" ]; then
+  ln -s "dotfiles/snippets" "$HOME/.snippets"
+fi

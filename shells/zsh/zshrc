@@ -85,3 +85,6 @@ compinit
 # fzf-z-search() keybind
 zle -N fzf-z-search
 bindkey '^f' fzf-z-search
+
+# starship
+eval "$(starship init zsh)"
