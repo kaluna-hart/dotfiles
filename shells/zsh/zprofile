@@ -99,6 +99,11 @@ if [ -d ${HOME}/flutter ] ; then
   export PATH="$PATH":"$FLUTTER_PATH/bin"
 fi
 
+if [ -d ${HOME}/.poetry ] ; then
+  export POETRY_PATH="$HOME/.poetry"
+  export PATH="$PATH":"$POETRY_PATH/bin"
+fi
+
 # To enable auto-actimation, pyenv-virtualenv
 if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)";
@@ -139,3 +144,5 @@ fzf-z-search() {
     return 1
   fi
 }
+
+export PATH="$HOME/.poetry/bin:$PATH"

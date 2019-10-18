@@ -29,6 +29,26 @@ repo = 'zacanger/angr.vim'
 [[plugins]]
 repo = 'cocopon/iceberg.vim'
 
+#vim color theme 'ondark'
+[[plugins]]
+repo = 'joshdick/onedark.vim'
+
+#vim color theme 'one'
+[[plugins]]
+repo = 'rakr/vim-one'
+
+#vim color theme 'neodark'
+[[plugins]]
+repo = 'KeitaNakamura/neodark.vim'
+
+#vim color theme 'lucius'
+[[plugins]]
+repo = 'jonathanfilip/vim-lucius'
+
+#vim color theme 'quantum'
+[[plugins]]
+repo = 'tyrannicaltoucan/vim-quantum'
+
 #vim color theme 'hybrid'
 # [[plugins]]
 # repo = 'w0ng/vim-hybrid'
@@ -116,3 +136,10 @@ hook_add = '''
 # hook_add = '''
 #   source ~/.config/nvim/dein/plugins/ale.plug.vim
 # '''
+
+# float-preview
+[[plugins]]
+repo = 'ncm2/float-preview.nvim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/float-preview.plug.vim
+'''

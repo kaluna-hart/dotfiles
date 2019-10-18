@@ -1,7 +1,8 @@
 " パワーライン
 let g:airline_powerline_fonts = 1
 " カラーテーマ指定
-let g:airline_theme = 'angr'
+let g:airline_theme = 'tomorrow'
+" let g:airline_theme = 'angr'
 " let g:airline_theme = 'iceberg'
 " タブバー
 let g:airline#extensions#tabline#enabled = 1

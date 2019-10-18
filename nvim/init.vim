@@ -1,15 +1,28 @@
 "エンコーディング
 "GUI版使ってるなら無効にした方がいいらしいです
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 set encoding=utf-8
 scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
+" set completeopt-=preview
+
+" ポップアップメニューの半透明表示
+" set pumblend=0
+" floating ウインドウの半透明表示
+" set winblend=30
+
 " mapping leader
 let mapleader = "\<Space>"
 
 " set fonts
-set guifont=Ricty\ Discord\ with-all-icons\ Regular
+set guifont=Ricty\ Discord\ with-all-icons
+" set guifont=Ricty\ Discord\ with-all-icons\ Regular
 
 "カーソル位置表示
 set ruler
@@ -195,8 +208,28 @@ endif
 
 "色
 set background=dark
-" colorscheme iceberg
-colorscheme angr
+
+autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight NonText ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight SpecialKey ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE 
+autocmd ColorScheme * highlight LineNr ctermbg=NONE ctermfg=12 guibg=NONE
+autocmd ColorScheme * highlight Folded ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight CursorLineNr ctermbg=NONE guibg=NONE guifg=#b2b2b2
+autocmd ColorScheme * highlight CursorLine ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight SignColumn ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight VertSplit ctermbg=NONE guibg=NONE
+autocmd ColorScheme * highlight Pmenu ctermbg=NONE guibg=NONE
+
+" highlight TabLineFill ctermbg=NONE ctermfg=NONE
+" highlight StatusLine ctermbg=NONE ctermfg=NONE
+" highlight ModeMsg ctermbg=NONE
+" highlight airline_tabfill ctermbg=NONE guibg=NONE
+" highlight airline_tabsel ctermbg=NONE
+" highlight CursorLineNr ctermbg=NONE ctermfg=195
+
+" colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
+colorscheme quantum
 syntax on
 
 " nerdtree起動,<C-a>
@@ -218,13 +251,8 @@ inoremap <C-l> <C-x><C-o>
 
 nnoremap <ESC><ESC> :noh<CR>
 
-" create tmuxline
-let g:tmuxline_preset = 'righteous'
-let g:tmuxline_theme = 'iceberg'
-
 " fzf
 " set rtp+=/usr/local/opt/fzf
-
 
 highlight Normal ctermbg=NONE guibg=NONE
 highlight NonText ctermbg=NONE guibg=NONE
@@ -244,4 +272,3 @@ highlight SignColumn ctermbg=NONE
 " highlight ModeMsg ctermbg=NONE
 " highlight airline_tabfill ctermbg=NONE guibg=NONE
 " highlight airline_tabsel ctermbg=NONE
-

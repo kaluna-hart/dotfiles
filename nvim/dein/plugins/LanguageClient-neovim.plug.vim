@@ -1,10 +1,11 @@
 set hidden
 
 " settings for languages
+let s:pyls_path = fnamemodify(g:python3_host_prog, ":h") . '/'. 'pyls'
 let g:LanguageClient_serverCommands = {
   \ 'cpp' : ['clangd'],
   \ 'rust'  : ['rustup', 'run', 'stable', 'rls'],
-  \ 'python'  : ['pyls'],
+  \ 'python'  : [s:pyls_path],
   \ 'julia' : ['/Applications/Julia-1.1.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
   \ using LanguageServer;
   \ using Pkg;
@@ -29,7 +30,7 @@ augroup LanguageClient_config
   autocmd User LanguageClientStopped setlocal signcolumn=auto
 augroup END
 
-let g:LanguageClient_autoStart = 2
+let g:LanguageClient_autoStart = 1
 nnoremap [LnagClient] <Nop>
 nmap <leader>l [LangClient]
 nnoremap <silent> [LangClient]h :call LanguageClient#textDocument_hover()<CR>
