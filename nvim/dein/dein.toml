@@ -22,28 +22,28 @@ hook_add = '''
 repo = 'vim-airline/vim-airline-themes'
 
 # airline theme 'angr'
-[[plugins]]
-repo = 'zacanger/angr.vim'
+# [[plugins]]
+# repo = 'zacanger/angr.vim'
 
 #vim color theme 'iceberg'
-[[plugins]]
-repo = 'cocopon/iceberg.vim'
+# [[plugins]]
+# repo = 'cocopon/iceberg.vim'
 
 #vim color theme 'ondark'
-[[plugins]]
-repo = 'joshdick/onedark.vim'
+# [[plugins]]
+# repo = 'joshdick/onedark.vim'
 
 #vim color theme 'one'
-[[plugins]]
-repo = 'rakr/vim-one'
+# [[plugins]]
+# repo = 'rakr/vim-one'
 
 #vim color theme 'neodark'
-[[plugins]]
-repo = 'KeitaNakamura/neodark.vim'
+# [[plugins]]
+# repo = 'KeitaNakamura/neodark.vim'
 
 #vim color theme 'lucius'
-[[plugins]]
-repo = 'jonathanfilip/vim-lucius'
+# [[plugins]]
+# repo = 'jonathanfilip/vim-lucius'
 
 #vim color theme 'quantum'
 [[plugins]]
@@ -143,3 +143,10 @@ repo = 'ncm2/float-preview.nvim'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/float-preview.plug.vim
 '''
+
+# tagbar
+# [[plugins]]
+# repo = 'majutsushi/tagbar'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/tagbar.plug.vim
+# '''

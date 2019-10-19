@@ -1,42 +1,18 @@
-" linterを登録
 " let g:ale_linters = {
-"  \ 'typescript': [''],
-"  \ 'javascript': ['javascript-typescript-stdio'],
-"  \}
-
- " \ 'typescript': ['eslint'],
-
-" 各ツールをFixerとして登録
-" let g:ale_fixers = {
-"   \ 'javascript' : ['prettier-eslint'],
-"   \ 'typescript' : ['prettier', 'eslint'],
+"   \ 'typescript' : ['eslint', 'tsserver']
 "   \}
 
 " 各ツールをFixerとして登録
-let g:ale_fixers = {}
-let g:ale_fixers['javascript'] = ['prettier-eslint']
-let g:ale_fixers['typescript'] = ['prettier', 'eslint']
-" " let g:ale_fixers['typescript'] = ['prettier-eslint', 'prettier']
-" " let g:ale_fixers['javascript.jsx'] = ['prettier-eslint']
-" let g:ale_fixers['javascript.jsx'] = ['prettier-eslint']
-" let g:ale_fixers['typescript.jsx'] = ['prettier-eslint', 'prettier']
-" let g:ale_fixers = {
-" \ 'python': ['autopep8', 'black', 'isort'],
-" \}
+let g:ale_fixers = {
+  \ 'javascript' : ['prettier'],
+  \ 'typescript' : ['prettier'],
+  \ 'html': ['prettier'],
+  \ 'css': ['prettier']
+  \}
 
+  " \ 'typescript' : ['prettier-eslint'],
 " ローカルの設定ファイルを考慮
 let g:ale_javascript_prettier_use_local_config = 1
-let g:ale_typescript_prettier_use_local_config = 1
-
-" 各ツールの実行オプションを変更してPythonパスを固定
-" let g:ale_python_flake8_executable = g:python3_host_prog
-" let g:ale_python_flake8_options = '-m flake8'
-" let g:ale_python_autopep8_executable = g:python3_host_prog
-" let g:ale_python_autopep8_options = '-m autopep8'
-" let g:ale_pythonisort_executable = g:python3_host_prog
-" let g:ale_python_isort_options = '-m isort'
-" let g:ale_python_black_executable = g:python3_host_prog
-" let g:ale_python_black_options = '-m black'
 
 " ついでにFixを次項するマッピングする
 " nmap <silent> <Leader>x <Plug>(ale_fix)
@@ -62,10 +38,10 @@ set omnifunc=ale#completion#OmniFunc
 " highlight color for ale error
 " highlight ALEError ctermbg=DarkMagenta
 
-nnoremap [LnagClient] <Nop>
-nmap <leader>l [LangClient]
-nnoremap <silent> [LangClient]h :ALEHover<CR>
-nnoremap <silent> [LangClient]d :ALEGoToDefinition<CR>
-nnoremap <silent> [LangClient]r :ALEFindReferences<CR>
-nnoremap <silent> [LangClient]t :ALEGoToTypeDefinition<CR>
-nnoremap <silent> [LangClient]s :ALESymbolSearch<CR>
+nnoremap [AleCommand] <Nop>
+nmap <leader>l [AleCommand]
+nnoremap <silent> [AleCommand]h :ALEHover<CR>
+nnoremap <silent> [AleCommand]d :ALEGoToDefinition<CR>
+nnoremap <silent> [AleCommand]r :ALEFindReferences<CR>
+nnoremap <silent> [AleCommand]t :ALEGoToTypeDefinition<CR>
+nnoremap <silent> [AleCommand]s :ALESymbolSearch<CR>

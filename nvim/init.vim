@@ -144,67 +144,23 @@ nnoremap # #zz
 nnoremap g* g*zz
 nnoremap g# g#zz
 
+inoremap <C-l> <C-x><C-o>
+
+nnoremap <ESC><ESC> :noh<CR>
+
 " w!!でsudo保存
 cabbr w!! w !sudo tee > /dev/null %
 
-"dein Scripts-----------------------------
+set signcolumn=yes
+" command line 補完
+set wildmode=list,full
 
-if &compatible
-  set nocompatible               " Be iMproved
-endif
+" python path
+let g:python3_host_prog = expand("$PYENV_ROOT/versions/neovim3/bin/python")
+let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
-"" Required:
-""set runtimepath+=/Users/faluna/.cache/dein/repos/github.com/Shougo/dein.vim
-
-" dein.vimのディレクトリ
-let s:dein_dir = expand('~/.cache/dein')
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
-
-"dein.vimがない場合，githubから落としてくる
-if !isdirectory(s:dein_repo_dir)
-    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-endif
-execute 'set runtimepath^=' . s:dein_repo_dir
-
-" Required:
-if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir)
-
-  " Let dein manage dein
-  " Required:
-  ""call dein#add('/Users/faluna/.cache/dein/repos/github.com/Shougo/dein.vim')
-
-  "" Add or remove your plugins here like this:
-  ""call dein#add('Shougo/neosnippet.vim')
-  ""call dein#add('Shougo/neosnippet-snippets')
-
-  " Required:
-  ""call dein#end()
-  ""call dein#save_state()
-
-  " dein.toml, dein_layz.tomlファイルのディレクトリをセット
-  let s:toml_dir = expand('~/.config/nvim/dein')
-  
-  " 起動時に読み込むプラグイン群
-  call dein#load_toml(s:toml_dir . '/dein.toml', {'lazy': 0})
-  
-  " 遅延読み込みしたいプラグイン群
-  call dein#load_toml(s:toml_dir . '/dein_lazy.toml', {'lazy': 1})
-  
-  call dein#end()
-  call dein#save_state()
-endif
-
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-  call dein#install()
-endif
-
-"End dein Scripts-------------------------
+" appear " for json
+autocmd Filetype json setl conceallevel=0
 
 "色
 set background=dark
@@ -228,47 +184,65 @@ autocmd ColorScheme * highlight Pmenu ctermbg=NONE guibg=NONE
 " highlight airline_tabsel ctermbg=NONE
 " highlight CursorLineNr ctermbg=NONE ctermfg=195
 
+let s:dein_dir = expand('~/.cache/dein')
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+"dein Scripts-----------------------------
+
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
+"" Required:
+""set runtimepath+=/Users/faluna/.cache/dein/repos/github.com/Shougo/dein.vim
+
+" dein.vimのディレクトリ
+
+"dein.vimがない場合，githubから落としてくる
+if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+endif
+execute 'set runtimepath+=' . s:dein_repo_dir
+" execute 'set runtimepath^=' . s:dein_repo_dir
+
+" Required:
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
+
+  " Let dein manage dein
+  " Required:
+  ""call dein#add('/Users/faluna/.cache/dein/repos/github.com/Shougo/dein.vim')
+
+  "" Add or remove your plugins here like this:
+  ""call dein#add('Shougo/neosnippet.vim')
+  ""call dein#add('Shougo/neosnippet-snippets')
+
+  " dein.toml, dein_layz.tomlファイルのディレクトリをセット
+  let s:toml_dir = expand('~/.config/nvim/dein')
+  
+  " 起動時に読み込むプラグイン群
+  call dein#load_toml(s:toml_dir . '/dein.toml', {'lazy': 0})
+  
+  " 遅延読み込みしたいプラグイン群
+  call dein#load_toml(s:toml_dir . '/dein_lazy.toml', {'lazy': 1})
+  
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+if dein#check_install()
+  call dein#install()
+endif
+
+"End dein Scripts-------------------------
+
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum
 syntax on
 
-" nerdtree起動,<C-a>
-" nnoremap <silent><C-a> :NERDTreeToggle<CR>
-
-set signcolumn=yes
-
-" python path
-let g:python3_host_prog = expand('/usr/local/bin/python3')
-let g:python_host_prog = expand('/usr/local/bin/python2')
-
-" appear " for json
-autocmd Filetype json setl conceallevel=0
-
-" command line 補完
-set wildmode=list,full
-
-inoremap <C-l> <C-x><C-o>
-
-nnoremap <ESC><ESC> :noh<CR>
-
-" fzf
-" set rtp+=/usr/local/opt/fzf
-
-highlight Normal ctermbg=NONE guibg=NONE
-highlight NonText ctermbg=NONE guibg=NONE
-highlight SpecialKey ctermbg=NONE guibg=NONE
-highlight EndOfBuffer ctermbg=NONE guibg=NONE 
-highlight LineNr ctermbg=NONE ctermfg=12
-highlight Folded ctermbg=NONE
-highlight CursorLineNr ctermbg=NONE guibg=NONE
-highlight Normal ctermbg=NONE
-highlight Normal ctermbg=NONE
-highlight CursorLine ctermbg=NONE guibg=NONE
-highlight CursorLineNr ctermbg=NONE ctermfg=195
-highlight SignColumn ctermbg=NONE
-" highlight TabLineFill ctermbg=NONE ctermfg=NONE
-" highlight StatusLine ctermbg=NONE ctermfg=NONE
-" highlight WildMenu ctermbg=NONE
-" highlight ModeMsg ctermbg=NONE
-" highlight airline_tabfill ctermbg=NONE guibg=NONE
-" highlight airline_tabsel ctermbg=NONE

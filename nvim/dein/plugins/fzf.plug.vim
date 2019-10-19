@@ -8,7 +8,8 @@ nnoremap [fzf]t :<C-u>Tags<CR>
 nnoremap [fzf]j :<C-u>BTags<CR>
 
 " [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R -a'
+let g:fzf_tags_command = 'ctags -R'
+" autocmd BufNewFile,BufRead *.ts,*tsx let g:fzf_tags_command='tstags -R'
 
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
