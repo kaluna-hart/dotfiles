@@ -171,7 +171,7 @@ autocmd ColorScheme * highlight SpecialKey ctermbg=NONE guibg=NONE
 autocmd ColorScheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE 
 autocmd ColorScheme * highlight LineNr ctermbg=NONE ctermfg=12 guibg=NONE
 autocmd ColorScheme * highlight Folded ctermbg=NONE guibg=NONE
-autocmd ColorScheme * highlight CursorLineNr ctermbg=NONE guibg=NONE guifg=#b2b2b2
+autocmd ColorScheme * highlight CursorLineNr ctermbg=NONE guibg=NONE guifg=#70ace5
 autocmd ColorScheme * highlight CursorLine ctermbg=NONE guibg=NONE
 autocmd ColorScheme * highlight SignColumn ctermbg=NONE guibg=NONE
 autocmd ColorScheme * highlight VertSplit ctermbg=NONE guibg=NONE
