@@ -206,3 +206,8 @@ repo = 'majutsushi/tagbar'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/tagbar.plug.vim
 '''
+
+# virtualenv for vim
+# [[plugins]]
+# repo = 'jmcantrell/vim-virtualenv'
+# on_ft = ['python']

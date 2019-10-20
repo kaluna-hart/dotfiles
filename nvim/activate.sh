@@ -8,11 +8,11 @@ source $HOME/.zprofile
 # neovim3 構築
 pyenv activate neovim3
 pip install --upgrade pip
-pip3 install --upgrade neovim
+pip install --upgrade pynvim
 source deactivate neovim3
 
 # neovim2 構築
-pyenv activate neovim2
+pyenv activate neovim
 pip install --upgrade pip
-pip2 install --upgrade neovim
+pip install --upgrade pynvim
 source deactivate neovim2

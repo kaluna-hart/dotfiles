@@ -28,6 +28,7 @@ augroup LanguageClient_config
   autocmd!
   autocmd User LanguageClientStarted setlocal signcolumn=yes
   autocmd User LanguageClientStopped setlocal signcolumn=auto
+  autocmd BufWritePre *.py call LanguageClient#textDocument_formatting()
 augroup END
 
 let g:LanguageClient_autoStart = 1

@@ -106,8 +106,8 @@ fi
 # ----------------------------------------------------------------
 
 # 追加補完を有効
-autoload -Uz compinit
-compinit
+autoload -U compinit
+compinit -u
 
 
 # ----------------------------------------------------------------
@@ -125,8 +125,6 @@ bindkey '^f' fzf-z-search
 # starship
 eval "$(starship init zsh)"
 # for zsh-autosuggestions
-source `brew --prefix`/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# for completions
 source `brew --prefix`/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # for zsh-syntax-highrighting
 source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
