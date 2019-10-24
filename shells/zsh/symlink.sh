@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 setopt EXTENDED_GLOB
 for rcfile in "${HOME}"/dotfiles/shells/zsh/^symlink.sh(.N); do

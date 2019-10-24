@@ -110,12 +110,6 @@ autoload -U compinit
 compinit -u
 
 
-# ----------------------------------------------------------------
-# fzf-z-search() keybind
-zle -N fzf-z-search
-bindkey '^f' fzf-z-search
-# ----------------------------------------------------------------
-
 ### 読み込み
 # ----------------------------------------------------------------
 # source fzf config
@@ -128,8 +122,17 @@ eval "$(starship init zsh)"
 source `brew --prefix`/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # for zsh-syntax-highrighting
 source `brew --prefix`/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# for my zsh cmd
+source $HOME/.zcmd.sh
+# ----------------------------------------------------------------
+
+# ----------------------------------------------------------------
+# fzf-z-search() keybind
+zle -N fzf-z-search
+bindkey '^f' fzf-z-search
 # ----------------------------------------------------------------
 
 # zsh-autosuggestions color
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
