@@ -36,3 +36,8 @@ if [ ! -h "$HOME/.ghq" ]; then
   zsh ~/dotfiles/ghq/goenv.sh
   zsh ~/dotfiles/ghq/ghq.sh
 fi
+
+# icloud link
+if [ ! -h "$HOME/iCloud" ]; then
+  ln -s "Library/Mobile Documents/com~apple~CloudDocs" "$HOME/iCloud"
+fi
