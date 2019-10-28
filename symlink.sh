@@ -41,3 +41,7 @@ fi
 if [ ! -h "$HOME/iCloud" ]; then
   ln -s "Library/Mobile Documents/com~apple~CloudDocs" "$HOME/iCloud"
 fi
+
+if [ ! -h "$HOME/Volumes" ]; then
+  ln -s "/Volumes" "$HOME/Volunes"
+fi
