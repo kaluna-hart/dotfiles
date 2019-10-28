@@ -43,5 +43,5 @@ if [ ! -h "$HOME/iCloud" ]; then
 fi
 
 if [ ! -h "$HOME/Volumes" ]; then
-  ln -s "/Volumes" "$HOME/Volunes"
+  ln -s "/Volumes" "$HOME/Volumes"
 fi
