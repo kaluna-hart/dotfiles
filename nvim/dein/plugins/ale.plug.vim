@@ -5,7 +5,9 @@
 " 各ツールをFixerとして登録
 let g:ale_fixers = {
   \ 'javascript' : ['prettier'],
+  \ 'javascript.jsx' : ['prettier'],
   \ 'typescript' : ['prettier'],
+  \ 'typescript.tsx' : ['prettier'],
   \ 'html': ['prettier'],
   \ 'css': ['prettier']
   \}

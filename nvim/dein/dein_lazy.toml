@@ -73,7 +73,7 @@ repo = 'tpope/vim-repeat'
 # html/CSS入力補助プラグイン
 [[plugins]]
 repo = 'mattn/emmet-vim'
-on_ft = ['css', 'html', 'javascript', 'typescript']
+on_ft = ['css', 'html', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact']
 hook_source = '''
     source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
 '''
@@ -109,12 +109,12 @@ depends = 'context_filetype.vim'
 # javascript syntax
 [[plugins]]
 repo = 'othree/yajs.vim'
-on_ft = ['javascript', 'javascript.jsx']
+on_ft = ['javascript', 'javascriptreact']
 
 #javascriptハイライト
 [[plugins]]
 repo = 'MaxMEllon/vim-jsx-pretty'
-on_ft = ['javascript', 'javascript.jsx']
+on_ft = ['javascript', 'javascriptreact']
 # julia plugins
 # [[plugins]]
 # repo = 'JuliaEditorSupport/julia-vim'
@@ -160,23 +160,23 @@ repo = 'tpope/vim-obsession'
 # syntax plugins for javascript and javascript.jsx
 [[plugins]]
 repo = 'pangloss/vim-javascript'
-on_ft = ['javascript', 'typescript']
+on_ft = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
 
 # syntax plugins packages for javascript and javascript.jsx 
 # [[plugins]]
 # repo = 'mxw/vim-jsx'
-# on_ft = ['javascript', 'javascript.jsx']
+# on_ft = ['javascript', 'javascriptreact']
 # depends = 'vim-javascript'
 
 # syntax plugins for typescript
 [[plugins]]
 repo = 'leafgarland/typescript-vim'
-on_ft = ['typescript']
+on_ft = ['typescript', 'typescriptreact']
 
 # syntax plugin for typescript jsx
 [[plugins]]
 repo = 'MaxMEllon/vim-jsx-pretty'
-on_ft = ['typescript', 'javascript']
+on_ft = ['typescript', 'typescriptreact', 'javascript', 'javascriptreact']
 hook_add = '''
   let g:vim_jsx_pretty_highlight_close_tag = 1
   let g:vim_jsx_pretty_colorful_config = 1
@@ -195,7 +195,7 @@ hook_source = '''
 # auto linter and fixer
 [[plugins]]
 repo = 'dense-analysis/ale'
-on_ft = ['javascript', 'typescript', 'html', 'css']
+on_ft = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'html', 'css']
 hook_source = '''
   source ~/.config/nvim/dein/plugins/ale.plug.vim
 '''
@@ -211,3 +211,8 @@ hook_add = '''
 # [[plugins]]
 # repo = 'jmcantrell/vim-virtualenv'
 # on_ft = ['python']
+
+# matlab syntax
+[[plugins]]
+repo = 'lazywei/vim-matlab'
+on_ft = ['matlab']
