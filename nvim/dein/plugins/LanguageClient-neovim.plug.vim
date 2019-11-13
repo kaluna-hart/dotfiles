@@ -19,10 +19,25 @@ let g:LanguageClient_serverCommands = {
   \ run(server);
   \ '],
   \ 'dart' : ['dart_language_server'],
-  \ 'javascript': ['javascript-typescript-stdio'],
-  \ 'javascript.jsx': ['javascript-typescript-stdio'],
+  \ 'javascript': ['typescript-language-server', '--stdio'],
+  \ 'javascript.jsx': ['typescript-language-server', '--stdio'],
+  \ 'typescript': ['typescript-language-server', '--stdio'],
+  \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
   \ }
-  " \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+  " \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+  " \ 'javascript.jsx': ['javascript-typescript-stdio'],
+  " \ 'typescript': ['javascript-typescript-stdio'],
+  " \ 'typescript.tsx': ['javascript-typescript-stdio'],
+
+" let g:LanguageClient_rootMarkers = {
+"   \ 'javascript': ['jsconfig.json'],
+"   \ 'javascript.jsx': ['jsconfig.json'],
+"   \ 'typescript': ['tsconfig.json'],
+"   \ 'typescript.tsx': ['tsconfig.json'],
+"   \ }
+
+set omnifunc=LanguageClient#complete
+set completefunc=LanguageClient#complete
 
 augroup LanguageClient_config
   autocmd!

@@ -63,13 +63,6 @@ hook_add = '''
 [[plugins]]
 repo = 'tpope/vim-repeat'
 
-#非同期コードチェッカー
-# [[plugins]]
-# repo = 'w0rp/ale'
-# hook_add = '''
-#     source ~/.config/nvim/dein/plugins/ale.plug.vim
-# '''
-
 # html/CSS入力補助プラグイン
 [[plugins]]
 repo = 'mattn/emmet-vim'
@@ -85,14 +78,6 @@ repo = 'edkolev/tmuxline.vim'
   source ~/.config/nvim/dein/plugins/tmuxline.plug.vim
  '''
 
-# 括弧の差し替え，追加，削除
-# [[plugins]]
-# repo = 'tpope/vim-surround'
-
-# インデントライン
-# [[plugins]]
-# repo = 'Yggdroot/indentLine'
-
 # plugins for rust
 [[plugins]]
 repo = 'rust-lang/rust.vim'
@@ -105,23 +90,6 @@ hook_add = '''
 [[plugins]]
 repo = 'osyo-manga/vim-precious'
 depends = 'context_filetype.vim'
-
-# javascript syntax
-[[plugins]]
-repo = 'othree/yajs.vim'
-on_ft = ['javascript', 'javascriptreact']
-
-#javascriptハイライト
-[[plugins]]
-repo = 'MaxMEllon/vim-jsx-pretty'
-on_ft = ['javascript', 'javascriptreact']
-# julia plugins
-# [[plugins]]
-# repo = 'JuliaEditorSupport/julia-vim'
-# on_ft = 'julia'
-# hook_add = '''
-  # source ~/.config/nvim/dein/plugins/julia-vim.plug.vim
-# '''
 
 # dart plugin
 [[plugins]]
@@ -143,62 +111,59 @@ hook_add = '''
 [[plugins]]
 repo = 'tpope/vim-obsession'
 
-# vim quickrun
-# [[plugins]]
-# repo = 'thinca/vim-quickrun'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/vim-quickrun.plug.vim
-# '''
-
-# function signature
-# [[plugins]]
-# repo = 'Shougo/echodoc.vim'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
-# '''
+# # javascript syntax
+[[plugins]]
+repo = 'othree/yajs.vim'
+on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 
 # syntax plugins for javascript and javascript.jsx
 [[plugins]]
 repo = 'pangloss/vim-javascript'
-on_ft = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact']
+on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 
 # syntax plugins packages for javascript and javascript.jsx 
-# [[plugins]]
-# repo = 'mxw/vim-jsx'
-# on_ft = ['javascript', 'javascriptreact']
-# depends = 'vim-javascript'
+[[plugins]]
+repo = 'mxw/vim-jsx'
+on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
+depends = 'vim-javascript'
 
-# syntax plugins for typescript
+# syntax highlighting plugins for typescript
 [[plugins]]
 repo = 'leafgarland/typescript-vim'
-on_ft = ['typescript', 'typescriptreact']
+on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 
-# syntax plugin for typescript jsx
 [[plugins]]
-repo = 'MaxMEllon/vim-jsx-pretty'
-on_ft = ['typescript', 'typescriptreact', 'javascript', 'javascriptreact']
+repo = 'peitalin/vim-jsx-typescript'
+on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
+depends = 'typescript-vim'
+
+# prettier for vim
+[[plugins]]
+repo = 'prettier/vim-prettier'
+rev = 'release/1.x'
+build = 'yarn install'
+on_ft = ['javascript','javascript.jsx', 'typescript', 'typescript.tsx', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
 hook_add = '''
-  let g:vim_jsx_pretty_highlight_close_tag = 1
-  let g:vim_jsx_pretty_colorful_config = 1
+  source ~/.config/nvim/dein/plugins/vim-prettier.plug.vim
 '''
 
 # Lnaguage Client
 [[plugins]]
 repo = 'autozimu/LanguageClient-neovim'
 rev = 'next'
-on_ft = ['rust', 'dart', 'python', 'sh']
+on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
 build = 'bash install.sh'
 hook_source = '''
    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
 '''
 
 # auto linter and fixer
-[[plugins]]
-repo = 'dense-analysis/ale'
-on_ft = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'html', 'css']
-hook_source = '''
-  source ~/.config/nvim/dein/plugins/ale.plug.vim
-'''
+# [[plugins]]
+# repo = 'dense-analysis/ale'
+# on_ft = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'html', 'css']
+# hook_source = '''
+#   source ~/.config/nvim/dein/plugins/ale.plug.vim
+# '''
 
 # tagbar
 [[plugins]]
@@ -206,11 +171,6 @@ repo = 'majutsushi/tagbar'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/tagbar.plug.vim
 '''
-
-# virtualenv for vim
-# [[plugins]]
-# repo = 'jmcantrell/vim-virtualenv'
-# on_ft = ['python']
 
 # matlab syntax
 [[plugins]]
