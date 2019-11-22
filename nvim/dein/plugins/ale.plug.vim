@@ -1,16 +1,19 @@
-" let g:ale_linters = {
-"   \ 'typescript' : ['eslint', 'tsserver']
-"   \}
+let g:ale_linters = {
+  \ 'javascript' : ['eslint', 'tsserver'],
+  \ 'javascriptreact' : ['eslint', 'tsserver'],
+  \ 'typescript' : ['eslint', 'tsserver'],
+  \ 'typescriptreact' : ['eslint', 'tsserver'],
+  \ }
 
 " 各ツールをFixerとして登録
 let g:ale_fixers = {
-  \ 'javascript' : ['prettier'],
-  \ 'javascript.jsx' : ['prettier'],
-  \ 'typescript' : ['prettier'],
-  \ 'typescript.tsx' : ['prettier'],
-  \ 'html': ['prettier'],
-  \ 'css': ['prettier']
-  \}
+  \ 'javascript' : ['prettier','eslint'],
+  \ 'javascriptreact' : ['prettier', 'eslint'],
+  \ 'typescript' : ['prettier', 'eslint'],
+  \ 'typescriptreact' : ['prettier', 'eslint'],
+  \ 'html': ['prettier', 'eslint'],
+  \ 'css': ['prettier', 'eslint'],
+  \ }
 
   " \ 'typescript' : ['prettier-eslint'],
 " ローカルの設定ファイルを考慮
@@ -20,6 +23,8 @@ let g:ale_javascript_prettier_use_local_config = 1
 " nmap <silent> <Leader>x <Plug>(ale_fix)
 " ファイル保存時に自動的にFixするオプションもあるのでお好みで
 let g:ale_fix_on_save = 1
+
+let g:ale_linters_explicit = 1
 
 " シンボルからむを表示したままにする
 let g:ale_sign_column_always = 1
