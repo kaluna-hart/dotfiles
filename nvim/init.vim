@@ -27,7 +27,7 @@ set guifont=Ricty\ Discord\ with-all-icons
 "カーソル位置表示
 set ruler
 "行番号表示
-set number
+set relativenumber
 
 " クリップボード共有
 set clipboard=unnamed
@@ -95,6 +95,13 @@ set showmatch
 set matchtime=1
 source $VIMRUNTIME/macros/matchit.vim " Vimの「%」を拡張する
 
+" function-------------------------------------------------------------
+command -nargs=1 MyLineSearch let @m=<q-args> | call search('^\s*'. @m)
+command -nargs=1 MyLineBackSearch let @m=<q-args> | call search('^\s*'. @m, 'b')
+command MyLineSameSearch call search('^\s*'. @m)
+command MyLineBackSameSearch call search('^\s*'. @m, 'b')
+" ---------------------------------------------------------------------
+
 """"""""""""""""""""""""""""""
 
 "カーソル移動
@@ -145,8 +152,13 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 inoremap <C-l> <C-x><C-o>
-
 nnoremap <ESC><ESC> :noh<CR>
+nnoremap <C-f>f :MyLineSearch<Space>
+nnoremap <C-f>b :MyLineBackSearch<Space>
+nnoremap <C-f>; :MyLineSameSearch<CR>
+nnoremap <C-f>, :MyLineBackSameSearch<CR>
+onoremap <C-f>f :MyLineSearch<Space>
+onoremap <C-f>b :MyLineBackSearch<Space>
 
 " w!!でsudo保存
 cabbr w!! w !sudo tee > /dev/null %
@@ -245,4 +257,3 @@ endif
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum
 syntax on
-

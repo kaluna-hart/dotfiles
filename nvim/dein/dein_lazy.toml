@@ -3,23 +3,23 @@
 repo = 'Shougo/context_filetype.vim'
 
 # denite
-[[plugins]]
-repo = 'Shougo/denite.nvim'
-on_cmd = 'Denite'
-depends = 'neomru.vim'
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/denite-add.plug.vim
-'''
-hook_post_source = '''
-    source ~/.config/nvim/dein/plugins/denite-post.plug.vim
-'''
+# [[plugins]]
+# repo = 'Shougo/denite.nvim'
+# on_cmd = 'Denite'
+# depends = 'neomru.vim'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/denite-add.plug.vim
+# '''
+# hook_post_source = '''
+#     source ~/.config/nvim/dein/plugins/denite-post.plug.vim
+# '''
 
-[[plugins]]
-repo = 'Shougo/neomru.vim'
+# [[plugins]]
+# repo = 'Shougo/neomru.vim'
 
-[[plugins]]
-repo = 'Shougo/neoyank.vim'
-depends = 'denite.nvim'
+# [[plugins]]
+# repo = 'Shougo/neoyank.vim'
+# depends = 'denite.nvim'
 
 # deoplete
 [[plugins]]
@@ -136,6 +136,13 @@ on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 repo = 'peitalin/vim-jsx-typescript'
 on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 depends = 'typescript-vim'
+
+# syntax highlighting plugin for styled-components
+[[plugins]]
+repo = 'styled-components/vim-styled-components'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/vim-styled-components.plug.vim
+'''
 
 # prettier for vim
 [[plugins]]

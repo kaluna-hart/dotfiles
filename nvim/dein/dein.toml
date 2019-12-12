@@ -86,15 +86,6 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/yankround.plug.vim
 '''
 
-# [[plugins]]
-# repo = 'autozimu/LanguageClient-neovim'
-# rev = 'next'
-# on_ft = ['rust', 'dart', 'python']
-# build = 'bash install.sh'
-# hook_add = '''
-#    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
-# '''
-
 # コメント化，コメント解除，gc{motion}
 [[plugins]]
 repo = 'tpope/vim-commentary'
@@ -133,14 +124,6 @@ hook_add = '''
 # [[plugins]]
 # repo = 'Shougo/deol.nvim'
 
-# auto linter and fixer
-# [[plugins]]
-# repo = 'dense-analysis/ale'
-# on_ft = ['javascript', 'javascript.jsx']
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/ale.plug.vim
-# '''
-
 # float-preview
 [[plugins]]
 repo = 'ncm2/float-preview.nvim'
@@ -148,9 +131,6 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/float-preview.plug.vim
 '''
 
-# tagbar
-# [[plugins]]
-# repo = 'majutsushi/tagbar'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/tagbar.plug.vim
-# '''
+# move (), {}, tag and etc...
+[[plugins]]
+repo = 'andymass/vim-matchup'
