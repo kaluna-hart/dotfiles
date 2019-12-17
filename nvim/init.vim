@@ -116,8 +116,8 @@ noremap <S-j> }
 noremap <S-k> {
 noremap <S-l> $
 
-";;でノーマルモード
-inoremap <silent> ;' <esc>
+"<C-j>でノーマルモード
+inoremap <silent> <C-j> <esc>
 
 "ノーマルモードのまま改行
 " nnoremap <CR> A<CR><ESC>
