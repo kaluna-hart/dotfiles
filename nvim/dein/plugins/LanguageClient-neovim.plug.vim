@@ -28,6 +28,7 @@ let g:LanguageClient_serverCommands = {
   " \ 'javascript.jsx': ['javascript-typescript-stdio'],
   " \ 'typescript': ['javascript-typescript-stdio'],
   " \ 'typescript.tsx': ['javascript-typescript-stdio'],
+  " \ 'rust'  : ['ra_lsp_server'],
 
 " let g:LanguageClient_rootMarkers = {
 "   \ 'javascript': ['jsconfig.json'],

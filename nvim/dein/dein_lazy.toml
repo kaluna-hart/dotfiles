@@ -22,14 +22,14 @@ repo = 'Shougo/context_filetype.vim'
 # depends = 'denite.nvim'
 
 # deoplete
-[[plugins]]
-repo = 'Shougo/deoplete.nvim'
-build = ':UpdateRemotePlugins'
-depends = 'context_filetype.vim'
-on_event = 'InsertEnter'
-hook_add = '''
-    source ~/.config/nvim/dein/plugins/deoplete.plug.vim
-'''
+# [[plugins]]
+# repo = 'Shougo/deoplete.nvim'
+# build = ':UpdateRemotePlugins'
+# depends = 'context_filetype.vim'
+# on_event = 'InsertEnter'
+# hook_add = '''
+#     source ~/.config/nvim/dein/plugins/deoplete.plug.vim
+# '''
 
 # snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
 [[plugins]]
@@ -155,14 +155,14 @@ hook_add = '''
 '''
 
 # Lnaguage Client
-[[plugins]]
-repo = 'autozimu/LanguageClient-neovim'
-rev = 'next'
-on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
-build = 'bash install.sh'
-hook_source = '''
-   source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
-'''
+# [[plugins]]
+# repo = 'autozimu/LanguageClient-neovim'
+# rev = 'next'
+# on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
+# build = 'bash install.sh'
+# hook_source = '''
+#    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
+# '''
 
 # auto linter and fixer
 # [[plugins]]
@@ -183,3 +183,13 @@ hook_add = '''
 [[plugins]]
 repo = 'lazywei/vim-matlab'
 on_ft = ['matlab']
+
+# -------------test-----------------
+[[plugins]]
+repo = 'neoclide/coc.nvim'
+merged = 0
+rev = 'release'
+on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/coc.plug.vim
+'''

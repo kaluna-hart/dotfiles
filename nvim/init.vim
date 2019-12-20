@@ -173,6 +173,7 @@ let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
 " appear " for json
 autocmd Filetype json setl conceallevel=0
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 "色
 set background=dark
