@@ -32,15 +32,22 @@ repo = 'Shougo/context_filetype.vim'
 # '''
 
 # snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
-[[plugins]]
-repo = 'Shougo/neosnippet.vim'
-on_event = 'InsertCharPre'
-on_ft = ['snippet']
-depends = ['context_filetype.vim', 'neosnippet-snippets']
-# depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
-hook_source = '''
-    source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
-'''
+# [[plugins]]
+# repo = 'Shougo/neosnippet.vim'
+# on_event = 'InsertCharPre'
+# on_ft = ['snippet']
+# depends = ['context_filetype.vim', 'neosnippet-snippets']
+# # depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
+# hook_source = '''
+#     source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
+# '''
+
+# echodoc
+# [[plugins]]
+# repo = 'Shougo/echodoc.vim'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
+# '''
 
 # auto close
 [[plugins]]
@@ -173,23 +180,13 @@ hook_add = '''
 # '''
 
 # tagbar
-[[plugins]]
-repo = 'majutsushi/tagbar'
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/tagbar.plug.vim
-'''
+# [[plugins]]
+# repo = 'majutsushi/tagbar'
+# hook_add = '''
+  # source ~/.config/nvim/dein/plugins/tagbar.plug.vim
+# '''
 
 # matlab syntax
 [[plugins]]
 repo = 'lazywei/vim-matlab'
 on_ft = ['matlab']
-
-# -------------test-----------------
-[[plugins]]
-repo = 'neoclide/coc.nvim'
-merged = 0
-rev = 'release'
-on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/coc.plug.vim
-'''

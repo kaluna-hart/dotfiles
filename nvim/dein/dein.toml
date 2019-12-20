@@ -3,8 +3,8 @@
 repo = 'Shougo/dein.vim'
 
 # snippets
-[[plugins]]
-repo = 'Shougo/neosnippet-snippets'
+# [[plugins]]
+# repo = 'Shougo/neosnippet-snippets'
 
 # extra snippets
 # [[plugins]]
@@ -134,3 +134,19 @@ hook_add = '''
 # move (), {}, tag and etc...
 [[plugins]]
 repo = 'andymass/vim-matchup'
+
+# -------------test-----------------
+[[plugins]]
+repo = 'liuchengxu/vista.vim'
+depends = ['coc.nvim']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/vista.plug.vim
+'''
+
+[[plugins]]
+repo = 'neoclide/coc.nvim'
+merged = 0
+rev = 'release'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/coc.plug.vim
+'''
