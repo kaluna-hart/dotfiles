@@ -28,6 +28,7 @@ fi
 
 # install pyenv by using anyenv
 anyenv install pyenv
+anyenv install nodenv
 
 # reload .zprofile
 source $HOME/.zprofile
@@ -43,7 +44,13 @@ pyenv install 3.7.4
 pyenv virtualenv 3.7.4 neovim3
 
 # install python2.7.16 by using pyenv and createvirtualenv neovim2
-pyenv install 2.7.16
-pyenv virtualenv 2.7.16 neovim2
+# pyenv install 2.7.16
+# pyenv virtualenv 2.7.16 neovim2
+
+# install node
+nodenv install 12.7.0
+
+# restart shell
+exec $SHELL -l
 
 zsh ~/dotfiles/nvim/activate.sh
