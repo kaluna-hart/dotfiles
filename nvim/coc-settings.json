@@ -15,5 +15,6 @@
     "javascriptreact",
     "typescript.tsx"
   ],
-  "python.jediEnabled": false
+  "python.jediEnabled": false,
+  "rust-analyzer.enableCargoWatchOnStartup": "enabled"
 }

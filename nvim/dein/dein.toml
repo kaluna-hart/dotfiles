@@ -3,8 +3,8 @@
 repo = 'Shougo/dein.vim'
 
 # snippets
-# [[plugins]]
-# repo = 'Shougo/neosnippet-snippets'
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
 
 # extra snippets
 # [[plugins]]
