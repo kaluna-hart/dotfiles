@@ -51,6 +51,6 @@ pyenv virtualenv 3.7.4 neovim3
 nodenv install 12.7.0
 
 # restart shell
-exec $SHELL -l
+# exec $SHELL -l
 
 zsh ~/dotfiles/nvim/activate.sh

@@ -17,6 +17,8 @@ source deactivate neovim3
 # pip install --upgrade pynvim
 # source deactivate neovim2
 
+call dein#install()
+
 nodenv global 12.7.0
 npm install -g yarn
 exec $SHELL -l
