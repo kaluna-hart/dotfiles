@@ -190,3 +190,7 @@ hook_add = '''
 [[plugins]]
 repo = 'lazywei/vim-matlab'
 on_ft = ['matlab']
+
+# z.sh
+[[plugins]]
+repo = 'rupa/z'
