@@ -16,5 +16,5 @@
     "typescript.tsx"
   ],
   "python.jediEnabled": false,
-  "rust-analyzer.enableCargoWatchOnStartup": "enabled"
+  "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"]
 }
