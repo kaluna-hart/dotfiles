@@ -116,9 +116,6 @@ noremap <S-j> }
 noremap <S-k> {
 noremap <S-l> $
 
-"<C-j>でノーマルモード
-inoremap <silent> <C-j> <esc>
-
 "ノーマルモードのまま改行
 " nnoremap <CR> A<CR><ESC>
 "ノーマルモードのままスペース
@@ -254,6 +251,9 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
+
+"<C-i>でノーマルモード
+inoremap <silent> <C-i> <esc>
 
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum
