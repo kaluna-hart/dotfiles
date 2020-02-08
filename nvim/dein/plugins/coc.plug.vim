@@ -34,14 +34,8 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-<<<<<<< HEAD
 " let g:coc_snippet_next = '<tab>'
 
-||||||| c0ee299
-=======
-let g:coc_snippet_next = '<tab>'
-
->>>>>>> caf59ca41c6739adfffbf9e52f82bba85ccc2837
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-r> coc#refresh()
 

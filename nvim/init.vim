@@ -10,6 +10,9 @@ scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
+"<C-j>でノーマルモード
+inoremap <silent> <c-j> <esc>
+
 " set completeopt-=preview
 
 " ポップアップメニューの半透明表示
@@ -251,9 +254,6 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
-
-"<C-i>でノーマルモード
-inoremap <silent> <C-i> <esc>
 
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum
