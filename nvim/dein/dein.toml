@@ -21,37 +21,9 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
 
-# airline theme 'angr'
-# [[plugins]]
-# repo = 'zacanger/angr.vim'
-
-#vim color theme 'iceberg'
-# [[plugins]]
-# repo = 'cocopon/iceberg.vim'
-
-#vim color theme 'ondark'
-# [[plugins]]
-# repo = 'joshdick/onedark.vim'
-
-#vim color theme 'one'
-# [[plugins]]
-# repo = 'rakr/vim-one'
-
-#vim color theme 'neodark'
-# [[plugins]]
-# repo = 'KeitaNakamura/neodark.vim'
-
-#vim color theme 'lucius'
-# [[plugins]]
-# repo = 'jonathanfilip/vim-lucius'
-
 #vim color theme 'quantum'
 [[plugins]]
 repo = 'tyrannicaltoucan/vim-quantum'
-
-#vim color theme 'hybrid'
-# [[plugins]]
-# repo = 'w0ng/vim-hybrid'
 
 # vim-devicons
 [[plugins]]
@@ -65,16 +37,16 @@ hook_add = '''
 [[plugins]]
 repo = 'scrooloose/nerdtree'
 hook_add = '''
-  " open a NERDTree automatically when vim starts up
   augroup nerdtree_config
     autocmd!
     autocmd vimenter * NERDTree
     autocmd vimenter * wincmd l
-  " open a NERDTree automatically when vim starts up if no files were specified
-  " autocmd StdinReadPre * let s:std_in=1
-  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
   augroup END
 '''
+#" open a NERDTree automatically when vim starts up
+# " open a NERDTree automatically when vim starts up if no files were specified
+# " autocmd StdinReadPre * let s:std_in=1
+# " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 [[plugins]]
 repo = 'Xuyuanp/nerdtree-git-plugin'
@@ -121,8 +93,11 @@ hook_add = '''
 '''
 
 # shell interface for NeoVim
-# [[plugins]]
-# repo = 'Shougo/deol.nvim'
+[[plugins]]
+repo = 'Shougo/deol.nvim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/deol.plug.vim
+'''
 
 # float-preview
 # [[plugins]]
@@ -137,16 +112,17 @@ repo = 'andymass/vim-matchup'
 
 # -------------test-----------------
 [[plugins]]
-repo = 'liuchengxu/vista.vim'
-depends = ['coc.nvim']
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/vista.plug.vim
-'''
-
-[[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/coc.plug.vim
 '''
+
+[[plugins]]
+repo = 'liuchengxu/vista.vim'
+depends = ['coc.nvim']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/vista.plug.vim
+'''
+

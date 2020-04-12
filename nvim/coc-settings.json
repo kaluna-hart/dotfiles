@@ -8,13 +8,6 @@
   "suggest.localityBonus": true,
   "suggest.echodocSupport": true,
   "tsserver.enableJavascript": true,
-  "eslint.filetypes": [
-    "javascript",
-    "typescript",
-    "typescriptreact",
-    "javascriptreact",
-    "typescript.tsx"
-  ],
   "python.jediEnabled": false,
   "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"]
 }
