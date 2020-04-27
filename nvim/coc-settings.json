@@ -9,5 +9,7 @@
   "suggest.echodocSupport": true,
   "tsserver.enableJavascript": true,
   "python.jediEnabled": false,
-  "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"]
+  "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"],
+  "eslint.autoFix": true,
+  "eslint.autoFixOnSave": true
 }

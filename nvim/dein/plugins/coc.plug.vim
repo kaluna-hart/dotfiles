@@ -75,6 +75,7 @@ nmap [CocLeader]n <Plug>(coc-rename)
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap [CocLeader]f  <Plug>(coc-format-selected)
+vmap <leader>f <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -115,6 +116,9 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Set up for prettier.
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Using CocList
 " Show all diagnostics
