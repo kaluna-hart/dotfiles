@@ -77,8 +77,8 @@ alias -g G='| grep'
 alias -g zrc='~/.zshrc'
 
 # rust cui
-alias ls='exa'
-alias ll='exa -ahl --git'
+alias ls='exa --icons'
+alias ll='exa -ahl --git --icons'
 
 # git関連お好みで
 alias g=git
@@ -115,7 +115,7 @@ compinit -u
 # source fzf config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # source z.sh
-[ -f ~/.ghq/github.com/rupa/z/z.sh ] && source ~/.ghq/github.com/rupa/z/z.sh
+[ -f ~/.cache/dein/repos/github.com/rupa/z/z.sh ] && source ~/.cache/dein/repos/github.com/rupa/z/z.sh
 # starship
 eval "$(starship init zsh)"
 # for zsh-autosuggestions

@@ -1,0 +1,13 @@
+{
+  "suggest.floatEnable": true,
+  "suggest.detailField": "menu",
+  "suggest.removeDuplicateItems": true,
+  "suggest.enablePreview": false,
+  "suggest.disableKind": false,
+  "suggest.disableMenu": false,
+  "suggest.localityBonus": true,
+  "suggest.echodocSupport": true,
+  "tsserver.enableJavascript": true,
+  "python.jediEnabled": false,
+  "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"]
+}

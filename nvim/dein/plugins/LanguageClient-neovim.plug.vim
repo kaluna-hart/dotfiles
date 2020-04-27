@@ -4,7 +4,7 @@ set hidden
 let s:pyls_path = fnamemodify(g:python3_host_prog, ":h") . '/'. 'pyls'
 let g:LanguageClient_serverCommands = {
   \ 'cpp' : ['clangd'],
-  \ 'rust'  : ['rustup', 'run', 'stable', 'rls'],
+  \ 'rust'  : ['ra_lsp_server'],
   \ 'python'  : [s:pyls_path],
   \ 'julia' : ['/Applications/Julia-1.1.app/Contents/Resources/julia/bin/julia', '--startup-file=no', '--history-file=no', '-e', '
   \ using LanguageServer;
@@ -28,6 +28,7 @@ let g:LanguageClient_serverCommands = {
   " \ 'javascript.jsx': ['javascript-typescript-stdio'],
   " \ 'typescript': ['javascript-typescript-stdio'],
   " \ 'typescript.tsx': ['javascript-typescript-stdio'],
+  " \ 'rust'  : ['rustup', 'run', 'stable', 'rls'],
 
 " let g:LanguageClient_rootMarkers = {
 "   \ 'javascript': ['jsconfig.json'],

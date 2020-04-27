@@ -32,10 +32,10 @@ if [ ! -h "$HOME/.snippets" ]; then
 fi
 
 # for ghq
-if [ ! -h "$HOME/.ghq" ]; then
-  zsh ~/dotfiles/ghq/goenv.sh
-  zsh ~/dotfiles/ghq/ghq.sh
-fi
+# if [ ! -h "$HOME/.ghq" ]; then
+#   zsh ~/dotfiles/ghq/goenv.sh
+#   zsh ~/dotfiles/ghq/ghq.sh
+# fi
 
 # icloud link
 if [ ! -h "$HOME/iCloud" ]; then

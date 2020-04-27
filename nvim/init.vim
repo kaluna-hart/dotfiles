@@ -10,6 +10,9 @@ scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
+"<C-j>でノーマルモード
+inoremap <silent> <c-j> <esc>
+
 " set completeopt-=preview
 
 " ポップアップメニューの半透明表示
@@ -116,9 +119,6 @@ noremap <S-j> }
 noremap <S-k> {
 noremap <S-l> $
 
-"<C-j>でノーマルモード
-inoremap <silent> <C-j> <esc>
-
 "ノーマルモードのまま改行
 " nnoremap <CR> A<CR><ESC>
 "ノーマルモードのままスペース
@@ -173,6 +173,7 @@ let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
 " appear " for json
 autocmd Filetype json setl conceallevel=0
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 "色
 set background=dark

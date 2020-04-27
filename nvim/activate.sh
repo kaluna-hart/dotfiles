@@ -12,7 +12,14 @@ pip install --upgrade pynvim
 source deactivate neovim3
 
 # neovim2 構築
-pyenv activate neovim
-pip install --upgrade pip
-pip install --upgrade pynvim
-source deactivate neovim2
+# pyenv activate neovim
+# pip install --upgrade pip
+# pip install --upgrade pynvim
+# source deactivate neovim2
+
+call dein#install()
+
+nodenv global 12.7.0
+npm install -g yarn
+exec $SHELL -l
+yarn global add neovim
