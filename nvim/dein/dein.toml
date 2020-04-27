@@ -99,13 +99,6 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/deol.plug.vim
 '''
 
-# float-preview
-# [[plugins]]
-# repo = 'ncm2/float-preview.nvim'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/float-preview.plug.vim
-# '''
-
 # move (), {}, tag and etc...
 [[plugins]]
 repo = 'andymass/vim-matchup'

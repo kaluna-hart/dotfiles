@@ -13,3 +13,5 @@
 [mergetool]
 	prompt = false
 
+[commit]
+	template = /Users/kaluna/.commit_template

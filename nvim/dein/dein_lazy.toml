@@ -21,16 +21,6 @@ repo = 'Shougo/context_filetype.vim'
 # repo = 'Shougo/neoyank.vim'
 # depends = 'denite.nvim'
 
-# deoplete
-# [[plugins]]
-# repo = 'Shougo/deoplete.nvim'
-# build = ':UpdateRemotePlugins'
-# depends = 'context_filetype.vim'
-# on_event = 'InsertEnter'
-# hook_add = '''
-#     source ~/.config/nvim/dein/plugins/deoplete.plug.vim
-# '''
-
 # snippets, <C-n>で候補切り替え，候補を選択した状態で<C-k>でスニペット挿入，以後<C-k>で入力位置移動
 [[plugins]]
 repo = 'Shougo/neosnippet.vim'
@@ -160,16 +150,6 @@ on_ft = ['javascript','javascript.jsx', 'typescript', 'typescript.tsx', 'css', '
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-prettier.plug.vim
 '''
-
-# Lnaguage Client
-# [[plugins]]
-# repo = 'autozimu/LanguageClient-neovim'
-# rev = 'next'
-# on_ft = ['rust', 'dart', 'python', 'sh', 'javascript', 'javascript.jsx', 'typescript', 'typescript.tsx']
-# build = 'bash install.sh'
-# hook_source = '''
-#    source ~/.config/nvim/dein/plugins/LanguageClient-neovim.plug.vim
-# '''
 
 # z.sh
 [[plugins]]
