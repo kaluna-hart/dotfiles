@@ -6,4 +6,4 @@ nnoremap <silent><leader>dh :<C-u>Deol -split=horizontal<CR>
 nmap <silent><leader>db (deol_bg)
 " [ESC]
 tnoremap <C-[> <C-\><C-n>
-" tnoremap <C-j> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n>

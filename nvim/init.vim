@@ -10,8 +10,8 @@ scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
-"<C-j>でノーマルモード
-inoremap <silent> <c-j> <esc>
+"<C-h>でノーマルモード
+inoremap <silent> <c-h> <esc>
 
 " set completeopt-=preview
 
