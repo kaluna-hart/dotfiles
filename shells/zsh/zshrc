@@ -60,6 +60,7 @@ alias mv='mv -i'
 
 # 省略
 alias v=nvim
+alias vimdiff='nvim -d'
 alias e=echo
 alias th=touch
 

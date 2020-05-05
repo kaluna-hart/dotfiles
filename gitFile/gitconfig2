@@ -1,0 +1,17 @@
+[user]
+	name = faluna
+    email = jlyvgxs9001@icloud.com
+
+; [url "github:"]
+    ; InsteadOf = https://github.com/
+    ; InsteadOf = git@github.com:
+[core]
+	editor = nvim
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false
+
+[commit]
+	template = /Users/kaluna/.commit_template
