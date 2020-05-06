@@ -12,6 +12,12 @@
   "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"],
   "eslint.autoFix": true,
   "eslint.autoFixOnSave": true,
+  "eslint.filetypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "markdown",
@@ -19,5 +25,7 @@
     "typescript",
     "javascriptreact",
     "typescriptreact"
-  ]
+  ],
+  "tsserver.formatOnType": true,
+  "coc.preferences.formatOnType": true
 }

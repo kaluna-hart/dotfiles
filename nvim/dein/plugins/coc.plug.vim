@@ -1,3 +1,32 @@
+" coc extension lists that I want to install when installing coc.
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-yank',
+  \ 'coc-snippets',
+  \ 'coc-omni',
+  \ 'coc-neosnippet',
+  \ 'coc-lists',
+  \ 'coc-highlight',
+  \ 'coc-git',
+  \ 'coc-emmet',
+  \ 'coc-yaml',
+  \ 'coc-rust-analyzer',
+  \ 'coc-python',
+  \ 'coc-json',
+  \ 'coc-markdownlint',
+  \ 'coc-html',
+  \ 'coc-css',
+  \ ]
+
+" for prettier
+if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+  let g:coc_global_extensions += ['coc-prettier']
+endif
+" for eslint
+if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+  let g:coc_global_extensions += ['coc-eslint']
+endif
+
 nnoremap [CocLeader] <Nop>
 nmap <leader>l [CocLeader]
 nmap <leader>c [CocListLeader]
@@ -55,7 +84,7 @@ nmap <silent> [CocLeader]t <Plug>(coc-type-definition)
 nmap <silent> [CocLeader]i <Plug>(coc-implementation)
 nmap <silent> [CocLeader]r <Plug>(coc-references)
 
-" Use K to show documentation in preview window
+" Use [CocLeader]h to show documentation in preview window
 nnoremap <silent> [CocLeader]h :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()

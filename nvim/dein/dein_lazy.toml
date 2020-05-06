@@ -121,7 +121,7 @@ on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 # syntax plugins packages for javascript and javascript.jsx 
 [[plugins]]
 repo = 'mxw/vim-jsx'
-on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
+on_ft = ['javascriptreact', 'javascript.jsx']
 depends = 'vim-javascript'
 
 # syntax highlighting plugins for typescript
@@ -131,7 +131,7 @@ on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 
 [[plugins]]
 repo = 'peitalin/vim-jsx-typescript'
-on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
+on_ft = ['typescriptreact', 'typescript.tsx']
 depends = 'typescript-vim'
 
 # syntax highlighting plugin for styled-components
@@ -141,6 +141,10 @@ on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typesc
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-styled-components.plug.vim
 '''
+
+# syntax for GraphQL
+[[plugins]]
+repo = 'jparise/vim-graphql'
 
 # prettier for vim
 # [[plugins]]
@@ -160,3 +164,7 @@ repo = 'rupa/z'
 [[plugins]]
 repo = 'hail2u/vim-css3-syntax'
 on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
+
+# for html5 syntax
+[[plugins]]
+repo = 'othree/html5.vim'
