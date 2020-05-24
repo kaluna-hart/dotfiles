@@ -100,16 +100,20 @@ alias ctags="`brew --prefix`/bin/ctags"
 if [ -e /usr/local/share/zsh-completions ]; then
   fpath=(/usr/local/share/zsh-completions/src $fpath)
 fi
+# for docker and docker-compose
+if [ -e $HOME/.docker -a -e $HOME/.zsh_functions -a ! -h $HOME/.zsh_functions/_docker ]; then
+  ETC=/Applications/Docker.app/Contents/Resources/etc
+  ln -s $ETC/docker.zsh-completion $HOME/.zsh_functions/_docker
+  ln -s $ETC/docker-compose.zsh-completion $HOME/.zsh_functions/_docker-compose
+fi
 # for alacritty zsh_completions
 if [ -e $HOME/.zsh_functions ]; then
-  fpath+=/Users/faluna/.zsh_functions
+  fpath+=$HOME/.zsh_functions
 fi
 # ----------------------------------------------------------------
 
 # 追加補完を有効
-autoload -U compinit
-compinit -u
-
+autoload -Uz compinit && compinit -i
 
 ### 読み込み
 # ----------------------------------------------------------------

@@ -109,4 +109,9 @@ if which pyenv-virtualenv-init > /dev/null; then
   eval "$(pyenv virtualenv-init -)";
 fi
 
-export PATH="$HOME/.poetry/bin:$PATH"
+# for binutils
+if [ -d /usr/local/opt/binutils ]; then
+  export PATH="/usr/local/opt/binutils/bin:$PATH"
+  export LDFLAGS="-L/usr/local/opt/binutils/lib"
+  export CPPFLAGS="-I/usr/local/opt/binutils/include"
+fi
