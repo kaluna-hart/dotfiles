@@ -10,8 +10,9 @@ scriptencoding utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 
-"<C-j>でノーマルモード
-inoremap <silent> <c-j> <esc>
+"<C-l>でノーマルモード
+inoremap <silent> <c-l> <esc>
+" inoremap <C-l> <C-x><C-o>
 
 " set completeopt-=preview
 
@@ -151,8 +152,8 @@ nnoremap # #zz
 nnoremap g* g*zz
 nnoremap g# g#zz
 
-inoremap <C-l> <C-x><C-o>
 nnoremap <ESC><ESC> :noh<CR>
+nnoremap <silent> <c-l><c-l> :noh<CR>
 nnoremap <C-f>f :MyLineSearch<Space>
 nnoremap <C-f>b :MyLineBackSearch<Space>
 nnoremap <C-f>; :MyLineSameSearch<CR>
@@ -254,6 +255,13 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
+
+" for vim-css3-syntax
+augroup VimCSS3Syntax
+  autocmd!
+
+  autocmd FileType css setlocal iskeyword+=-
+augroup END
 
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum

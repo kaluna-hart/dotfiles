@@ -63,7 +63,7 @@ repo = 'tpope/vim-repeat'
 # html/CSS入力補助プラグイン
 [[plugins]]
 repo = 'mattn/emmet-vim'
-on_ft = ['css', 'html', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact']
+on_ft = ['css', 'html', 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx']
 hook_source = '''
     source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
 '''
@@ -121,7 +121,7 @@ on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 # syntax plugins packages for javascript and javascript.jsx 
 [[plugins]]
 repo = 'mxw/vim-jsx'
-on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
+on_ft = ['javascriptreact', 'javascript.jsx']
 depends = 'vim-javascript'
 
 # syntax highlighting plugins for typescript
@@ -131,26 +131,40 @@ on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 
 [[plugins]]
 repo = 'peitalin/vim-jsx-typescript'
-on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
+on_ft = ['typescriptreact', 'typescript.tsx']
 depends = 'typescript-vim'
 
 # syntax highlighting plugin for styled-components
 [[plugins]]
 repo = 'styled-components/vim-styled-components'
+on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vim-styled-components.plug.vim
 '''
 
-# prettier for vim
+# syntax for GraphQL
 [[plugins]]
-repo = 'prettier/vim-prettier'
-rev = 'release/1.x'
-build = 'yarn install'
-on_ft = ['javascript','javascript.jsx', 'typescript', 'typescript.tsx', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/vim-prettier.plug.vim
-'''
+repo = 'jparise/vim-graphql'
+
+# prettier for vim
+# [[plugins]]
+# repo = 'prettier/vim-prettier'
+# rev = 'release/1.x'
+# build = 'yarn install'
+# on_ft = ['javascript','javascript.jsx', 'typescript', 'typescript.tsx', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/vim-prettier.plug.vim
+# '''
 
 # z.sh
 [[plugins]]
 repo = 'rupa/z'
+
+# css-syntax
+[[plugins]]
+repo = 'hail2u/vim-css3-syntax'
+on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
+
+# for html5 syntax
+[[plugins]]
+repo = 'othree/html5.vim'

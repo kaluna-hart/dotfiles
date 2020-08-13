@@ -30,3 +30,6 @@ fzf-z-search() {
     return 1
   fi
 }
+
+# for gh completion
+eval "$(gh completion -s zsh)"

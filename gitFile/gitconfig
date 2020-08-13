@@ -7,11 +7,14 @@
     ; InsteadOf = git@github.com:
 [core]
 	editor = nvim
+[diff]
+  tool = nvimdiff
+[difftool "nvimdiff"]
+  cmd = "nvim -R -d -c \"wincmd l\" -d \"$LOCAL\" \"$REMOTE\""
 [merge]
-	tool = vimdiff
-	conflictstyle = diff3
-[mergetool]
-	prompt = false
+	tool = nvimdiff
+[mergetool "nvimdiff"]
+  cmd = "nvim -d -c \"4wincmd w | wincmd J\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\""
 
 [commit]
-	template = /Users/kaluna/.commit_template
+	template = ~/.commit_template
