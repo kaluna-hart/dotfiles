@@ -88,7 +88,7 @@ scrolling:
   # faux_multiplier: 3
 
   # Scroll to the bottom when new text is written to the terminal.
-  auto_scroll: false
+  # auto_scroll: false
 
 # Spaces per Tab (changes require restart)
 #
@@ -97,7 +97,7 @@ scrolling:
 # Some applications, like Emacs, rely on knowing about the width of a tab.
 # To prevent unexpected behavior in these applications, it's also required to
 # change the `it` value in terminfo when altering this setting.
-tabspaces: 2
+# tabspaces: 2
 
 # Font configuration (changes require restart)
 font:
@@ -177,24 +177,24 @@ draw_bold_text_with_bright_colors: true
 colors:
   # Default colors
   primary:
-    # background: '0x000000'
-    # foreground: '0xeaeaea'
+    # background: '#000000'
+    # foreground: '#eaeaea'
     #############
     # like iceberg
-    # background: '0x161821'
-    # foreground: '0xd2d4de'
+    # background: '#161821'
+    # foreground: '#d2d4de'
     #############
 
     #############
     # like Gotham
-    # background: '0x0a0f14'
-    # foreground: '0x98d1ce'
+    # background: '#0a0f14'
+    # foreground: '#98d1ce'
     #############
 
     #############
     # like quantum
-    background: '0x212121'
-    foreground: '0xaebbc5'
+    background: '#212121'
+    foreground: '#aebbc5'
     #############
 
     # Bright and dim foreground colors
@@ -202,17 +202,17 @@ colors:
     # The dimmed foreground color is calculated automatically if it is not present.
     # If the bright foreground color is not set, or `draw_bold_text_with_bright_colors`
     # is `false`, the normal foreground color will be used.
-    #dim_foreground: '0x9a9a9a'
-    #bright_foreground: '0xffffff'
+    #dim_foreground: '#9a9a9a'
+    #bright_foreground: '#ffffff'
 
   # Cursor colors
   #
   # Colors which should be used to draw the terminal cursor. If these are unset,
   # the cursor color will be the inverse of the cell color.
   cursor:
-  #  text: '0x000000'
-    cursor: '0xffffff'
-    text: '0x6b7089'
+  #  text: '#000000'
+    cursor: '#ffffff'
+    text: '#6b7089'
 
   # Selection colors
   #
@@ -220,103 +220,103 @@ colors:
   # background is unset, selection color will be the inverse of the cell colors.
   # If only text is unset the cell text color will remain the same.
   #selection:
-  #  text: '0xeaeaea'
-  #  background: '0x404040'
+  #  text: '#eaeaea'
+  #  background: '#404040'
 
   # Normal colors
   normal:
-    # black:   '0x000000'
-    # red:     '0xd54e53'
-    # green:   '0xb9ca4a'
-    # yellow:  '0xe6c547'
-    # blue:    '0x7aa6da'
-    # magenta: '0xc397d8'
-    # cyan:    '0x70c0ba'
-    # white:   '0xeaeaea'
+    # black:   '#000000'
+    # red:     '#d54e53'
+    # green:   '#b9ca4a'
+    # yellow:  '#e6c547'
+    # blue:    '#7aa6da'
+    # magenta: '#c397d8'
+    # cyan:    '#70c0ba'
+    # white:   '#eaeaea'
 
     ###############
     # like iceberg
-    # black:   '0x161821'
-    # red:     '0xe27878'
-    # green:   '0xb4be82'
-    # yellow:  '0xe2a478'
-    # blue:    '0x84a0c6'
-    # magenta: '0xa093c7'
-    # cyan:    '0x89b8c2'
-    # white:   '0xc6c8d1'
+    # black:   '#161821'
+    # red:     '#e27878'
+    # green:   '#b4be82'
+    # yellow:  '#e2a478'
+    # blue:    '#84a0c6'
+    # magenta: '#a093c7'
+    # cyan:    '#89b8c2'
+    # white:   '#c6c8d1'
     ###############
 
     ###############
     # like Gotham
-    # black: '0x0a0f14'
-    # red: '0xc33027'
-    # green: '0x26a98b'
-    # yellow: '0xedb54b'
-    # blue: '0x195465'
-    # magenta: '0x4e5165'
-    # cyan: '0x33859d'
-    # white: '0x98d1ce'
+    # black: '#0a0f14'
+    # red: '#c33027'
+    # green: '#26a98b'
+    # yellow: '#edb54b'
+    # blue: '#195465'
+    # magenta: '#4e5165'
+    # cyan: '#33859d'
+    # white: '#98d1ce'
     ###############
 
     ################
     ## like quantum
-    black: '0x212121'
-    red: '0xdd71856'
-    green: '0x87de78'
-    # green: '0x87bb7c'
-    yellow: '0xd5b875'
-    blue: '0x70ace5'
-    magenta: '0xa48add'
-    cyan: '0x69c5ce'
-    white: '0xaebbc5'
+    black: '#212121'
+    red: '#d71856'
+    green: '#87de78'
+    # green: '#87bb7c'
+    yellow: '#d5b875'
+    blue: '#70ace5'
+    magenta: '#a48add'
+    cyan: '#69c5ce'
+    white: '#aebbc5'
     ################
 
   # Bright colors
   bright:
-    # black:   '0x666666'
-    # red:     '0xff3334'
-    # green:   '0x9ec400'
-    # yellow:  '0xe7c547'
-    # blue:    '0x7aa6da'
-    # magenta: '0xb77ee0'
-    # cyan:    '0x54ced6'
-    # white:   '0xffffff'
+    # black:   '#666666'
+    # red:     '#ff3334'
+    # green:   '#9ec400'
+    # yellow:  '#e7c547'
+    # blue:    '#7aa6da'
+    # magenta: '#b77ee0'
+    # cyan:    '#54ced6'
+    # white:   '#ffffff'
 
     ###############
     # like iceberg
-    # black:   '0x6b7089'
-    # red:     '0xe98989'
-    # green:   '0xc0ca8e'
-    # yellow:  '0xe9b189'
-    # blue:    '0x91acd1'
-    # magenta: '0xada0d3'
-    # cyan:    '0x95c4ce'
-    # white:   '0xd2d4de' 
+    # black:   '#6b7089'
+    # red:     '#e98989'
+    # green:   '#c0ca8e'
+    # yellow:  '#e9b189'
+    # blue:    '#91acd1'
+    # magenta: '#ada0d3'
+    # cyan:    '#95c4ce'
+    # white:   '#d2d4de' 
     ###############
 
     ###############
     # like Gotham
-    # black: '0x10151b'
-    # red: '0xd26939'
-    # green: '0x081f2d'
-    # yellow: '0x245361'
-    # blue: '0x093748'
-    # magenta: '0x888ba5'
-    # cyan: '0x599caa'
-    # white: '0xd3ebe9'
+    # black: '#10151b'
+    # red: '#d26939'
+    # green: '#081f2d'
+    # yellow: '#245361'
+    # blue: '#093748'
+    # magenta: '#888ba5'
+    # cyan: '#599caa'
+    # white: '#d3ebe9'
     ###############
 
     ################
     ## like quantum
-    black: '0x212121'
-    red: '0xdd71856'
-    green: '0x87de78'
-    # green: '0x87bb7c'
-    yellow: '0xd5b875'
-    blue: '0x70ace5'
-    magenta: '0xa48add'
-    cyan: '0x69c5ce'
-    white: '0xaebbc5'
+    black: '#212121'
+    red: '#d71856'
+    green: '#87de78'
+    # green: '#87bb7c'
+    yellow: '#d5b875'
+    blue: '#70ace5'
+    magenta: '#a48add'
+    cyan: '#69c5ce'
+    white: '#aebbc5'
     ################
 
   # Dim colors
@@ -324,14 +324,14 @@ colors:
   # If the dim colors are not set, they will be calculated automatically based
   # on the `normal` colors.
   #dim:
-  #  black:   '0x000000'
-  #  red:     '0x8c3336'
-  #  green:   '0x7a8530'
-  #  yellow:  '0x97822e'
-  #  blue:    '0x506d8f'
-  #  magenta: '0x80638e'
-  #  cyan:    '0x497e7a'
-  #  white:   '0x9a9a9a'
+  #  black:   '#000000'
+  #  red:     '#8c3336'
+  #  green:   '#7a8530'
+  #  yellow:  '#97822e'
+  #  blue:    '#506d8f'
+  #  magenta: '#80638e'
+  #  cyan:    '#497e7a'
+  #  white:   '#9a9a9a'
 
   # Indexed Colors
   #
@@ -339,7 +339,7 @@ colors:
   # When these are not set, they're filled with sensible defaults.
   #
   # Example:
-  #   `- { index: 16, color: '0xff00ff' }`
+  #   `- { index: 16, color: '#ff00ff' }`
   #
   indexed_colors: []
 
@@ -364,16 +364,16 @@ colors:
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-visual_bell:
-  animation: EaseOutExpo
-  duration: 0
-  color: '0xffffff'
+# visual_bell:
+#   animation: EaseOutExpo
+#   duration: 0
+#   color: '#ffffff'
 
 # Background opacity
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.3
+background_opacity: 0.5
 
 # Mouse bindings
 #
@@ -434,7 +434,7 @@ selection:
   save_to_clipboard: false
 
 # Allow terminal applications to change Alacritty's window title.
-dynamic_title: true
+# dynamic_title: true
 
 cursor:
   # Cursor style
