@@ -33,11 +33,11 @@ hook_source = '''
 '''
 
 # echodoc
-# [[plugins]]
-# repo = 'Shougo/echodoc.vim'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
-# '''
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/echodoc.plug.vim
+'''
 
 # auto close
 [[plugins]]
