@@ -181,3 +181,6 @@ hook_add = '''
 [[plugins]]
 repo = 'jupyter-vim/jupyter-vim'
 on_ft = ['python']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/jupyter-vim.plug.vim
+'''
