@@ -153,7 +153,7 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 nnoremap <ESC><ESC> :noh<CR>
-nnoremap <silent> <c-l><c-l> :noh<CR>
+" nnoremap <silent> <c-l><c-l> :noh<CR>
 nnoremap <C-f>f :MyLineSearch<Space>
 nnoremap <C-f>b :MyLineBackSearch<Space>
 nnoremap <C-f>; :MyLineSameSearch<CR>
