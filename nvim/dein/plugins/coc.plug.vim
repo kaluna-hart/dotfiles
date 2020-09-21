@@ -82,7 +82,8 @@ nmap <silent> [CocLeader]] <Plug>(coc-diagnostic-next)
 nmap <silent> [CocLeader]d <Plug>(coc-definition)
 nmap <silent> [CocLeader]t <Plug>(coc-type-definition)
 nmap <silent> [CocLeader]i <Plug>(coc-implementation)
-nmap <silent> [CocLeader]r <Plug>(coc-references)
+nmap <silent> [CocLeader]rf <Plug>(coc-references)
+nmap <silent> [CocLeader]rn <Plug>(coc-rename)
 
 " Use [CocLeader]h to show documentation in preview window
 nnoremap <silent> [CocLeader]h :call <SID>show_documentation()<CR>
