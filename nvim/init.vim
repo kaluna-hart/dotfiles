@@ -13,6 +13,7 @@ set fileencodings=utf-8
 "<C-l>でノーマルモード
 inoremap <silent> <c-l> <esc>
 " inoremap <C-l> <C-x><C-o>
+imap <silent> <c-h> <BS>
 
 " set completeopt-=preview
 

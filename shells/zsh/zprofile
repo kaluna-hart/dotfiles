@@ -115,3 +115,8 @@ if [ -d /usr/local/opt/binutils ]; then
   export LDFLAGS="-L/usr/local/opt/binutils/lib"
   export CPPFLAGS="-I/usr/local/opt/binutils/include"
 fi
+
+# for imagemagick
+if [ -e /usr/local/bin/convert ]; then
+  export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+fi
