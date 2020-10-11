@@ -184,3 +184,8 @@ on_ft = ['python']
 hook_add = '''
   source ~/.config/nvim/dein/plugins/jupyter-vim.plug.vim
 '''
+
+# syntax for mdx
+[[plugins]]
+repo = 'jxnblk/vim-mdx-js'
+on_ft = ['markdown.mdx']
