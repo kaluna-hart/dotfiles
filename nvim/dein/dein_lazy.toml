@@ -33,11 +33,11 @@ hook_source = '''
 '''
 
 # echodoc
-# [[plugins]]
-# repo = 'Shougo/echodoc.vim'
-# hook_add = '''
-#   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
-# '''
+[[plugins]]
+repo = 'Shougo/echodoc.vim'
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/echodoc.plug.vim
+'''
 
 # auto close
 [[plugins]]
@@ -168,3 +168,24 @@ on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typesc
 # for html5 syntax
 [[plugins]]
 repo = 'othree/html5.vim'
+
+# jupyter notebook for nvim.
+[[plugins]]
+repo = 'goerz/jupytext.vim'
+on_ft = ['python']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/jupytext.plug.vim
+'''
+
+# jupyter notebook for nvim.
+[[plugins]]
+repo = 'jupyter-vim/jupyter-vim'
+on_ft = ['python']
+hook_add = '''
+  source ~/.config/nvim/dein/plugins/jupyter-vim.plug.vim
+'''
+
+# syntax for mdx
+[[plugins]]
+repo = 'jxnblk/vim-mdx-js'
+on_ft = ['markdown.mdx']

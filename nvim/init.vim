@@ -13,6 +13,7 @@ set fileencodings=utf-8
 "<C-l>でノーマルモード
 inoremap <silent> <c-l> <esc>
 " inoremap <C-l> <C-x><C-o>
+imap <silent> <c-h> <BS>
 
 " set completeopt-=preview
 
@@ -153,7 +154,7 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 nnoremap <ESC><ESC> :noh<CR>
-nnoremap <silent> <c-l><c-l> :noh<CR>
+" nnoremap <silent> <c-l><c-l> :noh<CR>
 nnoremap <C-f>f :MyLineSearch<Space>
 nnoremap <C-f>b :MyLineBackSearch<Space>
 nnoremap <C-f>; :MyLineSameSearch<CR>
