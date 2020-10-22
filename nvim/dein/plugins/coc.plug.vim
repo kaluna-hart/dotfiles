@@ -47,8 +47,14 @@ set updatetime=300
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 
-" always show signcolumns
-set signcolumn=yes
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -65,8 +71,13 @@ endfunction
 
 " let g:coc_snippet_next = '<tab>'
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-r> coc#refresh()
+" Use <c-r> to trigger completion.
+"" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-r> coc#refresh()
+  " inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo cain at current position.
 " Coc only does snippet and additional edit on confirm.
@@ -83,6 +94,7 @@ nmap <silent> [CocLeader]d <Plug>(coc-definition)
 nmap <silent> [CocLeader]t <Plug>(coc-type-definition)
 nmap <silent> [CocLeader]i <Plug>(coc-implementation)
 nmap <silent> [CocLeader]rf <Plug>(coc-references)
+" Symbol renaming.
 nmap <silent> [CocLeader]rn <Plug>(coc-rename)
 
 " Use [CocLeader]h to show documentation in preview window
@@ -96,11 +108,8 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Highlight symbol under cursor on CursorHold
+" Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for rename current word
-nmap [CocLeader]n <Plug>(coc-rename)
 
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -117,9 +126,9 @@ augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
 xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap [CocLeader]a  <Plug>(coc-codeaction-selected)
+nmap [CocLeader]as  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of current line
+" Remap keys for applying codeAction to the current buffer.
 nmap [CocLeader]ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap [CocLeader]q  <Plug>(coc-fix-current)
@@ -128,12 +137,24 @@ nmap [CocLeader]q  <Plug>(coc-fix-current)
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
 omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
+omap ic <Plug>(coc-classobj-i)
+omap ac <Plug>(coc-classobj-a)
 
-" Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> [CocLeader]<C-d> <Plug>(coc-range-select)
-xmap <silent> <leader><C-d> <Plug>(coc-range-select)
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.3 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> [CocLeader]s <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
