@@ -1,3 +1,8 @@
+# zshrc compile
+if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
+  zcompile ~/.zshrc
+fi
+
 # シェル操作をvim互換にする
 bindkey -v
 
