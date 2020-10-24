@@ -74,18 +74,11 @@ if [ -z $ZSH_ENV_LOADED ]; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
   fi
-  # for D in `ls $HOME/.anyenv/envs`
-  # do
-  #   export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
-  # done
 
   # go path
-  if [ -d ${HOME}/go ] ; then
-    export GOPATH="$HOME/go"
-    # for D in `ls $GOPATH`
-    # do
-    #   export PATH="$GOPATH/$D/bin:$PATH"
-    # done
+  if [ -d ${GOENV_ROOT} ] ; then
+    export PATH="$PATH:$GOROOT/bin"
+    export PATH="$PATH:$GOPATH/bin"
   fi
 
   if [ -d ${HOME}/.pub-cache ] ; then
