@@ -145,6 +145,7 @@ hook_add = '''
 # syntax for GraphQL
 [[plugins]]
 repo = 'jparise/vim-graphql'
+on_ft = ['graphql', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact']
 
 # prettier for vim
 # [[plugins]]
