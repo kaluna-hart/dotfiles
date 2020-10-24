@@ -24,9 +24,13 @@
     "javascript",
     "typescript",
     "javascriptreact",
-    "typescriptreact"
+    "typescriptreact",
+    "go"
   ],
   "tsserver.formatOnType": true,
   "coc.preferences.formatOnType": true,
-  "coc.preferences.extensionUpdateCheck": "daily"
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "go.goplsOptions": {
+    "gofumpt": true
+  }
 }
