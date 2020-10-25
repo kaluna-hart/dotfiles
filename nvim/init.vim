@@ -54,7 +54,6 @@ set shiftround
 
 "タブをスペースに変換
 set expandtab
-set smarttab
 
 "ビープ音すべてを無効にする
 set visualbell t_vb=
@@ -173,10 +172,6 @@ set wildmode=list,full
 let g:python3_host_prog = expand("$PYENV_ROOT/versions/neovim3/bin/python")
 let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
-" appear " for json
-autocmd Filetype json setl conceallevel=0
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
 "色
 set background=dark
 
@@ -263,6 +258,13 @@ augroup VimCSS3Syntax
 
   autocmd FileType css setlocal iskeyword+=-
 augroup END
+
+" appear " for json
+autocmd Filetype json setl conceallevel=0
+autocmd FileType json syntax match Comment +\/\/.\+$+
+
+" indent and tab config for golang
+autocmd FileType go setlocal tabstop=4 softtabstop=4 shiftwidth=4
 
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark
 colorscheme quantum
