@@ -113,9 +113,6 @@ if [ -z $ZSH_ENV_LOADED ]; then
     export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
   fi
 
-  #  source fzf config
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
   export ZSH_ENV_LOADED="1"
 else
     print "already loaded .zshenv"
