@@ -39,9 +39,9 @@ source $HOME/.zprofile
 # install pyenv-virtualenv by using homebrew
 brew install pyenv-virtualenv
 
-# install python3.7.3 by using pyenv and createvirtualenv neovim3
-pyenv install 3.7.4
-pyenv virtualenv 3.7.4 neovim3
+# install python3.9.0 by using pyenv and createvirtualenv neovim3
+pyenv install 3.9.0
+pyenv virtualenv 3.9.0 neovim3
 
 # install python2.7.16 by using pyenv and createvirtualenv neovim2
 # pyenv install 2.7.16

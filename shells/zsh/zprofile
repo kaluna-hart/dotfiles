@@ -115,5 +115,12 @@ if [ -z $ZSH_ENV_LOADED ]; then
 
   export ZSH_ENV_LOADED="1"
 else
+  if [ -d ${HOME}/.anyenv ] ; then
+    eval "$(anyenv init -)"
+  fi
+  # To enable auto-actimation, pyenv-virtualenv
+  if which pyenv-virtualenv-init > /dev/null; then
+    eval "$(pyenv virtualenv-init -)";
+  fi
     print "already loaded .zshenv"
 fi
