@@ -170,7 +170,7 @@ set wildmode=list,full
 
 " python path
 let g:python3_host_prog = expand("$PYENV_ROOT/versions/neovim3.9/bin/python")
-let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
+" let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
 "色
 set background=dark

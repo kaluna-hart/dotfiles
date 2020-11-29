@@ -11,12 +11,12 @@ let g:coc_global_extensions = [
   \ 'coc-emmet',
   \ 'coc-yaml',
   \ 'coc-rust-analyzer',
-  \ 'coc-python',
   \ 'coc-json',
   \ 'coc-markdownlint',
   \ 'coc-html',
   \ 'coc-css',
   \ ]
+" \ 'coc-python',
 
 " for prettier
 if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
