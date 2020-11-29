@@ -12,7 +12,7 @@ let g:user_emmet_settings = {
   \   'filters' : 'fc',
   \ },
   \ 'php' : {
-  \   'extends : 'html',
+  \   'extends' : 'html',
   \   'filters' : 'html',
   \ },
   \}
