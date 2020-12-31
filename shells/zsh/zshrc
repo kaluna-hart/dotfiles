@@ -146,3 +146,6 @@ bindkey '^f' fzf-z-search
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
+
+# for nix
+# [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && . $HOME/.nix-profile/etc/profile.d/nix.sh
