@@ -150,6 +150,13 @@ merged = 0
 rev = 'release'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/coc.plug.vim
+  source ~/.config/nvim/dein/plugins/coc-explorer.plug.vim
+  augroup cocExplorer_config
+    autocmd!
+    autocmd vimenter * CocCommand explorer --preset default
+    autocmd vimenter * sleep 600ms
+    autocmd vimenter * wincmd l
+  augroup END
 '''
 
 [[plugins]]
@@ -157,12 +164,5 @@ repo = 'liuchengxu/vista.vim'
 depends = ['coc.nvim']
 hook_add = '''
   source ~/.config/nvim/dein/plugins/vista.plug.vim
-  source ~/.config/nvim/dein/plugins/coc-explorer.plug.vim
-  augroup cocExplorer_config
-    autocmd!
-    autocmd vimenter * CocCommand explorer --preset default
-    autocmd vimenter * sleep 1000ms
-    autocmd vimenter * wincmd l
-  augroup END
 '''
 

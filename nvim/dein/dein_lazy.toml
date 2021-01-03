@@ -190,3 +190,13 @@ hook_add = '''
 [[plugins]]
 repo = 'jxnblk/vim-mdx-js'
 on_ft = ['markdown.mdx']
+
+# highlighting and syntax for prisma
+[[plugins]]
+repo = 'pantharshit00/vim-prisma'
+on_ft = ['prisma']
+
+# syntax highlighting for nix
+[[plugins]]
+repo = 'LnL7/vim-nix'
+on_ft = ['nix']

@@ -1,4 +1,10 @@
 {
+  "languageserver": {
+    "nix": {
+      "command": "rnix-lsp",
+      "filetypes": ["nix"]
+    }
+  },
   "suggest.floatEnable": true,
   "suggest.detailField": "menu",
   "suggest.removeDuplicateItems": true,
@@ -26,7 +32,8 @@
     "javascriptreact",
     "typescriptreact",
     "go",
-    "python"
+    "python",
+    "prisma"
   ],
   "tsserver.formatOnType": true,
   "coc.preferences.formatOnType": true,
