@@ -33,7 +33,8 @@
     "typescriptreact",
     "go",
     "python",
-    "prisma"
+    "prisma",
+    "dart"
   ],
   "tsserver.formatOnType": true,
   "coc.preferences.formatOnType": true,
