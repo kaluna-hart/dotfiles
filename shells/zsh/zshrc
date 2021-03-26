@@ -152,3 +152,10 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
 
 # for direnv
 eval "$(direnv hook zsh)"
+
+# Wasmer
+export WASMER_DIR="/Users/kaluna/.wasmer"
+[ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
+
+# asdf
+. /usr/local/opt/asdf/asdf.sh
