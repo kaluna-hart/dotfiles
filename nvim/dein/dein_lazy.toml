@@ -84,9 +84,9 @@ hook_add = '''
 '''
 
 # precious
-[[plugins]]
-repo = 'osyo-manga/vim-precious'
-depends = 'context_filetype.vim'
+# [[plugins]]
+# repo = 'osyo-manga/vim-precious'
+# depends = 'context_filetype.vim'
 
 # dart plugin
 [[plugins]]
@@ -109,9 +109,9 @@ hook_add = '''
 repo = 'tpope/vim-obsession'
 
 # # javascript syntax
-[[plugins]]
-repo = 'othree/yajs.vim'
-on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
+# [[plugins]]
+# repo = 'othree/yajs.vim'
+# on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 
 # syntax plugins for javascript and javascript.jsx
 [[plugins]]
