@@ -39,7 +39,7 @@ set clipboard=unnamed
 
 "行番号の色や現在行の設定
 " autocmd ColorScheme * highlight LineNr ctermfg=12
-set cursorline
+" set cursorline
 " highlight clear CursorLine
 
 "オートインデント
