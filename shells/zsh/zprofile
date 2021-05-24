@@ -73,6 +73,7 @@ if [ -z $ZSH_ENV_LOADED ]; then
   if [ -d ${HOME}/.anyenv ] ; then
     export PATH="$HOME/.anyenv/bin:$PATH"
     eval "$(anyenv init -)"
+    eval "$(pyenv init --path)"
   fi
 
   # go path
@@ -117,6 +118,7 @@ if [ -z $ZSH_ENV_LOADED ]; then
 else
   if [ -d ${HOME}/.anyenv ] ; then
     eval "$(anyenv init -)"
+    eval "$(pyenv init --path)"
   fi
   # To enable auto-actimation, pyenv-virtualenv
   if which pyenv-virtualenv-init > /dev/null; then
