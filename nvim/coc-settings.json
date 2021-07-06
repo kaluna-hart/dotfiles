@@ -16,14 +16,7 @@
   "tsserver.enableJavascript": true,
   "python.jediEnabled": false,
   "python.venvFolders": ["envs", ".pyenv", ".direnv", ".venv"],
-  "eslint.autoFix": true,
   "eslint.autoFixOnSave": true,
-  "eslint.filetypes": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "markdown",
@@ -34,7 +27,8 @@
     "go",
     "python",
     "prisma",
-    "dart"
+    "dart",
+    "html"
   ],
   "tsserver.formatOnType": true,
   "coc.preferences.formatOnType": true,
@@ -42,8 +36,8 @@
   "go.goplsOptions": {
     "gofumpt": true
   },
-  "explorer.icon.enableVimDevicons": true,
   "explorer.icon.enableNerdfont": true,
+  "explorer.icon.source": "vim-devicons",
   "explorer.keyMappings.global": {
     "i": false, // cancel default mapkey
 
