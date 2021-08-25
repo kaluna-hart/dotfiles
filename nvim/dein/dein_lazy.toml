@@ -29,7 +29,7 @@ on_ft = ['snippet']
 depends = ['context_filetype.vim', 'neosnippet-snippets']
 # depends = ['context_filetype.vim', 'neosnippet-snippets', 'honza/vim-snippets']
 hook_source = '''
-    source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
+  source ~/.config/nvim/dein/plugins/neosnippet.plug.vim
 '''
 
 # echodoc
@@ -65,7 +65,7 @@ repo = 'tpope/vim-repeat'
 repo = 'mattn/emmet-vim'
 on_ft = ['css', 'html', 'javascript', 'javascriptreact', 'javascript.jsx', 'typescript', 'typescriptreact', 'typescript.tsx']
 hook_source = '''
-    source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
+  source ~/.config/nvim/dein/plugins/emmet-vim.plug.vim
 '''
 
 # tmuxline
@@ -89,20 +89,20 @@ hook_add = '''
 # depends = 'context_filetype.vim'
 
 # dart plugin
-[[plugins]]
-repo = 'dart-lang/dart-vim-plugin'
-on_ft = 'dart'
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/dart-vim-plugin.plug.vim
-'''
+# [[plugins]]
+# repo = 'dart-lang/dart-vim-plugin'
+# on_ft = 'dart'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/dart-vim-plugin.plug.vim
+# '''
 
 # flutter plugin for neovim
-[[plugins]]
-repo = 'thosakwe/vim-flutter'
-on_ft = 'dart'
-hook_add = '''
-  source ~/.config/nvim/dein/plugins/vim-flutter.plug.vim
-'''
+# [[plugins]]
+# repo = 'thosakwe/vim-flutter'
+# on_ft = 'dart'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/vim-flutter.plug.vim
+# '''
 
 # save nvim session and restore nvim session
 [[plugins]]
@@ -114,25 +114,25 @@ repo = 'tpope/vim-obsession'
 # on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 
 # syntax plugins for javascript and javascript.jsx
-[[plugins]]
-repo = 'pangloss/vim-javascript'
-on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
+# [[plugins]]
+# repo = 'pangloss/vim-javascript'
+# on_ft = ['javascript', 'javascriptreact', 'javascript.jsx']
 
 # syntax plugins packages for javascript and javascript.jsx 
-[[plugins]]
-repo = 'mxw/vim-jsx'
-on_ft = ['javascriptreact', 'javascript.jsx']
-depends = 'vim-javascript'
+# [[plugins]]
+# repo = 'mxw/vim-jsx'
+# on_ft = ['javascriptreact', 'javascript.jsx']
+# depends = 'vim-javascript'
 
 # syntax highlighting plugins for typescript
-[[plugins]]
-repo = 'leafgarland/typescript-vim'
-on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
+# [[plugins]]
+# repo = 'leafgarland/typescript-vim'
+# on_ft = ['typescript', 'typescriptreact', 'typescript.tsx']
 
-[[plugins]]
-repo = 'peitalin/vim-jsx-typescript'
-on_ft = ['typescriptreact', 'typescript.tsx']
-depends = 'typescript-vim'
+# [[plugins]]
+# repo = 'peitalin/vim-jsx-typescript'
+# on_ft = ['typescriptreact', 'typescript.tsx']
+# depends = 'typescript-vim'
 
 # syntax highlighting plugin for styled-components
 [[plugins]]
@@ -143,9 +143,9 @@ hook_add = '''
 '''
 
 # syntax for GraphQL
-[[plugins]]
-repo = 'jparise/vim-graphql'
-on_ft = ['graphql', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact']
+# [[plugins]]
+# repo = 'jparise/vim-graphql'
+# on_ft = ['graphql', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact']
 
 # prettier for vim
 # [[plugins]]
@@ -162,13 +162,13 @@ on_ft = ['graphql', 'javascript', 'typescript', 'javascriptreact', 'typescriptre
 repo = 'rupa/z'
 
 # css-syntax
-[[plugins]]
-repo = 'hail2u/vim-css3-syntax'
-on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
+# [[plugins]]
+# repo = 'hail2u/vim-css3-syntax'
+# on_ft = ['javascript','javascript.jsx', 'javascriptreact', 'typescript', 'typescript.tsx', 'typescriptreact', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html']
 
 # for html5 syntax
-[[plugins]]
-repo = 'othree/html5.vim'
+# [[plugins]]
+# repo = 'othree/html5.vim'
 
 # jupyter notebook for nvim.
 [[plugins]]
@@ -197,6 +197,24 @@ repo = 'pantharshit00/vim-prisma'
 on_ft = ['prisma']
 
 # syntax highlighting for nix
+# [[plugins]]
+# repo = 'LnL7/vim-nix'
+# on_ft = ['nix']
+
+# syntax highlighting
 [[plugins]]
-repo = 'LnL7/vim-nix'
-on_ft = ['nix']
+repo = 'nvim-treesitter/nvim-treesitter'
+if = 'has("nvim")'
+on_event = 'BufRead'
+hook_post_update = 'TSUpdate'
+hook_source = '''
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = 'maintained',
+    highlight = {
+        enable = true,
+        disable = {},
+    },
+}
+EOF
+'''
