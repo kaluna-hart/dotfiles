@@ -3,6 +3,11 @@
     "nix": {
       "command": "rnix-lsp",
       "filetypes": ["nix"]
+    },
+    "graphql": {
+      "command": "graphql-lsp",
+      "args": ["server", "-m", "stream"],
+      "filetypes": ["typescript", "typescriptreact", "graphql"]
     }
   },
   "suggest.floatEnable": true,
@@ -28,7 +33,8 @@
     "python",
     "prisma",
     "dart",
-    "html"
+    "html",
+    "graphql"
   ],
   "tsserver.formatOnType": true,
   "coc.preferences.formatOnType": true,
