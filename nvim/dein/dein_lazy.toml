@@ -39,11 +39,6 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/echodoc.plug.vim
 '''
 
-# auto close
-[[plugins]]
-repo = 'cohama/lexima.vim'
-on_i = 1
-
 # gitの操作
 [[plugins]]
 repo = 'tpope/vim-fugitive'
