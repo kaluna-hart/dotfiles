@@ -159,3 +159,5 @@ export WASMER_DIR="/Users/kaluna/.wasmer"
 
 # asdf
 . /usr/local/opt/asdf/asdf.sh
+
+export PATH="$HOME/.poetry/bin:$PATH"
