@@ -8,7 +8,8 @@ null_ls.setup {
     null_ls.builtins.formatting.prettier.with {
       prefer_local = "node_modules/.bin",
     },
-    --null_ls.builtins.code_actions.gitsigns,
+    null_ls.builtins.code_actions.gitsigns,
+    null_ls.builtins.formatting.stylua,
   },
   -- you can reuse a shared lspconfig on_attach callback here
     on_attach = function(client, bufnr)

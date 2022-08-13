@@ -1,21 +1,22 @@
 local status, nvim_lsp = pcall(require, "lspconfig")
-if (not status) then return end
+if not status then
+	return
+end
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<leader>lf', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '<leader>l[', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', '<leader>l]', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<leader>lq', vim.diagnostic.setloclist, opts)
+local opts = { noremap = true, silent = true }
+-- vim.keymap.set("n", "<leader>lf", vim.diagnostic.open_float, opts)
+-- vim.keymap.set("n", "<leader>l[", vim.diagnostic.goto_prev, opts)
+-- vim.keymap.set("n", "<leader>l]", vim.diagnostic.goto_next, opts)
+-- vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, opts)
 
 -- LSP handlers
---vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
---  vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = false }
---)
+vim.lsp.handlers["textDocument/publishDiagnostics"] =
+	vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = false })
 
 -- Reference highlight
-vim.cmd [[
+vim.cmd([[
 set updatetime=500
 highlight LspReferenceText  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
 highlight LspReferenceRead  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
@@ -25,7 +26,7 @@ augroup lsp_document_highlight
   autocmd CursorHold,CursorHoldI * silent! lua vim.lsp.buf.document_highlight()
   autocmd CursorMoved,CursorMovedI * silent! lua vim.lsp.buf.clear_references()
 augroup END
-]]
+]])
 
 vim.o.updatetime = 250
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+-- vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
