@@ -15,19 +15,11 @@ inoremap <silent> <c-l> <esc>
 " inoremap <C-l> <C-x><C-o>
 imap <silent> <c-h> <BS>
 
-" set completeopt-=preview
-
-" ポップアップメニューの半透明表示
-" set pumblend=0
-" floating ウインドウの半透明表示
-" set winblend=30
-
 " mapping leader
 let mapleader = "\<Space>"
 
 " set fonts
-set guifont=Ricty\ Discord\ with-all-icons
-" set guifont=Ricty\ Discord\ with-all-icons\ Regular
+set guifont="HackGenNerd Console"
 
 "カーソル位置表示
 set ruler
@@ -38,9 +30,9 @@ set relativenumber
 set clipboard=unnamed
 
 "行番号の色や現在行の設定
-" autocmd ColorScheme * highlight LineNr ctermfg=12
-" set cursorline
-" highlight clear CursorLine
+autocmd ColorScheme * highlight LineNr ctermfg=12
+set cursorline
+highlight clear CursorLine
 
 "オートインデント
 set autoindent
@@ -153,7 +145,6 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 nnoremap <ESC><ESC> :noh<CR>
-" nnoremap <silent> <c-l><c-l> :noh<CR>
 nnoremap <C-f>f :MyLineSearch<Space>
 nnoremap <C-f>b :MyLineBackSearch<Space>
 nnoremap <C-f>; :MyLineSameSearch<CR>
@@ -169,7 +160,7 @@ set signcolumn=yes
 set wildmode=list,full
 
 " python path
-let g:python3_host_prog = expand("$HOME/.pynvim3/.venv/bin/python")
+let g:python3_host_prog = expand("$HOME/.pynvim3.10.2/.venv/bin/python")
 " let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
 "色
@@ -251,13 +242,6 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
-
-" for vim-css3-syntax
-augroup VimCSS3Syntax
-  autocmd!
-
-  autocmd FileType css setlocal iskeyword+=-
-augroup END
 
 " appear " for json
 autocmd Filetype json setl conceallevel=0
