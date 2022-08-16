@@ -33,11 +33,12 @@ packer.startup(function(use)
 	})
 	use("kyazdani42/nvim-web-devicons")
 	use("nvim-telescope/telescope.nvim")
+	use({ "nvim-telescope/telescope-file-browser.nvim" })
 	use({
 		"AckslD/nvim-neoclip.lua",
 		requires = { "tami5/sqlite.lua" },
 	})
-	use("onsails/lspkind-nvim")
+	use("onsails/lspkind.nvim")
 	use("kyazdani42/nvim-tree.lua")
 	use("numToStr/Comment.nvim")
 	use("windwp/nvim-ts-autotag")
@@ -57,21 +58,33 @@ packer.startup(function(use)
 		"dinhhuy258/git.nvim",
 	})
 
-	use("vim-denops/denops.vim")
-	use({ "Shougo/ddc.vim", requires = { "vim-denops/denops.vim" } })
-	use("Shougo/ddc-around")
-	use("Shougo/ddc-matcher_head")
-	use("Shougo/ddc-sorter_rank")
-	use("Shougo/ddc-converter_remove_overlap")
-	use("Shougo/ddc-nvim-lsp")
-	use("Shougo/ddc-omni")
-	use("Shougo/ddc-file")
-	use("hrsh7th/vim-vsnip-integ")
+	use({
+		"hrsh7th/nvim-cmp",
+	})
+	use({ "hrsh7th/cmp-nvim-lsp" })
+	use({ "hrsh7th/cmp-buffer" })
+	use({ "hrsh7th/cmp-path" })
+	use({ "hrsh7th/cmp-cmdline" })
+	use({ "L3MON4D3/LuaSnip" })
+	use({ "hrsh7th/cmp-vsnip" })
+	use({ "hrsh7th/vim-vsnip" })
 	use("rafamadriz/friendly-snippets")
-	use({ "hrsh7th/vim-vsnip", requires = { "hrsh7th/vim-vsnip-integ", "rafamadriz/friendly-snippets" } })
+
+	-- use("vim-denops/denops.vim")
+	-- use({ "Shougo/ddc.vim", requires = { "vim-denops/denops.vim" } })
+	-- use("Shougo/ddc-around")
+	-- use("Shougo/ddc-matcher_head")
+	-- use("Shougo/ddc-sorter_rank")
+	-- use("Shougo/ddc-converter_remove_overlap")
+	-- use("Shougo/ddc-nvim-lsp")
+	-- use("Shougo/ddc-omni")
+	-- use("Shougo/ddc-file")
+	-- use("hrsh7th/vim-vsnip-integ")
+	-- use({ "hrsh7th/vim-vsnip", requires = { "hrsh7th/vim-vsnip-integ", "rafamadriz/friendly-snippets" } })
+
 	use("j-hui/fidget.nvim")
-	use("matsui54/denops-signature_help")
-	use("matsui54/denops-popup-preview.vim")
+	-- use("matsui54/denops-signature_help")
+	-- use("matsui54/denops-popup-preview.vim")
 	use({
 		"rust-lang/rust.vim",
 		ft = { "rust" },

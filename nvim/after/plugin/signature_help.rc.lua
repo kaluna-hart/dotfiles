@@ -1,1 +1,1 @@
-vim.cmd([[call popup_preview#enable()]])
+-- vim.cmd([[call popup_preview#enable()]])

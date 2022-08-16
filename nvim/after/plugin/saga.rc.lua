@@ -23,7 +23,7 @@ saga.init_lsp_saga({
 	diagnostic_header = { " ", " ", " ", "ﴞ " },
 	-- show diagnostic source
 	show_diagnostic_source = true,
-	-- add bracket or something with diagnostic source, just have 2 elements
+	-- -- add bracket or something with diagnostic source, just have 2 elements
 	diagnostic_source_bracket = {},
 	-- preview lines of lsp_finder and definition preview
 	max_preview_lines = 10,
@@ -110,7 +110,7 @@ vim.keymap.set("n", "<leader>lrn", "<Cmd>Lspsaga rename<CR>", opts)
 vim.keymap.set("n", "<leader>lc", "<cmd>Lspsaga code_action<CR>", { silent = true })
 vim.keymap.set("v", "<leader>lc", "<cmd><C-U>Lspsaga range_code_action<CR>", { silent = true })
 vim.keymap.set("n", "<leader>lo", "<cmd>LSoutlineToggle<CR>", { silent = true })
-vim.keymap.set("n", "<leader>df", "<cmd>Lspsaga open_floaterm custom_cli_command<CR>", { silent = true })
+vim.keymap.set("n", "<leader>df", "<cmd>Lspsaga open_floaterm<CR>", { silent = true })
 vim.keymap.set("t", "<leader>df", "<C-\\><C-n><cmd>Lspsaga close_floaterm<CR>", { silent = true })
 
 vim.cmd([[highlight link LspSagaFinderSelection Search]])
