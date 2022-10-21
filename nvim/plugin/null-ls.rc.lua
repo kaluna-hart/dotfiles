@@ -16,8 +16,11 @@ null_ls.setup({
 		-- 		diagnostic.code = diagnostic.message_id
 		-- 	end,
 		-- }),
-		null_ls.builtins.formatting.isort,
-		null_ls.builtins.formatting.black,
+		null_ls.builtins.formatting.isort, -- for python
+		null_ls.builtins.formatting.black, -- for python
+		null_ls.builtins.formatting.taplo, -- for toml
+		null_ls.builtins.diagnostics.hadolint, -- for Dockerfile
+		null_ls.builtins.formatting.yamlfmt, -- for yaml
 	},
 	-- you can reuse a shared lspconfig on_attach callback here
 	on_attach = function(client, bufnr)
