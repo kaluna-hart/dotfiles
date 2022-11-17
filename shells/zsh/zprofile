@@ -62,61 +62,57 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-# set cargo path
-export PATH="$HOME/.cargo/bin:$PATH"
+if [ -z $ZSH_ENV_LOADED ]; then
+  set cargo path
+  export PATH="$HOME/.cargo/bin:$PATH"
 
-# set XDG_CONFIG_HOME
-export XDG_CONFIG_HOME=~/.config
+  # set XDG_CONFIG_HOME
+  export XDG_CONFIG_HOME=~/.config
 
-# set anyenv path
-if [ -d ${HOME}/.anyenv ] ; then
-  export PATH="$HOME/.anyenv/bin:$PATH"
-  eval "$(anyenv init -)"
-  for D in `ls $HOME/.anyenv/envs`
-  do
-    export PATH="$HOME/.anyenv/envs/$D/shims:$PATH"
-  done
+  # go path
+  if [ -d ${GOENV_ROOT} ] ; then
+    export PATH="$PATH:$GOROOT/bin"
+    export PATH="$PATH:$GOPATH/bin"
+  fi
 
-fi
+  if [ -d ${HOME}/.pub-cache ] ; then
+    export PUB_CACHE_PATH="$HOME/.pub-cache"
+    export PATH="$PATH":"$PUB_CACHE_PATH/bin"
+  fi
 
-# go path
-if [ -d ${HOME}/go ] ; then
-  export GOPATH="$HOME/go"
-  for D in `ls $GOPATH`
-  do
-    export PATH="$GOPATH/$D/bin:$PATH"
-  done
+  if [ -d ${HOME}/flutter ] ; then
+    export FLUTTER_PATH="$HOME/flutter"
+    export PATH="$PATH":"$FLUTTER_PATH/bin"
+  fi
 
-fi
+  if [ -d ${HOME}/.poetry ] ; then
+    export POETRY_PATH="$HOME/.poetry"
+    export PATH="$PATH":"$POETRY_PATH/bin"
+  fi
 
-if [ -d ${HOME}/.pub-cache ] ; then
-  export PUB_CACHE_PATH="$HOME/.pub-cache"
-  export PATH="$PATH":"$PUB_CACHE_PATH/bin"
-fi
+  # To enable auto-actimation, pyenv-virtualenv
+  if which pyenv-virtualenv-init > /dev/null; then
+    eval "$(pyenv virtualenv-init -)";
+  fi
 
-if [ -d ${HOME}/flutter ] ; then
-  export FLUTTER_PATH="$HOME/flutter"
-  export PATH="$PATH":"$FLUTTER_PATH/bin"
-fi
+  # for binutils
+  if [ -d /usr/local/opt/binutils ]; then
+    export PATH="/usr/local/opt/binutils/bin:$PATH"
+    export LDFLAGS="-L/usr/local/opt/binutils/lib"
+    export CPPFLAGS="-I/usr/local/opt/binutils/include"
+  fi
 
-if [ -d ${HOME}/.poetry ] ; then
-  export POETRY_PATH="$HOME/.poetry"
-  export PATH="$PATH":"$POETRY_PATH/bin"
-fi
+  # for imagemagick
+  if [ -e /usr/local/bin/convert ]; then
+    export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+  fi
 
-# To enable auto-actimation, pyenv-virtualenv
-if which pyenv-virtualenv-init > /dev/null; then
-  eval "$(pyenv virtualenv-init -)";
-fi
+  export ZSH_ENV_LOADED="1"
+else
 
-# for binutils
-if [ -d /usr/local/opt/binutils ]; then
-  export PATH="/usr/local/opt/binutils/bin:$PATH"
-  export LDFLAGS="-L/usr/local/opt/binutils/lib"
-  export CPPFLAGS="-I/usr/local/opt/binutils/include"
-fi
-
-# for imagemagick
-if [ -e /usr/local/bin/convert ]; then
-  export XML_CATALOG_FILES="/usr/local/etc/xml/catalog"
+  # To enable auto-actimation, pyenv-virtualenv
+  if which pyenv-virtualenv-init > /dev/null; then
+    eval "$(pyenv virtualenv-init -)";
+  fi
+    print "already loaded .zshenv"
 fi

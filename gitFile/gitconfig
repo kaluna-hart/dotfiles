@@ -5,6 +5,10 @@
 ; [url "github:"]
     ; InsteadOf = https://github.com/
     ; InsteadOf = git@github.com:
+
+[includeIf "gitdir:~/github-snow-faluna/"]
+  path = ~/.gitconfig_snowhite
+
 [core]
 	editor = nvim
 [diff]

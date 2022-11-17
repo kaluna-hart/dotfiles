@@ -15,19 +15,11 @@ inoremap <silent> <c-l> <esc>
 " inoremap <C-l> <C-x><C-o>
 imap <silent> <c-h> <BS>
 
-" set completeopt-=preview
-
-" ポップアップメニューの半透明表示
-" set pumblend=0
-" floating ウインドウの半透明表示
-" set winblend=30
-
 " mapping leader
 let mapleader = "\<Space>"
 
 " set fonts
-set guifont=Ricty\ Discord\ with-all-icons
-" set guifont=Ricty\ Discord\ with-all-icons\ Regular
+set guifont="HackGenNerd Console"
 
 "カーソル位置表示
 set ruler
@@ -38,9 +30,9 @@ set relativenumber
 set clipboard=unnamed
 
 "行番号の色や現在行の設定
-" autocmd ColorScheme * highlight LineNr ctermfg=12
+autocmd ColorScheme * highlight LineNr ctermfg=12
 set cursorline
-" highlight clear CursorLine
+highlight clear CursorLine
 
 "オートインデント
 set autoindent
@@ -54,7 +46,6 @@ set shiftround
 
 "タブをスペースに変換
 set expandtab
-set smarttab
 
 "ビープ音すべてを無効にする
 set visualbell t_vb=
@@ -154,7 +145,6 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 
 nnoremap <ESC><ESC> :noh<CR>
-" nnoremap <silent> <c-l><c-l> :noh<CR>
 nnoremap <C-f>f :MyLineSearch<Space>
 nnoremap <C-f>b :MyLineBackSearch<Space>
 nnoremap <C-f>; :MyLineSameSearch<CR>
@@ -170,12 +160,8 @@ set signcolumn=yes
 set wildmode=list,full
 
 " python path
-let g:python3_host_prog = expand("$PYENV_ROOT/versions/neovim3/bin/python")
-let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
-
-" appear " for json
-autocmd Filetype json setl conceallevel=0
-autocmd FileType json syntax match Comment +\/\/.\+$+
+let g:python3_host_prog = expand("$HOME/.pynvim3.10.2/.venv/bin/python")
+" let g:python_host_prog = expand("$PYENV_ROOT/versions/neovim2/bin/python")
 
 "色
 set background=dark
@@ -257,11 +243,50 @@ endif
 
 "End dein Scripts-------------------------
 
-" for vim-css3-syntax
-augroup VimCSS3Syntax
-  autocmd!
+" appear " for json
+autocmd Filetype json setl conceallevel=0
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
-  autocmd FileType css setlocal iskeyword+=-
+" indent and tab config for golang
+autocmd FileType go setlocal tabstop=4 softtabstop=4 shiftwidth=4
+
+" for coc-explorer
+function! s:explorer_cur_dir()
+  let node_info = CocAction('runCommand', 'explorer.getNodeInfo', 0)
+  return fnamemodify(node_info['fullpath'], ':h')
+endfunction
+
+function! s:exec_cur_dir(cmd)
+  let dir = s:explorer_cur_dir()
+  execute 'cd ' . dir
+  execute a:cmd
+endfunction
+
+function! s:init_explorer()
+  set winblend=10
+
+  " Integration with other plugins
+
+  " CocList
+  nmap <buffer> <Leader>fg :call <SID>exec_cur_dir('CocList -I grep')<CR>
+  nmap <buffer> <Leader>fG :call <SID>exec_cur_dir('CocList -I grep -regex')<CR>
+  nmap <buffer> <C-p> :call <SID>exec_cur_dir('CocList files')<CR>
+
+  " vim-floaterm
+  nmap <buffer> <Leader>ft :call <SID>exec_cur_dir('FloatermNew --wintype=floating')<CR>
+endfunction
+
+function! s:enter_explorer()
+  if &filetype == 'coc-explorer'
+    " statusline
+    setl statusline=coc-explorer
+  endif
+endfunction
+
+augroup CocExplorerCustom
+  autocmd!
+  autocmd BufEnter * call <SID>enter_explorer()
+  autocmd FileType coc-explorer call <SID>init_explorer()
 augroup END
 
 " colorscheme iceberg, angr, quantum, lucius, neodark, one, onedark

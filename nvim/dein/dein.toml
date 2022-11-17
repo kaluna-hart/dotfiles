@@ -21,7 +21,7 @@ hook_add = '''
 [[plugins]]
 repo = 'vim-airline/vim-airline-themes'
 
-#vim color theme 'quantum'
+# vim color theme 'quantum'
 [[plugins]]
 repo = 'tyrannicaltoucan/vim-quantum'
 
@@ -33,23 +33,63 @@ hook_add = '''
     let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 '''
 
-# NERDTree, <C-n>で起動
-[[plugins]]
-repo = 'scrooloose/nerdtree'
-hook_add = '''
-  augroup nerdtree_config
-    autocmd!
-    autocmd vimenter * NERDTree
-    autocmd vimenter * wincmd l
-  augroup END
-'''
-#" open a NERDTree automatically when vim starts up
-# " open a NERDTree automatically when vim starts up if no files were specified
-# " autocmd StdinReadPre * let s:std_in=1
-# " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+# Fern
+# [[plugins]]
+# repo = 'lambdalisue/fern.vim'
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/fern.plug.vim
+# '''
 
-[[plugins]]
-repo = 'Xuyuanp/nerdtree-git-plugin'
+# fix cursorHold for Fern
+# [[plugins]]
+# repo = 'antoinemadec/FixCursorHold.nvim'
+# depends = ['fern.vim']
+# hook_add = '''
+#   source ~/.config/nvim/dein/plugins/FixCursorHold.plug.vim
+# '''
+
+# git status for fern
+# [[plugins]]
+# repo = 'lambdalisue/fern-git-status.vim'
+# depends = ['fern.vim']
+
+# devicons for fern
+# [[plugins]]
+# repo = 'lambdalisue/fern-renderer-devicons.vim'
+# depends = ['fern.vim', 'vim-devicons']
+
+# hijack for fern
+# [[plugins]]
+# repo = 'lambdalisue/fern-hijack.vim'
+# depends = ['fern.vim']
+
+# mapping fern
+# [[plugins]]
+# repo = 'lambdalisue/fern-mapping-project-top.vim'
+# depends = ['fern.vim']
+
+# fzf for fern
+# [[plugins]]
+# repo = 'LumaKernel/fern-mapping-fzf.vim'
+# depends = ['fern.vim']
+
+# NERDTree, <C-n>で起動
+ # [[plugins]]
+ # repo = 'scrooloose/nerdtree'
+ # hook_add = '''
+ #   augroup nerdtree_config
+ #     autocmd!
+ #     autocmd vimenter * NERDTree
+ #     autocmd vimenter * wincmd l
+ #   augroup END
+ # '''
+# " open a NERDTree automatically when vim starts up
+#  " open a NERDTree automatically when vim starts up if no files were specified
+#  " autocmd StdinReadPre * let s:std_in=1
+#  " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+# [[plugins]]
+# repo = 'Xuyuanp/nerdtree-git-plugin'
 
 # yank履歴を遡る,ペースト後, ctrl+nで遡る,反対はctrl+p
 [[plugins]]
@@ -103,13 +143,20 @@ hook_add = '''
 [[plugins]]
 repo = 'andymass/vim-matchup'
 
-# -------------test-----------------
+# coc.nvim, lsp
 [[plugins]]
 repo = 'neoclide/coc.nvim'
 merged = 0
 rev = 'release'
 hook_add = '''
   source ~/.config/nvim/dein/plugins/coc.plug.vim
+  source ~/.config/nvim/dein/plugins/coc-explorer.plug.vim
+  augroup cocExplorer_config
+    autocmd!
+    autocmd vimenter * CocCommand explorer --preset default
+    autocmd vimenter * sleep 600ms
+    autocmd vimenter * wincmd l
+  augroup END
 '''
 
 [[plugins]]
@@ -119,3 +166,7 @@ hook_add = '''
   source ~/.config/nvim/dein/plugins/vista.plug.vim
 '''
 
+# auto close
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_i = 1
