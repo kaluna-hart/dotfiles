@@ -1,13 +1,16 @@
 [user]
-	name = faluna
-	email = 37044099+faluna@users.noreply.github.com
+	name = kaluna-hart
+	email = kaluna.hart@gmail.com
 
 ; [url "github:"]
     ; InsteadOf = https://github.com/
     ; InsteadOf = git@github.com:
 
-[includeIf "gitdir:~/github-snow-faluna/"]
-  path = ~/.gitconfig_snowhite
+[includeIf "gitdir:~/github/rakuweb/"]
+  path = ~/.gitconfig_rakuweb
+
+[includeIf "gitdir:~/github/snowhite/"]
+  path = ~/.gitconfig_rakuweb
 
 [core]
 	editor = nvim

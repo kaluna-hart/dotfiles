@@ -14,3 +14,8 @@ if [ ! -h "$HOME/.gitconfig_snowhite" ]
 then
   ln -s "dotfiles/gitFile/gitconfig_snowhite" "$HOME/.gitconfig_snowhite"
 fi
+
+if [ ! -h "$HOME/.gitconfig_rakuweb" ]
+then
+  ln -s "dotfiles/gitFile/gitconfig_rakuweb" "$HOME/.gitconfig_rakuweb"
+fi
