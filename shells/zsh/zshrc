@@ -117,6 +117,11 @@ if [ -e $HOME/.zsh_functions ]; then
 fi
 # ----------------------------------------------------------------
 
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
 # 追加補完を有効
 autoload -Uz compinit && compinit -i
 
@@ -125,7 +130,7 @@ autoload -Uz compinit && compinit -i
 # # source fzf config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # source z.sh
-[ -f ~/.cache/dein/repos/github.com/rupa/z/z.sh ] && source ~/.cache/dein/repos/github.com/rupa/z/z.sh
+[ -f /opt/homebrew/etc/profile.d/z.sh ] && source /opt/homebrew/etc/profile.d/z.sh
 # starship
 eval "$(starship init zsh)"
 # for zsh-autosuggestions
@@ -150,14 +155,14 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
 # for nix
 # [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-# for direnv
-eval "$(direnv hook zsh)"
-
 # Wasmer
 export WASMER_DIR="/Users/kaluna/.wasmer"
 [ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
 
 # asdf
-. /usr/local/opt/asdf/asdf.sh
+. $(brew --prefix asdf)/libexec/asdf.sh
+
+# for direnv
+eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.poetry/bin:$PATH"
