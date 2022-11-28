@@ -32,10 +32,10 @@ window:
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 0
+    x: 2
     y: 0
   # Spread additional padding evenly around the terminal content.
-  dynamic_padding: false
+  dynamic_padding: true
   # Window decorations
   #
   # Values for `decorations`:
@@ -409,7 +409,7 @@ live_config_reload: true
 #   - (Linux) user login shell
 #   - (Windows) powershell
 shell:
-  program: /usr/local/bin/zsh
+  program: /bin/zsh
   args:
     - --login
 # Startup directory
