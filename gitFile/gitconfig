@@ -1,6 +1,6 @@
 [user]
-	name = kaluna-hart
-	email = 37044099+kaluna-hart@users.noreply.github.com
+	name = Kumazawa
+	email = dev@rakuweb.jp
 
 ; [url "github:"]
     ; InsteadOf = https://github.com/
@@ -25,3 +25,8 @@
 
 [commit]
 	template = ~/.commit_template
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

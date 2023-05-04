@@ -23,9 +23,7 @@ end
 
 null_ls.setup({
   sources = {
-    null_ls.builtins.formatting.prettier.with({
-      prefer_local = "node_modules/.bin",
-    }),
+    null_ls.builtins.formatting.prettier,
     null_ls.builtins.code_actions.gitsigns,
     null_ls.builtins.formatting.stylua,
     --   null_ls.builtins.diagnostics.pylint.with({
@@ -33,9 +31,9 @@ null_ls.setup({
     -- 		diagnostic.code = diagnostic.message_id
     -- 	end,
     -- }),
-    null_ls.builtins.formatting.isort, -- for python
-    null_ls.builtins.formatting.black, -- for python
-    null_ls.builtins.formatting.taplo, -- for toml
+    null_ls.builtins.formatting.isort,   -- for python
+    null_ls.builtins.formatting.black,   -- for python
+    null_ls.builtins.formatting.taplo,   -- for toml
     null_ls.builtins.diagnostics.hadolint, -- for Dockerfile
     null_ls.builtins.formatting.yamlfmt, -- for yaml
   },

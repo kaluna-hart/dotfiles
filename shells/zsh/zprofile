@@ -91,6 +91,11 @@ if [ -z $ZSH_ENV_LOADED ]; then
     export PATH="$PATH":"$POETRY_PATH/bin"
   fi
 
+  if [ -d ${HOME}/.yarn ] ; then
+    export YARN_PATH="$HOME/.yarn"
+    export PATH="$PATH":"$YARN_PATH/bin"
+  fi
+
   # To enable auto-actimation, pyenv-virtualenv
   if which pyenv-virtualenv-init > /dev/null; then
     eval "$(pyenv virtualenv-init -)";
