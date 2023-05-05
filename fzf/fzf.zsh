@@ -10,7 +10,7 @@ fi
 
 # Key bindings
 # ------------
-source "${HOME}/.asdf/installs/fzf/0.35.0/shell/key-bindings.zsh"
+source "${HOME}/.asdf/installs/fzf/0.35.1/shell/key-bindings.zsh"
 
 
 export FZF_CTRL_T_COMMAND="rg --files --hidden --follow --glob '!.git/*' 2>/dev/null"
