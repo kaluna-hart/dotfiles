@@ -14,7 +14,7 @@ packer.startup(function(use)
 
   use({
     "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons", opt = true },
+    requires = { "nvim-tree/nvim-web-devicons", opt = true },
   })
   use("nvim-lua/plenary.nvim")
   use("neovim/nvim-lspconfig")
@@ -23,15 +23,35 @@ packer.startup(function(use)
   use("williamboman/mason.nvim")
   use("williamboman/mason-lspconfig.nvim")
   use({
-    "glepnir/lspsaga.nvim",
+    "nvimdev/lspsaga.nvim",
+    opt = true,
     branch = "main",
+    event = "LspAttach",
+    config = function()
+      require("lspsaga").setup({
+        lightbulb = {
+          enable = false,
+          enable_in_insert = true,
+          sign = true,
+          sign_priority = 40,
+          virtual_text = true,
+        },
+      })
+    end,
+    requires = {
+      { "nvim-tree/nvim-web-devicons" },
+      { "nvim-treesitter/nvim-treesitter" },
+    },
   })
 
   use({
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
+    run = function()
+      local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+      ts_update()
+    end,
   })
-  use("kyazdani42/nvim-web-devicons")
+  use("nvim-tree/nvim-web-devicons")
   use("nvim-telescope/telescope.nvim")
   use({ "nvim-telescope/telescope-file-browser.nvim" })
   use({
@@ -39,12 +59,12 @@ packer.startup(function(use)
     requires = { "tami5/sqlite.lua" },
   })
   use("onsails/lspkind.nvim")
-  use("kyazdani42/nvim-tree.lua")
+  use("nvim-tree/nvim-tree.lua")
   use("numToStr/Comment.nvim")
   use("windwp/nvim-ts-autotag")
   use("lukas-reineke/indent-blankline.nvim")
-  use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
-  use({ "akinsho/bufferline.nvim", tag = "v2.*", requires = "kyazdani42/nvim-web-devicons" })
+  use({ "akinsho/toggleterm.nvim", tag = "*" })
+  use({ "akinsho/bufferline.nvim", tag = "*", requires = "nvim-tree/nvim-web-devicons" })
   use({ "xiyaowong/nvim-transparent" })
 
   use({ "machakann/vim-sandwich" })

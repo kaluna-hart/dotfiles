@@ -1,14 +1,5 @@
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
-local saga = require("lspsaga").setup({
-  lightbulb = {
-    enable = false,
-    enable_in_insert = true,
-    sign = true,
-    sign_priority = 40,
-    virtual_text = true,
-  },
-})
 
 local keymap = vim.keymap.set
 -- Lsp finder find the symbol definition implement reference
