@@ -122,4 +122,11 @@ packer.startup(function(use)
     end,
   })
   use({ "chipsenkbeil/distant.nvim" })
+  use({
+    "phaazon/hop.nvim",
+    branch = "v2",
+    config = function()
+      require("hop").setup({ key = "etovxqpdygfblzhckisuran" })
+    end,
+  })
 end)
