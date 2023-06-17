@@ -11,6 +11,7 @@ packer.startup(function(use)
 
   use("norcalli/nvim-colorizer.lua")
   use("marko-cerovac/material.nvim")
+  use({ "bluz71/vim-moonfly-colors", as = "moonfly" })
 
   use({
     "nvim-lualine/lualine.nvim",

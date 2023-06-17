@@ -1,21 +1,16 @@
 vim.opt.termguicolors = true
-vim.opt.background = 'dark'
+vim.opt.background = "dark"
 vim.opt.pumblend = 50
 vim.opt.winblend = 30
 
 vim.cmd([[let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"]])
 vim.cmd([[let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"]])
 
---vim.cmd([[highlight clear CursorLine]])
-
---vim.api.nvim_create_autocmd("ColorScheme", {
---  pattern = { "*" },
---  command = "hightlight LineNr ctermfg=12"
---})
+-- vim.cmd([[highlight clear CursorLine]])
 
 vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = { "*" },
-  command = "highlight Normal ctermbg=NONE guibg=NONE"
+  command = "highlight Normal ctermbg=NONE guibg=NONE",
 })
 vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = { "*" },
@@ -43,7 +38,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = { "*" },
-  command = "highlight CursorLine ctermbg=NONE guibg=NONE"
+  command = "highlight CursorLine ctermbg=NONE guibg=NONE",
 })
 vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = { "*" },
@@ -63,4 +58,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 vim.cmd([[syntax on]])
-vim.cmd([[colorscheme material]])
+vim.cmd([[colorscheme moonfly]])
