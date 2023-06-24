@@ -130,4 +130,5 @@ packer.startup(function(use)
       require("hop").setup({ key = "etovxqpdygfblzhckisuran" })
     end,
   })
+  use({ "folke/todo-comments.nvim", requires = { "nvim-lua/plenary.nvim" } })
 end)
