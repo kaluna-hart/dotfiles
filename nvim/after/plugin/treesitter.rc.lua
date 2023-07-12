@@ -1,13 +1,18 @@
 local status, ts = pcall(require, "nvim-treesitter.configs")
-if (not status) then return end
+if not status then
+  return
+end
 
-ts.setup {
-  ensure_installed = 'all',
+ts.setup({
+  ensure_installed = "all",
   highlight = {
-      enable = true,
-      disable = {},
+    enable = true,
+    disable = {},
   },
   autotag = {
     enable = true,
-  }
-}
+  },
+  matchup = {
+    enable = true,
+  },
+})

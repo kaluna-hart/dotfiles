@@ -126,22 +126,40 @@ packer.startup(function(use)
   })
   use({ "folke/todo-comments.nvim", requires = { "nvim-lua/plenary.nvim" } })
   use({
-  "github/copilot.vim",
-  config = function()
-    vim.g.copilot_no_tab_map = true
-
-    local keymap = vim.keymap.set
-    -- https://github.com/orgs/community/discussions/29817#discussioncomment-4217615
-    keymap(
-      "i",
-      "<C-c>",
-      'copilot#Accept("<CR>")',
-      { silent = true, expr = true, script = true, replace_keycodes = false }
-    )
-    keymap("i", "<C-j>", "<Plug>(copilot-next)")
-    keymap("i", "<C-k>", "<Plug>(copilot-previous)")
-    keymap("i", "<C-o>", "<Plug>(copilot-dismiss)")
-    keymap("i", "<C-s>", "<Plug>(copilot-suggest)")
-  end,
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end,
   })
+  use({
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function()
+      require("copilot_cmp").setup()
+    end,
+  })
+  -- use({
+  --   "github/copilot.vim",
+  --   config = function()
+  --     vim.g.copilot_no_tab_map = true
+  --
+  --     local keymap = vim.keymap.set
+  --     -- https://github.com/orgs/community/discussions/29817#discussioncomment-4217615
+  --     keymap(
+  --       "i",
+  --       "<C-o>",
+  --       'copilot#Accept("<CR>")',
+  --       { noremap = true, silent = true, expr = true, script = true, replace_keycodes = false }
+  --     )
+  --     keymap("i", "<C-j>", "<Plug>(copilot-next)")
+  --     keymap("i", "<C-k>", "<Plug>(copilot-previous)")
+  --     keymap("i", "<C-d>", "<Plug>(copilot-dismiss)")
+  --     keymap("i", "<C-s>", "<Plug>(copilot-suggest)")
+  --   end,
+  -- })
 end)
