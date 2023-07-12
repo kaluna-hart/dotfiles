@@ -25,9 +25,7 @@ packer.startup(function(use)
   use("williamboman/mason-lspconfig.nvim")
   use({
     "nvimdev/lspsaga.nvim",
-    opt = true,
-    branch = "main",
-    event = "LspAttach",
+    after = "nvim-lspconfig",
     config = function()
       require("lspsaga").setup({
         lightbulb = {
@@ -39,10 +37,6 @@ packer.startup(function(use)
         },
       })
     end,
-    requires = {
-      { "nvim-tree/nvim-web-devicons" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
   })
 
   use({
