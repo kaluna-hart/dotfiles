@@ -116,7 +116,6 @@ packer.startup(function(use)
       vim.cmd([[source ~/.config/nvim/dein/plugins/vim-styled-components.plug.vim]])
     end,
   })
-  use({ "chipsenkbeil/distant.nvim" })
   use({
     "phaazon/hop.nvim",
     branch = "v2",
