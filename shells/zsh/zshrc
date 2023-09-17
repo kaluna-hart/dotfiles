@@ -166,3 +166,4 @@ export WASMER_DIR="$HOME/.wasmer"
 eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.poetry/bin:$PATH"
+eval "$(rtx activate zsh)"
