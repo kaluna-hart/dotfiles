@@ -155,15 +155,14 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
 # for nix
 # [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && . $HOME/.nix-profile/etc/profile.d/nix.sh
 
+eval "$(rtx activate zsh)"
+eval "$(rtx hook-env)"
+
 # Wasmer
 export WASMER_DIR="$HOME/.wasmer"
 [ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
 
-# asdf
-. $(brew --prefix asdf)/libexec/asdf.sh
+export PATH="$HOME/.poetry/bin:$PATH"
 
 # for direnv
 eval "$(direnv hook zsh)"
-
-export PATH="$HOME/.poetry/bin:$PATH"
-eval "$(rtx activate zsh)"
