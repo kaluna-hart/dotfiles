@@ -1,4 +1,3 @@
-vim.opt.termguicolors = true
 vim.opt.background = "dark"
 vim.opt.pumblend = 50
 vim.opt.winblend = 30
