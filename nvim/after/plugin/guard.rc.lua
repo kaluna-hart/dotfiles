@@ -1,8 +1,9 @@
 local ft = require("guard.filetype")
-ft("lua"):fmt("stylua")
+
+ft("lua"):fmt("lsp"):append("stylua")
 ft("typescript,javascript,typescriptreact"):fmt("prettier")
-ft('python'):fmt('black')
-ft('rust'):fmt('rustfmt')
+ft("python"):fmt("black")
+ft("rust"):fmt("rustfmt")
 
 require("guard").setup({
   -- the only options for the setup function
