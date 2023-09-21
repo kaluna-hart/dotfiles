@@ -1,7 +1,4 @@
 local keymap = vim.keymap.set
-local opts = { noremap = true, silent = true }
-
-local keymap = vim.keymap.set
 -- Lsp finder find the symbol definition implement reference
 -- if there is no implement it will hide
 -- when you use action in finder like open vsplit then you can
@@ -43,10 +40,10 @@ keymap("n", "<leader>l]", "<cmd>Lspsaga diagnostic_jump_next<CR>")
 
 -- Diagnostic jump with filter like Only jump to error
 keymap("n", "[E", function()
-  require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+	require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
 end)
 keymap("n", "]E", function()
-  require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+	require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
 end)
 
 -- Toggle Outline
