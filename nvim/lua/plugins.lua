@@ -19,7 +19,13 @@ return {
   { "neovim/nvim-lspconfig" },
   { "MunifTanjim/prettier.nvim" },
   { "williamboman/mason.nvim" },
-  { "williamboman/mason-lspconfig.nvim" },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = {
+      { "williamboman/mason.nvim" },
+      { "neovim/nvim-lspconfig" },
+    },
+  },
   {
     "nvimdev/lspsaga.nvim",
     dependencies = { "nvim-lspconfig" },
@@ -53,7 +59,7 @@ return {
   { "nvim-tree/nvim-tree.lua" },
   { "numToStr/Comment.nvim" },
   { "windwp/nvim-ts-autotag" },
-  { "lukas-reineke/indent-blankline.nvim" },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
   {
     "akinsho/toggleterm.nvim",
     version = "*",
