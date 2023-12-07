@@ -3,7 +3,7 @@ local keymap = vim.keymap.set
 -- if there is no implement it will hide
 -- when you use action in finder like open vsplit then you can
 -- use <C-t> to jump back
-keymap("n", "<leader>llf", "<Cmd>Lspsaga lsp_finder<CR>")
+keymap("n", "<leader>lf", "<Cmd>Lspsaga finder tyd+ref+def<CR>")
 
 -- Code action
 keymap({ "n", "v" }, "<leader>lca", "<cmd>Lspsaga code_action<CR>")
@@ -18,10 +18,12 @@ keymap("n", "<leader>lrp", "<cmd>Lspsaga rename ++project<CR>")
 -- you can edit the definition file in this float window
 -- also support open/vsplit/etc operation check definition_action_keys
 -- support tagstack C-t jump back
-keymap("n", "<leader>lp", "<cmd>Lspsaga peek_definition<CR>")
+keymap("n", "<leader>lpd", "<cmd>Lspsaga peek_definition<CR>")
+keymap("n", "<leader>lpt", "<cmd>Lspsaga peek_type_definition<CR>")
 
 -- Go to Definition
 keymap("n", "<leader>lgd", "<cmd>Lspsaga goto_definition<CR>")
+keymap("n", "<leader>lgt", "<cmd>Lspsaga goto_type_definition<CR>")
 
 -- Show line diagnostics you can pass argument ++unfocus to make
 -- show_line_diagnostics float window unfocus
@@ -40,10 +42,10 @@ keymap("n", "<leader>l]", "<cmd>Lspsaga diagnostic_jump_next<CR>")
 
 -- Diagnostic jump with filter like Only jump to error
 keymap("n", "[E", function()
-	require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+  require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
 end)
 keymap("n", "]E", function()
-	require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+  require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
 end)
 
 -- Toggle Outline
@@ -58,7 +60,7 @@ keymap("n", "<leader>lh", "<cmd>Lspsaga hover_doc<CR>")
 -- notice if you use hover with ++keep you press this keymap it will
 -- close the hover window .if you want jump to hover window must use
 -- wincmd command <C-w>w
-keymap("n", "<leader>lh", "<cmd>Lspsaga hover_doc ++keep<CR>")
+keymap("n", "<leader>lH", "<cmd>Lspsaga hover_doc ++keep<CR>")
 -- keymap("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>")
 
 -- Callhierarchy

@@ -1,7 +1,10 @@
 local ft = require("guard.filetype")
 
-ft("lua"):fmt("lsp"):append("stylua")
-ft("typescript,javascript,typescriptreact"):fmt("dprint")
+ft("lua"):fmt("stylua"):lint("selene")
+ft("typescript,javascript,typescriptreact")
+	:fmt("prettier")
+	-- :append({ cmd = "rustywind", stdin = true, args = { "--stdin", "-" }, fname = true })
+	:lint("eslint_d")
 ft("python"):fmt("ruff"):lint("ruff")
 ft("rust"):fmt("rustfmt")
 ft("graphql"):fmt("prettier")
