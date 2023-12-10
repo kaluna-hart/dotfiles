@@ -176,14 +176,93 @@ return {
 			}
 		end,
 	},
-	-- {
-	-- 	"Exafunction/codeium.nvim",
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"hrsh7th/nvim-cmp",
-	-- 	},
-	-- 	config = function()
-	-- 		require("codeium").setup({})
-	-- 	end,
-	-- },
+	{
+		"sourcegraph/sg.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("sg").setup({
+				-- Pass your own custom attach function
+				--    If you do not pass your own attach function, then the following maps are provide:
+				--        - gd -> goto definition
+				--        - gr -> goto references
+				-- on_attach = your_custom_lsp_attach_function,
+			})
+			-- " Example mapping for doing searches from within neovim (may change) using telescope.
+			-- " (requires telescope.nvim to be installed)
+			local keymap = vim.keymap.set
+			keymap("n", "<leader>ct", "<Cmd>CodyToggle<CR>")
+		end,
+	},
+	{
+		"Exafunction/codeium.nvim",
+		event = "BufEnter",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			require("codeium").setup({})
+		end,
+	},
+	{
+		"kevinhwang91/nvim-hlslens",
+		config = function()
+			require("hlslens").setup({
+				calm_down = true,
+				nearest_only = true,
+				nearest_float_when = "always",
+
+				override_lens = function(render, posList, nearest, idx, relIdx)
+					local sfw = vim.v.searchforward == 1
+					local indicator, text, chunks
+					local absRelIdx = math.abs(relIdx)
+					if absRelIdx > 1 then
+						indicator = ("%d%s"):format(absRelIdx, sfw ~= (relIdx > 1) and "▲" or "▼")
+					elseif absRelIdx == 1 then
+						indicator = sfw ~= (relIdx == 1) and "▲" or "▼"
+					else
+						indicator = ""
+					end
+
+					local lnum, col = unpack(posList[idx])
+					if nearest then
+						local cnt = #posList
+						if indicator ~= "" then
+							text = ("[%s %d/%d]"):format(indicator, idx, cnt)
+						else
+							text = ("[%d/%d]"):format(idx, cnt)
+						end
+						chunks = { { " ", "Ignore" }, { text, "HlSearchLensNear" } }
+					else
+						text = ("[%s %d]"):format(indicator, idx)
+						chunks = { { " ", "Ignore" }, { text, "HlSearchLens" } }
+					end
+					render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
+				end,
+			})
+			vim.keymap.set({ "n", "x" }, "<Leader>L", function()
+				vim.schedule(function()
+					if require("hlslens").exportLastSearchToQuickfix() then
+						vim.cmd("cw")
+					end
+				end)
+				return ":noh<CR>"
+			end, { expr = true })
+		end,
+	},
+	{
+		"rcarriga/nvim-notify",
+		config = function()
+			vim.opt.termguicolors = true
+			local notify = require("notify")
+			notify.setup()
+			vim.notify = notify
+			local telescope = require("telescope")
+			telescope.load_extension("notify")
+
+			vim.keymap.set("n", "<leader>fn", function()
+				telescope.extensions.notify.notify()
+			end)
+		end,
+	},
 }
