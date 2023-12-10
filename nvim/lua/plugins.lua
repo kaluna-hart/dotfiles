@@ -255,14 +255,10 @@ return {
 		config = function()
 			vim.opt.termguicolors = true
 			local notify = require("notify")
-			notify.setup()
+			notify.setup({
+				background_colour = "#ffffff",
+			})
 			vim.notify = notify
-			local telescope = require("telescope")
-			telescope.load_extension("notify")
-
-			vim.keymap.set("n", "<leader>fn", function()
-				telescope.extensions.notify.notify()
-			end)
 		end,
 	},
 }
