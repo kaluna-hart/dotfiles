@@ -38,6 +38,10 @@ return {
 					sign_priority = 40,
 					virtual_text = true,
 				},
+				code_action = {
+					show_server_name = true,
+					extend_gitsigns = true,
+				},
 			})
 		end,
 	},
@@ -260,6 +264,21 @@ return {
 				max_width = 60,
 			})
 			vim.notify = notify
+		end,
+	},
+	{
+		"kdheepak/lazygit.nvim",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+			"nvim-lua/plenary.nvim",
+		},
+		config = function()
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "*",
+				callback = function()
+					require("lazygit.utils").project_root_dir()
+				end,
+			})
 		end,
 	},
 }

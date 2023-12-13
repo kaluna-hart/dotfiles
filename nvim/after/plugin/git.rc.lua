@@ -22,6 +22,6 @@ require('git').setup({
     revert_file = "<Leader>gR",
   },
   -- Default target branch when create a pull request
-  target_branch = "master",
+  target_branch = "develop",
 })
 
