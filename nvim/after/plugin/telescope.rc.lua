@@ -3,29 +3,29 @@
 local telescope = require("telescope")
 
 telescope.setup({
-	extensions = {
-		file_browser = {
-			theme = "ivy",
-			-- disables netrw and use telescope-file-browser in its place
-			hijack_netrw = true,
-			mappings = {
-				["i"] = {
-					-- your custom insert mode mappings
-				},
-				["n"] = {
-					-- your custom normal mode mappings
-				},
-			},
-		},
-		aerial = {
-			-- Display symbols as <root>.<parent>.<symbol>
-			show_nesting = {
-				["_"] = false, -- This key will be the default
-				json = true, -- You can set the option for specific filetypes
-				yaml = true,
-			},
-		},
-	},
+  extensions = {
+    file_browser = {
+      theme = "ivy",
+      -- disables netrw and use telescope-file-browser in its place
+      hijack_netrw = true,
+      mappings = {
+        ["i"] = {
+          -- your custom insert mode mappings
+        },
+        ["n"] = {
+          -- your custom normal mode mappings
+        },
+      },
+    },
+    aerial = {
+      -- Display symbols as <root>.<parent>.<symbol>
+      show_nesting = {
+        ["_"] = false, -- This key will be the default
+        json = true, -- You can set the option for specific filetypes
+        yaml = true,
+      },
+    },
+  },
 })
 -- To get telescope-file-browser loaded and working with telescope,
 -- you need to call load_extension, somewhere after setup function:
@@ -33,6 +33,7 @@ telescope.load_extension("file_browser")
 telescope.load_extension("aerial")
 telescope.load_extension("notify")
 telescope.load_extension("lazygit")
+-- telescope.load_extension('dap')
 
 local keymap = vim.keymap
 
@@ -46,6 +47,11 @@ keymap.set("n", "[telescope]h", "<cmd>Telescope oldfiles<cr>")
 keymap.set("n", "[telescope]r", ":Telescope file_browser<cr>")
 keymap.set("n", "[telescope]a", ":Telescope aerial<cr>")
 keymap.set("n", "[telescope]n", function()
-	telescope.extensions.notify.notify()
+  telescope.extensions.notify.notify()
 end)
 keymap.set("n", "[telescope]g", ":Telescope lazygit<cr>")
+keymap.set("n", "[telescope]dc", ":Telescope dap commands<cr>")
+keymap.set("n", "[telescope]do", ":Telescope dap configurations<cr>")
+keymap.set("n", "[telescope]dl", ":Telescope dap list_breakpoints<cr>")
+keymap.set("n", "[telescope]dv", ":Telescope dap variables<cr>")
+keymap.set("n", "[telescope]df", ":Telescope dap frames<cr>")
