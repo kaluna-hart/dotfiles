@@ -22,7 +22,10 @@ return {
   },
   {
     "nvimdev/lspsaga.nvim",
-    dependencies = { "nvim-lspconfig" },
+    dependencies = { "nvim-lspconfig",
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    },
     config = function()
       require("lspsaga").setup({
         lightbulb = {
@@ -241,7 +244,8 @@ return {
       local notify = require("notify")
       notify.setup({
         background_colour = "#ffffff",
-        max_width = 60,
+        minimum_width = 40,
+        timeout = 750,
       })
       vim.notify = notify
     end,
@@ -270,19 +274,6 @@ return {
       vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
-
-      -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-      vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-      vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
-      vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
-      vim.keymap.set("n", "zm", require("ufo").closeFoldsWith) -- closeAllFolds == closeFoldsWith(0)
-      vim.keymap.set("n", "zK", function()
-        local winid = require("ufo").peekFoldedLinesUnderCursor()
-        if not winid then
-          -- choose one of coc.nvim and nvim lsp
-          vim.lsp.buf.hover()
-        end
-      end)
 
       local function nN(char)
         local ok, winid = hlslens.nNPeekWithUFO(char)

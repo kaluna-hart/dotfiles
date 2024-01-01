@@ -32,7 +32,7 @@ local mappings_n = {
       if not winid then
         vim.lsp.buf.hover()
       end
-    end }
+    end, "ufo peek folded lines under cursor" }
   }
 }
 local opts_n_leader = {
@@ -179,5 +179,9 @@ local mappings_t = {
   ["<c-d>"] = { "<cmd>Lspsaga term_toggle<cr>", "lspsaga term toggle" },
 }
 
-which_key.setup(setup)
-which_key.register(mappings, opts)
+which_key.setup()
+which_key.register(mappings_n, opts_n)
+which_key.register(mappings_t, opts_t)
+which_key.register(mappings_n_leader, opts_n_leader)
+which_key.register(mappings_v_leader, opts_v_leader)
+which_key.register(mappings_x_leader, opts_x_leader)

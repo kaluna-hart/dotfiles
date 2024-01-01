@@ -37,17 +37,17 @@ vim.diagnostic.config({
 })
 
 -- Reference highlight
-vim.cmd([[
-set updatetime=500
-highlight LspReferenceText  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
-highlight LspReferenceRead  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
-highlight LspReferenceWrite cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
-augroup lsp_document_highlight
-  autocmd!
-  autocmd CursorHold,CursorHoldI * silent! lua vim.lsp.buf.document_highlight()
-  autocmd CursorMoved,CursorMovedI * silent! lua vim.lsp.buf.clear_references()
-augroup END
-]])
+-- vim.cmd([[
+-- set updatetime=500
+-- highlight LspReferenceText  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
+-- highlight LspReferenceRead  cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
+-- highlight LspReferenceWrite cterm=underline ctermfg=1 ctermbg=8 gui=underline guifg=#A00000 guibg=#104040
+-- augroup lsp_document_highlight
+--   autocmd!
+--   autocmd CursorHold,CursorHoldI * silent! lua vim.lsp.buf.document_highlight()
+--   autocmd CursorMoved,CursorMovedI * silent! lua vim.lsp.buf.clear_references()
+-- augroup END
+-- ]])
 
-vim.o.updatetime = 250
+-- vim.o.updatetime = 250
 -- vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
