@@ -83,8 +83,8 @@ alias -g G='| grep'
 alias -g zrc='~/.zshrc'
 
 # rust cui
-alias ls='exa --icons'
-alias ll='exa -ahl --git --icons'
+alias ls='eza --icons'
+alias ll='eza -ahl --git --icons'
 
 # git関連お好みで
 alias g=git
@@ -155,8 +155,9 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan"
 # for nix
 # [ -f $HOME/.nix-profile/etc/profile.d/nix.sh ] && . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-eval "$(rtx activate zsh)"
-eval "$(rtx hook-env)"
+eval "$(mise activate zsh)"
+eval "$(mise hook-env -s zsh)"
+eval "$(mise completion zsh)"
 
 # Wasmer
 export WASMER_DIR="$HOME/.wasmer"
@@ -170,3 +171,6 @@ eval "$(direnv hook zsh)"
 # for modular
 export MODULAR_HOME="$HOME/.modular"
 export PATH="$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH"
+
+# for kompose
+[ -f /opt/homebrew/bin/kompose ] && source <(kompose completion zsh)

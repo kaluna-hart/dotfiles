@@ -1,10 +1,10 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == ${HOME}/.local/share/rtx/installs/fzf/0.35.1/bin* ]]; then
+if [[ ! "$PATH" == ${HOME}/.local/share/mise/installs/fzf/0.45.0/bin* ]]; then
   # Key bindings
-  source "${HOME}/.local/share/rtx/installs/fzf/0.35.1/shell/key-bindings.zsh"
+  source "${HOME}/.local/share/mise/installs/fzf/0.45.0/shell/key-bindings.zsh"
 # Auto-completion
-  source "${HOME}/.local/share/rtx/installs/fzf/0.35.1/shell/completion.zsh"
+  source "${HOME}/.local/share/mise/installs/fzf/0.45.0/shell/completion.zsh"
 fi
 
 export FZF_CTRL_T_COMMAND="rg --files --hidden --follow --glob '!.git/*' 2>/dev/null"

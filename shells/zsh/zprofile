@@ -122,3 +122,8 @@ else
   fi
     print "already loaded .zshenv"
 fi
+
+# for mise
+if [ -d /opt/homebrew/bin/mise ]; then
+  export PATH="$HOME/.local/share/mise/shims:$PATH"
+fi
