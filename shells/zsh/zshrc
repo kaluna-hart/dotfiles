@@ -83,8 +83,8 @@ alias -g G='| grep'
 alias -g zrc='~/.zshrc'
 
 # rust cui
-alias ls='eza --icons'
-alias ll='eza -ahl --git --icons'
+alias ls='eza --icons=auto'
+alias ll='eza -ahl --git --icons=auto'
 
 # git関連お好みで
 alias g=git
