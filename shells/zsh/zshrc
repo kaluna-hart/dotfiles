@@ -174,3 +174,9 @@ export PATH="$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH"
 
 # for kompose
 [ -f /opt/homebrew/bin/kompose ] && source <(kompose completion zsh)
+
+# for zoxide
+# zoxideがインストールされていたら、zoxideの初期化を行う
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
