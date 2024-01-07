@@ -245,6 +245,7 @@ return {
       notify.setup({
         background_colour = "#ffffff",
         minimum_width = 40,
+        max_width = 60,
         timeout = 750,
       })
       vim.notify = notify
