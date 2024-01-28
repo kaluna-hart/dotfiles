@@ -92,11 +92,64 @@ return {
 	"rafamadriz/friendly-snippets",
 	"j-hui/fidget.nvim",
 	{
-		"rust-lang/rust.vim",
+		"mrcjkb/rustaceanvim",
+		version = "^4", -- Recommended
 		ft = { "rust" },
+	},
+	{
+		"saecki/crates.nvim",
+		event = { "BufRead Cargo.toml" },
 		config = function()
-			vim.g.rustfmt_autosave = 1
+			require("crates").setup()
 		end,
+	},
+	{
+		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"antoinemadec/FixCursorHold.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-rust"),
+					require("neotest-plenary"),
+					require("neotest-vim-test")({ ignore_filetypes = { "python", "vim", "lua", "rust" } }),
+				},
+			})
+		end,
+	},
+	{ "nvim-neotest/neotest-python", dependencies = { "nvim-neotest/neotest" } },
+	{ "rouge8/neotest-rust", dependencies = { "nvim-neotest/neotest" } },
+	{ "nvim-neotest/neotest-plenary", dependencies = { "nvim-neotest/neotest" } },
+	{ "nvim-neotest/neotest-vim-test", dependencies = { "nvim-neotest/neotest" } },
+	{ "vim-test/vim-test", dependencies = { "nvim-neotest/neotest-vim-test" } },
+	{
+		"folke/neodev.nvim",
+		opts = {
+			library = {
+				enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
+				-- these settings will be used for your Neovim config directory
+				runtime = true, -- runtime path
+				types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
+				plugins = true, -- installed opt or start plugins in packpath
+				-- you can also specify the list of plugins to make available as a workspace library
+				-- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
+			},
+			setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
+			-- for your Neovim config directory, the config.library settings will be used as is
+			-- for plugin directories (root_dirs having a /lua directory), config.library.plugins will be disabled
+			-- for any other directory, config.library.enabled will be set to false
+			override = function(root_dir, options) end,
+			-- With lspconfig, Neodev will automatically setup your lua-language-server
+			-- If you disable this, then you have to set {before_init=require("neodev.lsp").before_init}
+			-- in your lsp start options
+			lspconfig = true,
+			-- much faster, but needs a recent built of lua-language-server
+			-- needs lua-language-server >= 3.6.0
+			pathStrict = true,
+		},
 	},
 	{
 		"styled-components/vim-styled-components",
@@ -312,7 +365,7 @@ return {
 				-- Customize or remove this keymap to your liking
 				"<leader>cf",
 				function()
-					require("conform").format({ async = true, lsp_fallback = false })
+					require("conform").format({ async = true, lsp_fallback = true })
 				end,
 				mode = "",
 				desc = "Format buffer",
@@ -328,6 +381,7 @@ return {
 				javascriptreact = { { "prettierd", "prettier" } },
 				typescript = { { "prettierd", "prettier" } },
 				typescriptreact = { { "prettierd", "prettier" } },
+				rust = { "rustfmt" },
 			},
 			-- Set up format-on-save
 			-- format_on_save = { timeout_ms = 500, lsp_fallback = true },
@@ -360,6 +414,68 @@ return {
 			vim.o.timeout = true
 			vim.o.timeoutlen = 300
 		end,
+	},
+	{
+		"folke/trouble.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons", "nvim-telescope/telescope.nvim" },
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+			position = "bottom", -- position of the list can be: bottom, top, left, right
+			height = 10, -- height of the trouble list when position is top or bottom
+			width = 50, -- width of the list when position is left or right
+			icons = true, -- use devicons for filenames
+			mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+			severity = nil, -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
+			fold_open = "", -- icon used for open folds
+			fold_closed = "", -- icon used for closed folds
+			group = true, -- group results by file
+			padding = true, -- add an extra new line on top of the list
+			cycle_results = true, -- cycle item list when reaching beginning or end of list
+			action_keys = { -- key mappings for actions in the trouble list
+				-- map to {} to remove a mapping, for example:
+				-- close = {},
+				close = "q", -- close the list
+				cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+				refresh = "r", -- manually refresh
+				jump = { "<cr>", "<tab>", "<2-leftmouse>" }, -- jump to the diagnostic or open / close folds
+				open_split = { "<c-x>" }, -- open buffer in new split
+				open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+				open_tab = { "<c-t>" }, -- open buffer in new tab
+				jump_close = { "o" }, -- jump to the diagnostic and close the list
+				toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+				switch_severity = "s", -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
+				toggle_preview = "P", -- toggle auto_preview
+				hover = "K", -- opens a small popup with the full multiline message
+				preview = "p", -- preview the diagnostic location
+				open_code_href = "c", -- if present, open a URI with more information about the diagnostic error
+				close_folds = { "zM", "zm" }, -- close all folds
+				open_folds = { "zR", "zr" }, -- open all folds
+				toggle_fold = { "zA", "za" }, -- toggle fold of current file
+				previous = "k", -- previous item
+				next = "j", -- next item
+				help = "?", -- help menu
+			},
+			multiline = true, -- render multi-line messages
+			indent_lines = true, -- add an indent guide below the fold icons
+			win_config = { border = "single" }, -- window configuration for floating windows. See |nvim_open_win()|.
+			auto_open = false, -- automatically open the list when you have diagnostics
+			auto_close = false, -- automatically close the list when you have no diagnostics
+			auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+			auto_fold = false, -- automatically fold a file trouble list at creation
+			auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
+			include_declaration = { "lsp_references", "lsp_implementations", "lsp_definitions" }, -- for the given modes, include the declaration of the current symbol in the results
+			signs = {
+				-- icons / text used for a diagnostic
+				error = "",
+				warning = "",
+				hint = "",
+				information = "",
+				other = "",
+			},
+			use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+		},
 	},
 
 	-- for dap
