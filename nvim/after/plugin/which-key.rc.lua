@@ -66,7 +66,11 @@ local mappings_n_leader = {
 		r = { "<cmd>GitRevert<cr>", "git revert" },
 		R = { "<cmd>GitRevertFile<cr>", "git revert file" },
 	},
-	["ef"] = { "<cmd>NvimTreeToggle<cr>", "nvim tree" },
+	["ef"] = {
+		name = "nvim tree",
+		"<cmd>NvimTreeToggle<cr>",
+		"nvim tree",
+	},
 	l = {
 		name = "lsp",
 		D = { vim.lsp.buf.declaration, "lsp declaration" },
@@ -114,6 +118,7 @@ local mappings_n_leader = {
 		H = { "<cmd>Lspsaga hover_doc ++keep<cr>", "lspsaga hover doc ++keep" },
 	},
 	f = {
+		name = "telescope",
 		f = { "<cmd>Telescope find_files hidden=true<cr>", "telescope find files hidden=true" },
 		l = { "<cmd>Telescope live_grep<cr>", "telescope live grep" },
 		b = { "<cmd>Telescope buffers<cr>", "telescope buffers" },
@@ -139,6 +144,7 @@ local mappings_n_leader = {
 		t = { "<cmd>TodoTelescope<cr>", "todo telescope" },
 	},
 	c = {
+		name = "cody",
 		t = { "<cmd>CodyToggle<cr>", "cody toggle" },
 	},
 	L = {

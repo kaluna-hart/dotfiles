@@ -1,7 +1,6 @@
 -- You don't need to set any of these options.
 -- IMPORTANT!: this is only a showcase of how you can set default options!
 local telescope = require("telescope")
-local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
 
 telescope.setup({
@@ -38,24 +37,3 @@ telescope.load_extension("aerial")
 telescope.load_extension("notify")
 telescope.load_extension("lazygit")
 -- telescope.load_extension('dap')
-
-local keymap = vim.keymap
-
-keymap.set("n", "[telescope]", "<nop>")
-keymap.set("n", "<leader>f", "[telescope]", { remap = true })
-keymap.set("n", "[telescope]f", "<cmd>Telescope find_files hidden=true<cr>")
-keymap.set("n", "[telescope]l", "<cmd>Telescope live_grep<cr>")
-keymap.set("n", "[telescope]b", "<cmd>Telescope buffers<cr>")
-keymap.set("n", "[telescope]h", "<cmd>Telescope oldfiles<cr>")
--- keymap.set("n", "[telescope]g", "<cmd>Telescope git_branches<cr>")
-keymap.set("n", "[telescope]r", ":Telescope file_browser<cr>")
-keymap.set("n", "[telescope]a", ":Telescope aerial<cr>")
-keymap.set("n", "[telescope]n", function()
-	telescope.extensions.notify.notify()
-end)
-keymap.set("n", "[telescope]g", ":Telescope lazygit<cr>")
-keymap.set("n", "[telescope]dc", ":Telescope dap commands<cr>")
-keymap.set("n", "[telescope]do", ":Telescope dap configurations<cr>")
-keymap.set("n", "[telescope]dl", ":Telescope dap list_breakpoints<cr>")
-keymap.set("n", "[telescope]dv", ":Telescope dap variables<cr>")
-keymap.set("n", "[telescope]df", ":Telescope dap frames<cr>")
