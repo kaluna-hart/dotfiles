@@ -14,6 +14,9 @@ local has_words_before = function()
 end
 
 cmp.setup({
+	enabled = function()
+		return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+	end,
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
@@ -82,6 +85,12 @@ cmp.setup.filetype("gitcommit", {
 	}),
 })
 
+cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+	sources = {
+		{ name = "dap" },
+	},
+})
+
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline("/", {
 	mapping = cmp.mapping.preset.cmdline(),
@@ -99,10 +108,3 @@ cmp.setup.cmdline(":", {
 		{ name = "path" },
 	}),
 })
-
--- Setup lspconfig.
--- local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
--- require("lspconfig")["<YOUR_LSP_SERVER>"].setup({
--- 	capabilities = capabilities,
--- })

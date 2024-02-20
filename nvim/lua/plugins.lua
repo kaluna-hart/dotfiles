@@ -53,6 +53,13 @@ return {
 	{ "nvim-telescope/telescope.nvim" },
 	{ "nvim-telescope/telescope-file-browser.nvim" },
 	{
+		"nvim-telescope/telescope-dap.nvim",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			"nvim-telescope/telescope.nvim",
+		},
+	},
+	{
 		"AckslD/nvim-neoclip.lua",
 		dependencies = { "tami5/sqlite.lua" },
 	},
@@ -86,6 +93,7 @@ return {
 	{ "hrsh7th/cmp-buffer" },
 	{ "hrsh7th/cmp-path" },
 	{ "hrsh7th/cmp-cmdline" },
+	{ "rcarriga/cmp-dap" },
 	{ "L3MON4D3/LuaSnip" },
 	{ "saadparwaiz1/cmp_luasnip" },
 	{ "ray-x/cmp-treesitter" },
@@ -400,6 +408,15 @@ return {
 	{
 		"mfussenegger/nvim-lint",
 		config = function()
+			require("lint").linters_by_ft = {
+				markdown = { "vale" },
+				python = { "ruff" },
+				javascript = { "eslint" },
+				javascriptreact = { "eslint" },
+				typescript = { "eslint" },
+				typescriptreact = { "eslint" },
+				lua = { "luacheck" },
+			}
 			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 				callback = function()
 					require("lint").try_lint()
@@ -477,55 +494,123 @@ return {
 			use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
 		},
 	},
-
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- add any options here
+		},
+		dependencies = {
+			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+			"MunifTanjim/nui.nvim",
+			-- OPTIONAL:
+			--   `nvim-notify` is only needed, if you want to use the notification view.
+			--   If not available, we use `mini` as the fallback
+			"rcarriga/nvim-notify",
+		},
+		opts = {
+			lsp = {
+				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+				},
+			},
+			-- you can enable a preset for easier configuration
+			presets = {
+				bottom_search = true, -- use a classic bottom cmdline for search
+				command_palette = true, -- position the cmdline and popupmenu together
+				long_message_to_split = true, -- long messages will be sent to a split
+				inc_rename = false, -- enables an input dialog for inc-rename.nvim
+				lsp_doc_border = false, -- add a border to hover docs and signature help
+			},
+		},
+	},
 	-- for dap
-	-- {
-	--   "mfussenegger/nvim-dap",
-	--   dependencies = {
-	--     "mfussenegger/nvim-dap",
-	--   },
-	--   config = function()
-	--     -- vim.keymap.set(n, '<leader>dk', function() require('dap').continue() end)
-	--     -- vim.keymap.set(n, '<leader>dl', function() require('dap').run_last() end)
-	--     -- vim.keymap.set(n, '<leader>b', function() require('dap').toggle_breakpoint() end)
-	--   end
-	-- },
-	-- {
-	--   "jay-babu/mason-nvim-dap.nvim",
-	--   config = function()
-	--     local SETTINGS = {
-	--       -- A list of adapters to install if they're not already installed.
-	--       -- This setting has no relation with the `automatic_installation` setting.
-	--       ensure_installed = {},
-	--
-	--       -- NOTE: this is left here for future porting in case needed
-	--       -- Whether adapters that are set up (via dap) should be automatically installed if they're not already installed.
-	--       -- This setting has no relation with the `ensure_installed` setting.
-	--       -- Can either be:
-	--       --   - false: Daps are not automatically installed.
-	--       --   - true: All adapters set up via dap are automatically installed.
-	--       --   - { exclude: string[] }: All adapters set up via mason-nvim-dap, except the ones provided in the list, are automatically installed.
-	--       --       Example: automatic_installation = { exclude = { "python", "delve" } }
-	--       automatic_installation = false,
-	--
-	--       -- See below on usage
-	--       handlers = nil,
-	--     }
-	--     require("mason-nvim-dap").setup(SETTINGS)
-	--   end
-	-- },
-	-- {
-	--   "rcarriga/nvim-dap-ui",
-	--   dependencies = { "mfussenegger/nvim-dap" },
-	--   {
-	--     "folke/neodev.nvim",
-	--     opts = {},
-	--     config = function()
-	--       require("neodev").setup({
-	--         library = { plugins = { "nvim-dap-ui" }, types = true },
-	--       })
-	--     end
-	--   }
-	-- }
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"theHamsta/nvim-dap-virtual-text",
+		},
+		config = function()
+			require("nvim-dap-virtual-text").setup()
+			local dap = require("dap")
+			dap.configurations.rust = {
+				{
+					name = "Launch file",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+				},
+			}
+		end,
+	},
+	{
+		"mfussenegger/nvim-dap-python",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			config = function()
+				local venv = os.getenv("VIRTUAL_ENV")
+				local command = string.format("%s/bin/python", venv)
+				require("dap-python").setup(command)
+			end,
+		},
+	},
+	{
+		"jay-babu/mason-nvim-dap.nvim",
+		config = function()
+			local SETTINGS = {
+				-- A list of adapters to install if they're not already installed.
+				-- This setting has no relation with the `automatic_installation` setting.
+				ensure_installed = {},
+
+				-- NOTE: this is left here for future porting in case needed
+				-- Whether adapters that are set up (via dap) should be automatically installed if they're not already installed.
+				-- This setting has no relation with the `ensure_installed` setting.
+				-- Can either be:
+				--   - false: Daps are not automatically installed.
+				--   - true: All adapters set up via dap are automatically installed.
+				--   - { exclude: string[] }: All adapters set up via mason-nvim-dap, except the ones provided in the list, are automatically installed.
+				--       Example: automatic_installation = { exclude = { "python", "delve" } }
+				automatic_installation = false,
+
+				-- See below on usage
+				handlers = {
+					function(config)
+						require("mason-nvim-dap").default_setup(config)
+					end,
+				},
+			}
+			require("mason-nvim-dap").setup(SETTINGS)
+		end,
+		{ "williamboman/mason.nvim" },
+	},
+	{
+		"rcarriga/nvim-dap-ui",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("dapui").setup()
+		end,
+	},
+	{
+		"LiadOz/nvim-dap-repl-highlights",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("nvim-dap-repl-highlights").setup()
+		end,
+	},
+	{
+		"mxsdev/nvim-dap-vscode-js",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			"microsoft/vscode-js-debug",
+		},
+	},
 	-- dap end
 }

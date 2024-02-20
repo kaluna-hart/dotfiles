@@ -12,6 +12,30 @@ local opts_n = {
 	nowait = true, -- use `nowait` when creating keymaps
 }
 local mappings_n = {
+	["<F5>"] = {
+		function()
+			require("dap").continue()
+		end,
+		"dap continue",
+	},
+	["<F10>"] = {
+		function()
+			require("dap").step_over()
+		end,
+		"dap step over",
+	},
+	["<F11>"] = {
+		function()
+			require("dap").step_into()
+		end,
+		"dap step info",
+	},
+	["<F12>"] = {
+		function()
+			require("dap").step_out()
+		end,
+		"dap step out",
+	},
 	["m"] = { "<cmd>AerialToggle! float<CR>", "aerial" },
 	["["] = {
 		E = {
@@ -197,9 +221,86 @@ local mappings_n_leader = {
 			"toggle lsp_references",
 		},
 	},
+	d = {
+		name = "nvim-dap",
+		b = {
+			function()
+				require("dap").toggle_breakpoint()
+			end,
+			"dap toggle breakpoint",
+		},
+		B = {
+			function()
+				require("dap").set_breakpoint()
+			end,
+			"dap set breakpoint",
+		},
+		lp = {
+			function()
+				require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
+			end,
+			"dap log point message",
+		},
+		ro = {
+			function()
+				require("dap").repl.open()
+			end,
+			"dap repl open",
+		},
+		rl = {
+			function()
+				require("dap").run_last()
+			end,
+			"dap run last",
+		},
+		h = {
+			function()
+				require("dap.ui.widgets").hover()
+			end,
+			"dap ui widgets hover",
+		},
+		p = {
+			function()
+				require("dap.ui.widgets").preview()
+			end,
+			"dap ui widgets preview",
+		},
+		t = {
+			function()
+				require("dapui").toggle()
+			end,
+			"dapui toggle",
+		},
+		fe = {
+			function()
+				require("dapui").float_element()
+			end,
+			"dapui floating elements",
+		},
+		fc = {
+			function()
+				local widgets = require("dap.ui.widgets")
+				widgets.centered_float(widgets.frames)
+			end,
+			"dap widgets centered float frames",
+		},
+		s = {
+			function()
+				local widgets = require("dap.ui.widgets")
+				widgets.centered_float(widgets.scopes)
+			end,
+			"dap ui widgets centered float scopes",
+		},
+		e = {
+			function()
+				require("dapui").eval()
+			end,
+			"dapui eval",
+		},
+	},
 }
 local opts_v_leader = {
-	mode = "n", -- NORMAL mode
+	mode = "v", -- NORMAL mode
 	prefix = "<leader>",
 	buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
 	silent = true, -- use `silent` when creating keymaps
@@ -211,6 +312,25 @@ local mappings_v_leader = {
 		name = "lsp",
 		c = {
 			a = { "<cmd>Lspsaga code_action<cr>", "lspsaga code action" },
+		},
+	},
+	d = {
+		name = "nvim-dap",
+		e = {
+			'<cmd>lua require("dapui").eval()<cr>',
+			"dapui eval",
+		},
+		h = {
+			function()
+				require("dap.ui.widgets").hover()
+			end,
+			"dap ui widgets hover",
+		},
+		p = {
+			function()
+				require("dap.ui.widgets").preview()
+			end,
+			"dap ui widgets preview",
 		},
 	},
 }
