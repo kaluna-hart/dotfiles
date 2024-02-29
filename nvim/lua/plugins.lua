@@ -66,7 +66,12 @@ return {
 	{ "onsails/lspkind.nvim" },
 	{ "nvim-tree/nvim-tree.lua" },
 	{ "numToStr/Comment.nvim" },
-	{ "windwp/nvim-ts-autotag" },
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
+	},
 	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
 	{
 		"akinsho/toggleterm.nvim",
@@ -384,12 +389,13 @@ return {
 			-- Define your formatters
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "ruff", "isort", "black" },
+				python = { { "ruff_format", "isort", "black" } },
 				javascript = { { "prettierd", "prettier" } },
 				javascriptreact = { { "prettierd", "prettier" } },
 				typescript = { { "prettierd", "prettier" } },
 				typescriptreact = { { "prettierd", "prettier" } },
 				rust = { "rustfmt" },
+				markdown = { { "mdformat", "markdownlint" } },
 			},
 			-- Set up format-on-save
 			-- format_on_save = { timeout_ms = 500, lsp_fallback = true },
@@ -408,8 +414,9 @@ return {
 	{
 		"mfussenegger/nvim-lint",
 		config = function()
-			require("lint").linters_by_ft = {
-				markdown = { "vale" },
+			local lint = require("lint")
+			lint.linters_by_ft = {
+				-- markdown = { "vale" },
 				python = { "ruff" },
 				javascript = { "eslint" },
 				javascriptreact = { "eslint" },
@@ -417,8 +424,8 @@ return {
 				typescriptreact = { "eslint" },
 				lua = { "luacheck" },
 			}
-			vim.api.nvim_create_autocmd({ "TextChanged" }, {
-				-- vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+			vim.api.nvim_create_autocmd({ "TextChanged", "BufWritePost", "BufReadPost", "InsertLeave" }, {
+				group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
 				callback = function()
 					require("lint").try_lint()
 				end,
@@ -538,6 +545,26 @@ return {
 		config = function()
 			require("nvim-dap-virtual-text").setup()
 			local dap = require("dap")
+			dap.adapters["pwa-node"] = {
+				type = "server",
+				host = "127.0.0.1",
+				port = 8123,
+				executable = {
+					command = "js-debug-adapter",
+				},
+			}
+			for _, language in ipairs({ "typescript", "javascript" }) do
+				dap.configurations[language] = {
+					{
+						type = "pwa-node",
+						request = "launch",
+						name = "Launch file",
+						program = "${file}",
+						cwd = "${workspaceFolder}",
+						runtimeExecutable = "node",
+					},
+				}
+			end
 			dap.configurations.rust = {
 				{
 					name = "Launch file",
