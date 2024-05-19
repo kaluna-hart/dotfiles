@@ -72,14 +72,20 @@ return {
 			require("nvim-ts-autotag").setup()
 		end,
 	},
-	{ "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		opts = {},
+		dependencies = { "HiPhish/rainbow-delimiters.nvim" },
+	},
 	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 	},
 	{
 		"akinsho/bufferline.nvim",
-		version = "*",
+		-- version = "*",
+		branch = "main",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{ "xiyaowong/nvim-transparent" },
@@ -505,9 +511,6 @@ return {
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
-		opts = {
-			-- add any options here
-		},
 		dependencies = {
 			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 			"MunifTanjim/nui.nvim",
@@ -541,7 +544,7 @@ return {
 		dependencies = {
 			"rcarriga/nvim-dap-ui",
 			"theHamsta/nvim-dap-virtual-text",
-      "nvim-neotest/nvim-nio",
+			"nvim-neotest/nvim-nio",
 		},
 		config = function()
 			require("nvim-dap-virtual-text").setup()
