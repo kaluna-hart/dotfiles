@@ -1,7 +1,12 @@
 -- You don't need to set any of these options.
 -- IMPORTANT!: this is only a showcase of how you can set default options!
 local telescope = require("telescope")
-local trouble = require("trouble.providers.telescope")
+
+local actions = require("telescope.actions")
+local open_with_trouble = require("trouble.sources.telescope").open
+
+-- Use this to add more results without clearing the trouble list
+local add_to_trouble = require("trouble.sources.telescope").add
 
 telescope.setup({
 	extensions = {
@@ -12,11 +17,11 @@ telescope.setup({
 			mappings = {
 				["i"] = {
 					-- your custom insert mode mappings
-					["<c-t>"] = trouble.open_with_trouble,
+					["<c-t>"] = open_with_trouble,
 				},
 				["n"] = {
 					-- your custom normal mode mappings
-					["<c-t>"] = trouble.open_with_trouble,
+					["<c-t>"] = open_with_trouble,
 				},
 			},
 		},
