@@ -68,9 +68,6 @@ return {
 	{ "numToStr/Comment.nvim" },
 	{
 		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
 	},
 	{
 		"lukas-reineke/indent-blankline.nvim",
