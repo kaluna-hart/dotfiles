@@ -1,0 +1,13 @@
+theme = catppuccin-mocha
+window-padding-x = 8
+window-padding-y = 8
+window-padding-balance = true
+window-theme = ghostty
+background-opacity = 0.85
+background-blur-radius = 20
+macos-titlebar-style = transparent
+font-family = "Moralerspace Radon HWNF"
+macos-titlebar-style = tabs
+
+window-width = 1000
+window-height = 1000
