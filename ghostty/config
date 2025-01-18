@@ -5,9 +5,11 @@ window-padding-balance = true
 window-theme = ghostty
 background-opacity = 0.85
 background-blur-radius = 20
-macos-titlebar-style = transparent
 font-family = "Moralerspace Radon HWNF"
-macos-titlebar-style = tabs
+macos-titlebar-style = hidden
 
 window-width = 1000
 window-height = 1000
+
+cursor-style = bar
+shell-integration-features = no-cursor
