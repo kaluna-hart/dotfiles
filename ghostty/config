@@ -6,10 +6,9 @@ window-theme = ghostty
 background-opacity = 0.85
 background-blur-radius = 20
 font-family = "Moralerspace Radon HWNF"
+window-title-font-family = "Moralerspace Radon HWNF"
 macos-titlebar-style = hidden
-
 window-width = 1000
 window-height = 1000
-
 cursor-style = bar
 shell-integration-features = no-cursor
