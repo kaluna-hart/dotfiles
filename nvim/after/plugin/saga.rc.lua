@@ -1,4 +1,7 @@
 local keymap = vim.keymap.set
+vim.diagnostic.config({
+	severity_sort = true,
+})
 -- Lsp finder find the symbol definition implement reference
 -- if there is no implement it will hide
 -- when you use action in finder like open vsplit then you can
@@ -35,6 +38,9 @@ keymap("n", "<leader>lsc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
 
 -- Show buffer diagnostic
 keymap("n", "<leader>lsb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
+
+-- Show buffer diagnostic
+keymap("n", "<leader>lsw", "<cmd>Lspsaga show_workspace_diagnostics<CR>")
 
 -- Diagnostic jump can use `<c-o>` to jump back
 keymap("n", "<leader>l[", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
