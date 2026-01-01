@@ -1,10 +1,35 @@
 return {
 	{ "NvChad/nvim-colorizer.lua" },
 	{
-		"bluz71/vim-moonfly-colors",
-		name = "moonfly",
+		"catppuccin/nvim",
+		name = "catppuccin",
 		lazy = false,
 		priority = 1000,
+		init = function()
+			vim.opt.background = "light"
+			vim.cmd.colorscheme("catppuccin")
+		end,
+		config = function()
+			require("catppuccin").setup({
+				flavour = "latte", -- ここでライトテーマを指定
+				background = "light",
+				transparent_background = true, -- ★ 背景を塗らない
+				auto_integrations = true, -- 好みで有効化（入れてるプラグインの統合を自動ON）
+				integrations = {
+					-- bufferline = true, -- bufferlineのインテグレーションを有効化
+					lualine = true, -- lualineのインテグレーションを有効化
+					aerial = true,
+					fidget = true,
+					hop = true,
+					lsp_saga = true,
+					mason = true,
+					noice = true,
+					notify = true,
+					sandwich = true,
+					which_key = true,
+				},
+			})
+		end,
 	},
 	{
 		"nvim-lualine/lualine.nvim",
@@ -23,7 +48,7 @@ return {
 	{
 		"nvimdev/lspsaga.nvim",
 		dependencies = {
-			"nvim-lspconfig",
+			"neovim/nvim-lspconfig",
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-tree/nvim-web-devicons",
 		},
@@ -51,13 +76,9 @@ return {
 		end,
 	},
 	{ "nvim-telescope/telescope.nvim" },
-	{ "nvim-telescope/telescope-file-browser.nvim" },
 	{
-		"nvim-telescope/telescope-dap.nvim",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"nvim-telescope/telescope.nvim",
-		},
+		"nvim-telescope/telescope-file-browser.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
 	},
 	{
 		"AckslD/nvim-neoclip.lua",
@@ -70,12 +91,6 @@ return {
 		"windwp/nvim-ts-autotag",
 	},
 	{
-		"lukas-reineke/indent-blankline.nvim",
-		main = "ibl",
-		opts = {},
-		dependencies = { "HiPhish/rainbow-delimiters.nvim" },
-	},
-	{
 		"akinsho/toggleterm.nvim",
 		version = "*",
 	},
@@ -83,9 +98,8 @@ return {
 		"akinsho/bufferline.nvim",
 		-- version = "*",
 		branch = "main",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		dependencies = { "nvim-tree/nvim-web-devicons", "catppuccin/nvim" },
 	},
-	{ "xiyaowong/nvim-transparent" },
 	{ "machakann/vim-sandwich" },
 	{ "andymass/vim-matchup" },
 	{ "cohama/lexima.vim" },
@@ -101,77 +115,31 @@ return {
 	{ "hrsh7th/cmp-buffer" },
 	{ "hrsh7th/cmp-path" },
 	{ "hrsh7th/cmp-cmdline" },
-	{ "rcarriga/cmp-dap" },
 	{ "L3MON4D3/LuaSnip" },
 	{ "saadparwaiz1/cmp_luasnip" },
+	{
+		"petertriho/cmp-git",
+		dependencies = { "hrsh7th/nvim-cmp" },
+		opts = {
+			-- options go here
+		},
+		init = function()
+			table.insert(require("cmp").get_config().sources, { name = "cmp_git" })
+		end,
+	},
 	{ "ray-x/cmp-treesitter" },
 	"rafamadriz/friendly-snippets",
 	"j-hui/fidget.nvim",
 	{
 		"mrcjkb/rustaceanvim",
-		version = "^4", -- Recommended
-		ft = { "rust" },
+		version = "^6", -- Recommended
+		lazy = false, -- This plugin is already lazy
 	},
 	{
 		"saecki/crates.nvim",
 		event = { "BufRead Cargo.toml" },
 		config = function()
 			require("crates").setup()
-		end,
-	},
-	{
-		"nvim-neotest/neotest",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"antoinemadec/FixCursorHold.nvim",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		config = function()
-			require("neotest").setup({
-				adapters = {
-					require("neotest-rust"),
-					require("neotest-plenary"),
-					require("neotest-vim-test")({ ignore_filetypes = { "python", "vim", "lua", "rust" } }),
-				},
-			})
-		end,
-	},
-	{ "nvim-neotest/neotest-python", dependencies = { "nvim-neotest/neotest" } },
-	{ "rouge8/neotest-rust", dependencies = { "nvim-neotest/neotest" } },
-	{ "nvim-neotest/neotest-plenary", dependencies = { "nvim-neotest/neotest" } },
-	{ "nvim-neotest/neotest-vim-test", dependencies = { "nvim-neotest/neotest" } },
-	{ "vim-test/vim-test", dependencies = { "nvim-neotest/neotest-vim-test" } },
-	{
-		"folke/neodev.nvim",
-		opts = {
-			library = {
-				enabled = true, -- when not enabled, neodev will not change any settings to the LSP server
-				-- these settings will be used for your Neovim config directory
-				runtime = true, -- runtime path
-				types = true, -- full signature, docs and completion of vim.api, vim.treesitter, vim.lsp and others
-				plugins = true, -- installed opt or start plugins in packpath
-				-- you can also specify the list of plugins to make available as a workspace library
-				-- plugins = { "nvim-treesitter", "plenary.nvim", "telescope.nvim" },
-			},
-			setup_jsonls = true, -- configures jsonls to provide completion for project specific .luarc.json files
-			-- for your Neovim config directory, the config.library settings will be used as is
-			-- for plugin directories (root_dirs having a /lua directory), config.library.plugins will be disabled
-			-- for any other directory, config.library.enabled will be set to false
-			override = function(root_dir, options) end,
-			-- With lspconfig, Neodev will automatically setup your lua-language-server
-			-- If you disable this, then you have to set {before_init=require("neodev.lsp").before_init}
-			-- in your lsp start options
-			lspconfig = true,
-			-- much faster, but needs a recent built of lua-language-server
-			-- needs lua-language-server >= 3.6.0
-			pathStrict = true,
-		},
-	},
-	{
-		"styled-components/vim-styled-components",
-		ft = { "javascript", "javascript.jsx", "javascriptreact", "typescript", "typescript.tsx", "typescriptreact" },
-		config = function()
-			vim.cmd([[source ~/.config/nvim/dein/plugins/vim-styled-components.plug.vim]])
 		end,
 	},
 	{
@@ -217,36 +185,6 @@ return {
 		},
 	},
 	{
-		"b0o/schemastore.nvim",
-		config = function()
-			local status, lspconfig = pcall(require, "lspconfig")
-			if not status then
-				return
-			end
-			lspconfig.jsonls.setup({
-				settings = {
-					json = {
-						schemas = require("schemastore").json.schemas(),
-						validate = { enable = true },
-					},
-				},
-			})
-			lspconfig.yamlls.setup({})
-			settings = {
-				yaml = {
-					schemaStore = {
-						-- You must disable built-in schemaStore support if you want to use
-						-- this plugin and its advanced options like `ignore`.
-						enable = false,
-						-- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-						url = "",
-					},
-					schemas = require("schemastore").yaml.schemas(),
-				},
-			}
-		end,
-	},
-	{
 		"sourcegraph/sg.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
@@ -261,17 +199,6 @@ return {
 			-- " (requires telescope.nvim to be installed)
 			local keymap = vim.keymap.set
 			keymap("n", "<leader>ct", "<Cmd>CodyToggle<CR>")
-		end,
-	},
-	{
-		"Exafunction/codeium.nvim",
-		event = "BufEnter",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
-		config = function()
-			require("codeium").setup({})
 		end,
 	},
 	{
@@ -323,6 +250,15 @@ return {
 	},
 	{
 		"kdheepak/lazygit.nvim",
+		lazy = false,
+		cmd = {
+			"LazyGit",
+			"LazyGitConfig",
+			"LazyGitCurrentFile",
+			"LazyGitFilter",
+			"LazyGitFilterCurrentFile",
+		},
+		-- optional for floating window border decoration
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
 			"nvim-lua/plenary.nvim",
@@ -399,6 +335,7 @@ return {
 				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
 				rust = { "rustfmt" },
 				markdown = { "mdformat", "markdownlint", stop_after_first = true },
+				graphql = { "prettierd", "prettier", stop_after_first = true },
 			},
 			-- Set up format-on-save
 			-- format_on_save = { timeout_ms = 500, lsp_fallback = true },
@@ -438,6 +375,7 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
+		dependencies = { { "nvim-tree/nvim-web-devicons" }, { "echasnovski/mini.icons", version = false } },
 		init = function()
 			vim.o.timeout = true
 			vim.o.timeoutlen = 300
@@ -445,64 +383,40 @@ return {
 	},
 	{
 		"folke/trouble.nvim",
+		opts = {}, -- for default options, refer to the configuration section for custom setup.
+		cmd = "Trouble",
 		dependencies = { "nvim-tree/nvim-web-devicons", "nvim-telescope/telescope.nvim" },
-		opts = {
-			-- your configuration comes here
-			-- or leave it empty to use the default settings
-			-- refer to the configuration section below
-			position = "bottom", -- position of the list can be: bottom, top, left, right
-			height = 10, -- height of the trouble list when position is top or bottom
-			width = 50, -- width of the list when position is left or right
-			icons = true, -- use devicons for filenames
-			mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
-			severity = nil, -- nil (ALL) or vim.diagnostic.severity.ERROR | WARN | INFO | HINT
-			fold_open = "", -- icon used for open folds
-			fold_closed = "", -- icon used for closed folds
-			group = true, -- group results by file
-			padding = true, -- add an extra new line on top of the list
-			cycle_results = true, -- cycle item list when reaching beginning or end of list
-			action_keys = { -- key mappings for actions in the trouble list
-				-- map to {} to remove a mapping, for example:
-				-- close = {},
-				close = "q", -- close the list
-				cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-				refresh = "r", -- manually refresh
-				jump = { "<cr>", "<tab>", "<2-leftmouse>" }, -- jump to the diagnostic or open / close folds
-				open_split = { "<c-x>" }, -- open buffer in new split
-				open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-				open_tab = { "<c-t>" }, -- open buffer in new tab
-				jump_close = { "o" }, -- jump to the diagnostic and close the list
-				toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-				switch_severity = "s", -- switch "diagnostics" severity filter level to HINT / INFO / WARN / ERROR
-				toggle_preview = "P", -- toggle auto_preview
-				hover = "K", -- opens a small popup with the full multiline message
-				preview = "p", -- preview the diagnostic location
-				open_code_href = "c", -- if present, open a URI with more information about the diagnostic error
-				close_folds = { "zM", "zm" }, -- close all folds
-				open_folds = { "zR", "zr" }, -- open all folds
-				toggle_fold = { "zA", "za" }, -- toggle fold of current file
-				previous = "k", -- previous item
-				next = "j", -- next item
-				help = "?", -- help menu
+		keys = {
+			{
+				"<leader>td",
+				"<cmd>Trouble diagnostics toggle<cr>",
+				desc = "Diagnostics (Trouble)",
 			},
-			multiline = true, -- render multi-line messages
-			indent_lines = true, -- add an indent guide below the fold icons
-			win_config = { border = "single" }, -- window configuration for floating windows. See |nvim_open_win()|.
-			auto_open = false, -- automatically open the list when you have diagnostics
-			auto_close = false, -- automatically close the list when you have no diagnostics
-			auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-			auto_fold = false, -- automatically fold a file trouble list at creation
-			auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
-			include_declaration = { "lsp_references", "lsp_implementations", "lsp_definitions" }, -- for the given modes, include the declaration of the current symbol in the results
-			signs = {
-				-- icons / text used for a diagnostic
-				error = "",
-				warning = "",
-				hint = "",
-				information = "",
-				other = "",
+			{
+				"<leader>tD",
+				"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+				desc = "Buffer Diagnostics (Trouble)",
 			},
-			use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+			{
+				"<leader>ts",
+				"<cmd>Trouble symbols toggle focus=false<cr>",
+				desc = "Symbols (Trouble)",
+			},
+			{
+				"<leader>tl",
+				"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+				desc = "LSP Definitions / references / ... (Trouble)",
+			},
+			{
+				"<leader>tL",
+				"<cmd>Trouble loclist toggle<cr>",
+				desc = "Location List (Trouble)",
+			},
+			{
+				"<leader>tq",
+				"<cmd>Trouble qflist toggle<cr>",
+				desc = "Quickfix List (Trouble)",
+			},
 		},
 	},
 	{
@@ -535,111 +449,145 @@ return {
 			},
 		},
 	},
-	-- for dap
 	{
-		"mfussenegger/nvim-dap",
+		"ravitemer/mcphub.nvim",
 		dependencies = {
-			"rcarriga/nvim-dap-ui",
-			"theHamsta/nvim-dap-virtual-text",
-			"nvim-neotest/nvim-nio",
+			"nvim-lua/plenary.nvim", -- Required for Job and HTTP requests
 		},
+		-- comment the following line to ensure hub will be ready at the earliest
+		cmd = "MCPHub", -- lazy load by default
+		build = "npm install -g mcp-hub@latest", -- Installs required mcp-hub npm module
+		-- uncomment this if you don't want mcp-hub to be available globally or can't use -g
+		-- build = "bundled_build.lua",  -- Use this and set use_bundled_binary = true in opts  (see Advanced configuration)
 		config = function()
-			require("nvim-dap-virtual-text").setup()
-			local dap = require("dap")
-			dap.adapters["pwa-node"] = {
-				type = "server",
-				host = "127.0.0.1",
-				port = 8123,
-				executable = {
-					command = "js-debug-adapter",
+			require("mcphub").setup({
+				auto_approve = false,
+			})
+		end,
+	},
+	{
+		"yetone/avante.nvim",
+		event = "VeryLazy",
+		version = false, -- Never set this value to "*"! Never!
+		opts = {
+			-- add any opts here
+			-- for example
+			provider = "ollama",
+			providers = {
+				ollama = {
+					endpoint = "http://localhost:11434",
+					model = "qwen2.5-coder:7b",
 				},
-			}
-			for _, language in ipairs({ "typescript", "javascript" }) do
-				dap.configurations[language] = {
-					{
-						type = "pwa-node",
-						request = "launch",
-						name = "Launch file",
-						program = "${file}",
-						cwd = "${workspaceFolder}",
-						runtimeExecutable = "node",
+			},
+		},
+		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+		build = "make",
+		-- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			--- The below dependencies are optional,
+			"echasnovski/mini.pick", -- for file_selector provider mini.pick
+			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+			"ibhagwan/fzf-lua", -- for file_selector provider fzf
+			"stevearc/dressing.nvim", -- for input provider dressing
+			"folke/snacks.nvim", -- for input provider snacks
+			"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+			"zbirenbaum/copilot.lua", -- for providers='copilot'
+			{
+				-- support for image pasting
+				"HakonHarnes/img-clip.nvim",
+				event = "VeryLazy",
+				opts = {
+					-- recommended settings
+					default = {
+						embed_image_as_base64 = false,
+						prompt_for_file_name = false,
+						drag_and_drop = {
+							insert_mode = true,
+						},
+						-- required for Windows users
+						use_absolute_path = true,
 					},
-				}
-			end
-			dap.configurations.rust = {
-				{
-					name = "Launch file",
-					type = "codelldb",
-					request = "launch",
-					program = function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-					end,
-					cwd = "${workspaceFolder}",
-					stopOnEntry = false,
 				},
-			}
-		end,
-	},
-	{
-		"mfussenegger/nvim-dap-python",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			config = function()
-				local venv = os.getenv("VIRTUAL_ENV")
-				local command = string.format("%s/bin/python", venv)
-				require("dap-python").setup(command)
-			end,
+			},
+			{
+				-- Make sure to set this up properly if you have lazy=true
+				"MeanderingProgrammer/render-markdown.nvim",
+				opts = {
+					file_types = { "markdown", "Avante" },
+				},
+				ft = { "markdown", "Avante" },
+			},
 		},
 	},
 	{
-		"jay-babu/mason-nvim-dap.nvim",
+		"shellRaining/hlchunk.nvim",
+		event = { "BufReadPre", "BufNewFile" },
 		config = function()
-			local SETTINGS = {
-				-- A list of adapters to install if they're not already installed.
-				-- This setting has no relation with the `automatic_installation` setting.
-				ensure_installed = {},
-
-				-- NOTE: this is left here for future porting in case needed
-				-- Whether adapters that are set up (via dap) should be automatically installed if they're not already installed.
-				-- This setting has no relation with the `ensure_installed` setting.
-				-- Can either be:
-				--   - false: Daps are not automatically installed.
-				--   - true: All adapters set up via dap are automatically installed.
-				--   - { exclude: string[] }: All adapters set up via mason-nvim-dap, except the ones provided in the list, are automatically installed.
-				--       Example: automatic_installation = { exclude = { "python", "delve" } }
-				automatic_installation = false,
-
-				-- See below on usage
-				handlers = {
-					function(config)
-						require("mason-nvim-dap").default_setup(config)
-					end,
+			require("hlchunk").setup({
+				chunk = {
+					enable = true,
+					style = "#806d9c",
 				},
-			}
-			require("mason-nvim-dap").setup(SETTINGS)
-		end,
-		{ "williamboman/mason.nvim" },
-	},
-	{
-		"rcarriga/nvim-dap-ui",
-		dependencies = { "mfussenegger/nvim-dap" },
-		config = function()
-			require("dapui").setup()
+				indent = {
+					enable = true,
+				},
+				blank = {
+					enable = true,
+				},
+			})
 		end,
 	},
 	{
-		"LiadOz/nvim-dap-repl-highlights",
-		dependencies = { "mfussenegger/nvim-dap" },
-		config = function()
-			require("nvim-dap-repl-highlights").setup()
-		end,
-	},
-	{
-		"mxsdev/nvim-dap-vscode-js",
-		dependencies = {
-			"mfussenegger/nvim-dap",
-			"microsoft/vscode-js-debug",
+		"moonbit-community/moonbit.nvim",
+		ft = { "moonbit" },
+		opts = {
+			mooncakes = {
+				virtual_text = true, -- virtual text showing suggestions
+				use_local = true, -- recommended, use index under ~/.moon
+			},
+			-- optionally disable the treesitter integration
+			treesitter = {
+				enabled = true,
+				-- Set false to disable automatic installation and updating of parsers.
+				auto_install = true,
+			},
+			-- configure the language server integration
+			-- set `lsp = false` to disable the language server integration
+			lsp = {
+				-- provide an `on_attach` function to run when the language server starts
+				on_attach = function(client, bufnr) end,
+				-- provide client capabilities to pass to the language server
+				capabilities = vim.lsp.protocol.make_client_capabilities(),
+			},
 		},
 	},
-	-- dap end
+	{
+		"johnseth97/codex.nvim",
+		lazy = true,
+		cmd = { "Codex", "CodexToggle" }, -- Optional: Load only on command execution
+		keys = {
+			{
+				"<leader>cc", -- Change this to your preferred keybinding
+				function()
+					require("codex").toggle()
+				end,
+				desc = "Toggle Codex popup",
+			},
+		},
+		opts = {
+			keymaps = {
+				toggle = nil, -- Keybind to toggle Codex window (Disabled by default, watch out for conflicts)
+				quit = "<C-q>", -- Keybind to close the Codex window (default: Ctrl + q)
+			}, -- Disable internal default keymap (<leader>cc -> :CodexToggle)
+			border = "rounded", -- Options: 'single', 'double', or 'rounded'
+			width = 0.8, -- Width of the floating window (0.0 to 1.0)
+			height = 0.8, -- Height of the floating window (0.0 to 1.0)
+			model = nil, -- Optional: pass a string to use a specific model (e.g., 'o3-mini')
+			autoinstall = true, -- Automatically install the Codex CLI if not found
+		},
+	},
 }

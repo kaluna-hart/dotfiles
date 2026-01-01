@@ -15,7 +15,7 @@ end
 
 cmp.setup({
 	enabled = function()
-		return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
+		return vim.bo.buftype ~= "prompt"
 	end,
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
@@ -46,17 +46,13 @@ cmp.setup({
 	}),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
-		-- { name = "vsnip" }, -- For vsnip users.
 		{ name = "luasnip" }, -- For luasnip users.
-		-- { name = 'ultisnips' }, -- For ultisnips users.
-		-- { name = 'snippy' }, -- For snippy users.
 		{ name = "buffer" },
 		{ name = "path" },
 		{ name = "treesitter" },
 		{ name = "copilot", group_index = 2 },
 		{ name = "cody" },
 		{ name = "codeium" },
-		{ name = "buffer" },
 	}),
 	formatting = {
 		format = lspkind.cmp_format({
@@ -83,12 +79,6 @@ cmp.setup.filetype("gitcommit", {
 	}, {
 		{ name = "buffer" },
 	}),
-})
-
-cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-	sources = {
-		{ name = "dap" },
-	},
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).

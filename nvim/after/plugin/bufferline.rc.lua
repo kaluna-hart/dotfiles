@@ -1,5 +1,6 @@
 vim.opt.termguicolors = true
 require("bufferline").setup({
+	highlights = require("catppuccin.special.bufferline").get_theme(),
 	options = {
 		numbers = function(opts)
 			return string.format("%s·%s", opts.raise(opts.id), opts.lower(opts.ordinal))

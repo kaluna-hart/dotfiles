@@ -96,117 +96,6 @@ local mappings_n_leader = {
 	},
 	{ "<leader>c", group = "cody", nowait = true, remap = false },
 	{ "<leader>ct", "<cmd>CodyToggle<cr>", desc = "cody toggle", nowait = true, remap = false },
-	{ "<leader>d", group = "nvim-dap", nowait = true, remap = false },
-	{
-		"<leader>dB",
-		function()
-			require("dap").set_breakpoint()
-		end,
-		desc = "dap set breakpoint",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>db",
-		function()
-			require("dap").toggle_breakpoint()
-		end,
-		desc = "dap toggle breakpoint",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>de",
-		function()
-			require("dapui").eval()
-		end,
-		desc = "dapui eval",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dfc",
-		function()
-			local widgets = require("dap.ui.widgets")
-			widgets.centered_float(widgets.frames)
-		end,
-		desc = "dap widgets centered float frames",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dfe",
-		function()
-			require("dapui").float_element()
-		end,
-		desc = "dapui floating elements",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dh",
-		function()
-			require("dap.ui.widgets").hover()
-		end,
-		desc = "dap ui widgets hover",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dlp",
-		function()
-			require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-		end,
-		desc = "dap log point message",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dp",
-		function()
-			require("dap.ui.widgets").preview()
-		end,
-		desc = "dap ui widgets preview",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>drl",
-		function()
-			require("dap").run_last()
-		end,
-		desc = "dap run last",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dro",
-		function()
-			require("dap").repl.open()
-		end,
-		desc = "dap repl open",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>ds",
-		function()
-			local widgets = require("dap.ui.widgets")
-			widgets.centered_float(widgets.scopes)
-		end,
-		desc = "dap ui widgets centered float scopes",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>dt",
-		function()
-			require("dapui").toggle()
-		end,
-		desc = "dapui toggle",
-		nowait = true,
-		remap = false,
-	},
 	{ "<leader>ef", "<cmd>NvimTreeToggle<cr>", group = "nvim tree", nowait = true, remap = false },
 	{ "<leader>f", group = "telescope", nowait = true, remap = false },
 	{ "<leader>fa", "<cmd>Telescope aerial<cr>", desc = "telescope aerial", nowait = true, remap = false },
@@ -243,9 +132,10 @@ local mappings_n_leader = {
 		nowait = true,
 		remap = false,
 	},
-	{ "<leader>fg", "<cmd>Telescope lazygit<cr>", desc = "telescope lazygit", nowait = true, remap = false },
-	{ "<leader>fh", "<cmd>Telescope oldfiles<cr>", desc = "telescope old files", nowait = true, remap = false },
+	{ "<leader>fg", "<cmd>LazyGit<cr>", desc = "telescope lazygit", nowait = true, remap = false },
+	{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "telescope old files", nowait = true, remap = false },
 	{ "<leader>fl", "<cmd>Telescope live_grep<cr>", desc = "telescope live grep", nowait = true, remap = false },
+	{ "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "telescope help tags", nowait = true, remap = false },
 	{
 		"<leader>fn",
 		function()
@@ -388,61 +278,7 @@ local mappings_n_leader = {
 		nowait = true,
 		remap = false,
 	},
-	{ "<leader>t", group = "trouble", nowait = true, remap = false },
-	{
-		"<leader>td",
-		function()
-			require("trouble").toggle("document_diagnostics")
-		end,
-		desc = "toggle document_diagnotics",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>tl",
-		function()
-			require("trouble").toggle("loclist")
-		end,
-		desc = "toggle loclist",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>tq",
-		function()
-			require("trouble").toggle("quickfix")
-		end,
-		desc = "toggle quickfix",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>tr",
-		function()
-			require("trouble").toggle("lsp_references")
-		end,
-		desc = "toggle lsp_references",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>tw",
-		function()
-			require("trouble").toggle("workspace_diagnostics")
-		end,
-		desc = "toggle workspace_diagnotics",
-		nowait = true,
-		remap = false,
-	},
-	{
-		"<leader>tx",
-		function()
-			require("trouble").toggle()
-		end,
-		desc = "toggle",
-		nowait = true,
-		remap = false,
-	},
+	{ "<leader>t", group = "Trouble", nowait = true, remap = false },
 }
 
 local mappings_v_leader = {

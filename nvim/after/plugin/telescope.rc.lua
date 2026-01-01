@@ -17,11 +17,9 @@ telescope.setup({
 			mappings = {
 				["i"] = {
 					-- your custom insert mode mappings
-					["<c-t>"] = open_with_trouble,
 				},
 				["n"] = {
 					-- your custom normal mode mappings
-					["<c-t>"] = open_with_trouble,
 				},
 			},
 		},
@@ -34,6 +32,12 @@ telescope.setup({
 			},
 		},
 	},
+  defaults = {
+    mappings = {
+      i = { ["<c-t>"] = open_with_trouble },
+      n = { ["<c-t>"] = open_with_trouble },
+    },
+  },
 })
 -- To get telescope-file-browser loaded and working with telescope,
 -- you need to call load_extension, somewhere after setup function:
@@ -41,4 +45,3 @@ telescope.load_extension("file_browser")
 telescope.load_extension("aerial")
 telescope.load_extension("notify")
 telescope.load_extension("lazygit")
-telescope.load_extension('dap')
