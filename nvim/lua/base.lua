@@ -6,7 +6,6 @@ vim.opt.fileencoding = "utf-8"
 
 vim.wo.number = true
 
-vim.opt.guifont = "HackGenNerd Console"
 vim.opt.title = true -- window title bar
 vim.opt.autoindent = true -- 前のインデントを継続
 vim.opt.smartindent = true -- 改行時のインデントの増減
@@ -39,7 +38,13 @@ vim.opt.formatoptions:append({ "r" })
 vim.opt.signcolumn = "yes"
 vim.opt.wildmode = "list,full"
 vim.opt.cursorline = true
-vim.opt.mouse = ""
+if vim.g.neovide then
+	vim.opt.mouse = "a"
+	vim.opt.guifont = "Moralerspace Radon HWNF:h11"
+else
+	vim.opt.mouse = "" -- 端末では無効（変更しないならこの行は不要）
+	vim.opt.guifont = "Moralerspace Radon HWNF"
+end
 
 vim.cmd([[let &t_Cs = "\e[4:3m"]]) -- undercurl
 vim.cmd([[let &t_Ce = "\e[4:0m"]]) -- undercurl
