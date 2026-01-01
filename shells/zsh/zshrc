@@ -183,3 +183,19 @@ export PATH="$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH"
 if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init zsh)"
 fi
+export PATH="$HOME/.moon/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/hart/.codeium/windsurf/bin:$PATH"
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/hart/.docker/completions $fpath)
+fpath+=~/.zfunc
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+# Added by Antigravity
+export PATH="/Users/hart/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
