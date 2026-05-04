@@ -1,0 +1,106 @@
+# ~/.codex/rules/custom.rules
+
+# rm は毎回確認
+prefix_rule(
+    pattern = ["rm"],
+    decision = "prompt",
+    justification = "rm は削除を伴うため毎回確認する",
+    match = [
+        "rm foo.txt",
+        "rm -f package-lock.json",
+        "rm -rf .next",
+        "rm -rf node_modules",
+    ],
+    not_match = [
+        "git rm foo.txt",
+        "ls",
+    ],
+)
+
+# ルート削除は完全禁止
+prefix_rule(
+    pattern = ["rm", "-rf", "/"],
+    decision = "forbidden",
+    justification = "ルート削除は禁止",
+    match = [
+        "rm -rf /",
+    ],
+)
+
+# Git の破壊的操作は確認
+prefix_rule(
+    pattern = ["git", "reset", "--hard"],
+    decision = "prompt",
+    justification = "git reset --hard は作業内容を失う可能性があるため確認する",
+    match = [
+        "git reset --hard",
+        "git reset --hard HEAD~1",
+    ],
+)
+
+prefix_rule(
+    pattern = ["git", "clean", "-fd"],
+    decision = "prompt",
+    justification = "未追跡ファイル削除は確認する",
+    match = [
+        "git clean -fd",
+    ],
+)
+
+prefix_rule(
+    pattern = ["git", "clean", "-fdx"],
+    decision = "prompt",
+    justification = "ignore 対象も含む削除は確認する",
+    match = [
+        "git clean -fdx",
+    ],
+)
+
+# Docker の大きい掃除は確認
+prefix_rule(
+    pattern = ["docker", "system", "prune"],
+    decision = "prompt",
+    justification = "Docker 全体の掃除は影響が大きいため確認する",
+    match = [
+        "docker system prune -af",
+        "docker system prune --volumes -f",
+    ],
+)
+
+prefix_rule(
+    pattern = ["docker", "volume", "prune"],
+    decision = "prompt",
+    justification = "Docker volume 削除は確認する",
+    match = [
+        "docker volume prune -f",
+    ],
+)
+
+# 危険な一括削除は確認
+prefix_rule(
+    pattern = ["find", ".", "-delete"],
+    decision = "prompt",
+    justification = "find による一括削除は確認する",
+    match = [
+        "find . -delete",
+    ],
+)
+
+# 再帰的な権限変更は確認
+prefix_rule(
+    pattern = ["chmod", "-R"],
+    decision = "prompt",
+    justification = "再帰 chmod は広範囲へ影響するため確認する",
+    match = [
+        "chmod -R 755 .",
+    ],
+)
+
+prefix_rule(
+    pattern = ["chown", "-R"],
+    decision = "prompt",
+    justification = "再帰 chown は広範囲へ影響するため確認する",
+    match = [
+        "chown -R user:staff .",
+    ],
+)

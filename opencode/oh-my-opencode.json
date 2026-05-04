@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "google_auth": false,
+  "agents": {
+    "prometheus": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "sisyphus": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "metis": {
+      "model": "opencode-go/qwen3.6-plus"
+    },
+    "momus": {
+      "model": "opencode-go/deepseek-v4-pro"
+    },
+    "oracle": {
+      "model": "opencode-go/deepseek-v4-pro"
+    },
+    "librarian": {
+      "model": "opencode-go/qwen3.6-plus"
+    },
+    "explore": {
+      "model": "opencode-go/deepseek-v4-flash"
+    },
+    "frontend-ui-ux-engineer": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "document-writer": {
+      "model": "opencode-go/minimax-m2.5"
+    },
+    "multimodal-looker": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "atlas": {
+      "model": "opencode-go/qwen3.6-plus"
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "artistry": {
+      "model": "opencode-go/kimi-k2.6"
+    },
+    "writing": {
+      "model": "opencode-go/minimax-m2.5"
+    }
+  }
+}
