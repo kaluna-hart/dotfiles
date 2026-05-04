@@ -142,13 +142,6 @@ return {
 			require("crates").setup()
 		end,
 	},
-	{
-		"phaazon/hop.nvim",
-		branch = "v2",
-		config = function()
-			require("hop").setup({ key = "etovxqpdygfblzhckisuran" })
-		end,
-	},
 	{ "folke/todo-comments.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
 	{
 		"zbirenbaum/copilot.lua",
