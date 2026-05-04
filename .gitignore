@@ -1,3 +1,5 @@
 alacritty.yml.old
 nvim/colors/*
 .DS_Store
+.sisyphus/
+tmux-client-*.log
