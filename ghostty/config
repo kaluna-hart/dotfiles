@@ -12,3 +12,4 @@ window-width = 1000
 window-height = 1000
 cursor-style = bar
 shell-integration-features = no-cursor
+
