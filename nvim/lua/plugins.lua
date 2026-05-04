@@ -17,7 +17,7 @@ return {
 				auto_integrations = true, -- 好みで有効化（入れてるプラグインの統合を自動ON）
 				integrations = {
 					-- bufferline = true, -- bufferlineのインテグレーションを有効化
-					lualine = true, -- lualineのインテグレーションを有効化
+					-- lualine = true, -- lualineのインテグレーションを有効化
 					aerial = true,
 					fidget = true,
 					hop = true,
