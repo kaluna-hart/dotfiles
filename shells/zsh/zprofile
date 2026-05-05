@@ -127,3 +127,6 @@ fi
 if [ -d /opt/homebrew/bin/mise ]; then
   export PATH="$HOME/.local/share/mise/shims:$PATH"
 fi
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"

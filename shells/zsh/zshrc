@@ -211,3 +211,6 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 [ -s "/Users/hart/.bun/_bun" ] && source "/Users/hart/.bun/_bun"
 export PATH="$HOME/.bun/bin:$PATH"
 
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"
