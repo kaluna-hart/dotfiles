@@ -164,13 +164,13 @@ source_type = "local"
 source = "/Users/haku/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-05-05T13:08:12Z"
+last_updated = "2026-05-05T13:15:56Z"
 last_revision = "ac45fdae4b7af187b5624599ab054090dedadd94"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-codex]
-last_updated = "2026-05-05T13:08:13Z"
+last_updated = "2026-05-05T13:15:57Z"
 last_revision = "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
 source_type = "git"
 source = "https://github.com/openai/codex-plugin-cc.git"

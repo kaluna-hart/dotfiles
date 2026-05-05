@@ -48,11 +48,10 @@ OpenCode Bridge の OSS agent は、通常の Codex 作業を補助するため�
 
 ### 重い実装の扱い
 
-重い実装、複雑な設計判断、横断的変更、重要領域に近い修正、OSS agent の結果レビューでは `gpt-5.3-codex` を優先する。
-
-`gpt-5.3-codex` が利用できない場合、または Codex 側で移行扱いになる場合は `gpt-5.5` を使う。
-
-軽い実装は `oss_kimi_impl` または `oss_deepseek_pro` を検討してよいが、重要領域や失敗時の影響が大きい変更は OSS agentに委譲しない。
+- 重い実装、複雑な設計判断、横断的変更、重要領域に近い修正、OSS agent の結果レビューでは `gpt-5.3-codex` を優先する。
+- 重い実装を委譲する場合は `codex_heavy_impl` を優先する。
+- `gpt-5.3-codex` が利用できない場合、または Codex 側で移行扱いになる場合は `gpt-5.5` を使う。
+- 軽い実装は `oss_kimi_impl` または `oss_deepseek_pro` を検討してよいが、重要領域や失敗時の影響が大きい変更は OSS agentに委譲しない。
 
 ### OSS agent へ委譲する時のルール
 
@@ -73,3 +72,4 @@ OpenCode Bridge の OSS agent は、通常の Codex 作業を補助するため�
 | `oss_flash_support` | ドキュメント、要約、変更履歴、機械的な補助 | 原則 read-only |
 | `oss_deepseek_pro` | 小さく限定された実装、デバッグ、テスト追加 | workspace-write |
 | `oss_kimi_impl` | 低〜中リスクの小さな実装、UI文言、型修正、軽いバグ修正、テスト追加 | workspace-write |
+| `codex_heavy_impl` | 重い実装、複雑な設計判断、横断的変更、重要レビュー、OSS agent 結果の検証 | workspace-write |
