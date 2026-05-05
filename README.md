@@ -25,6 +25,12 @@ starship/starship.toml →  \${SDG\_CONFIG\_HOME:\-$HOME/.config}/starship.toml
 ## snippets
 snippets →  $HOME/.snippets
 
+## codex
+codex/config.toml →  $HOME/.codex/config.toml
+codex/AGENTS.md →  $HOME/.codex/AGENTS.md
+codex/rules →  $HOME/.codex/rules
+codex/agents →  $HOME/.codex/agents
+
 ## tmux
 ```sh
 git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm

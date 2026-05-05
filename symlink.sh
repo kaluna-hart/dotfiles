@@ -198,6 +198,7 @@ ensure_dir "$HOME/.codex"
 create_symlink "$HOME/dotfiles/codex/config.toml" "$HOME/.codex/config.toml"
 create_symlink "$HOME/dotfiles/codex/AGENTS.md" "$HOME/.codex/AGENTS.md"
 create_symlink "$HOME/dotfiles/codex/rules" "$HOME/.codex/rules"
+create_symlink "$HOME/dotfiles/codex/agents" "$HOME/.codex/agents"
 echo ""
 
 # -------------------------------------------
