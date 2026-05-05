@@ -4,7 +4,6 @@ personality = "pragmatic"
 web_search = "live"
 model = "gpt-5.5"
 sandbox_mode = "workspace-write"
-project_doc_fallback_filenames = [ "CLAUDE.md" ]
 
 [approval_policy.granular]
 rules = true
@@ -88,6 +87,26 @@ theme = "catppuccin-latte"
 [tui.model_availability_nux]
 "gpt-5.5" = 4
 
+[model_providers.opencode_bridge]
+name = "OpenCode Bridge"
+base_url = "http://127.0.0.1:4000/v1"
+wire_api = "responses"
+request_max_retries = 2
+stream_max_retries = 2
+stream_idle_timeout_ms = 300000
+
+[model_providers.opencode_bridge.auth]
+command = "echo"
+args = ["sk-local-codex-bridge"]
+timeout_ms = 1000
+
+[profiles.oss_native]
+model_provider = "opencode_bridge"
+web_search = "disabled"
+
+[profiles.oss_native.features]
+apps = false
+
 [projects."/Users/hart/github/rakuweb/forjob"]
 trust_level = "trusted"
 
@@ -127,25 +146,39 @@ trust_level = "trusted"
 [projects."/Users/hart/.config/opencode"]
 trust_level = "trusted"
 
+[projects."/Users/haku"]
+trust_level = "trusted"
+
+[projects."/Users/haku/projects"]
+trust_level = "trusted"
+
+[projects."/Users/haku/projects/projecta"]
+trust_level = "trusted"
+
+[projects."/Users/haku/dotfiles"]
+trust_level = "trusted"
+
 [marketplaces.openai-bundled]
-last_updated = "2026-05-02T18:42:33Z"
+last_updated = "2026-05-04T20:01:27Z"
 source_type = "local"
-source = "/Users/hart/.codex/.tmp/bundled-marketplaces/openai-bundled"
+source = "/Users/haku/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-05-02T18:42:45Z"
+last_updated = "2026-05-05T12:54:42Z"
+last_revision = "ac45fdae4b7af187b5624599ab054090dedadd94"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-codex]
-last_updated = "2026-05-02T18:42:46Z"
+last_updated = "2026-05-05T12:54:44Z"
+last_revision = "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
 source_type = "git"
 source = "https://github.com/openai/codex-plugin-cc.git"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-02T19:32:55Z"
+last_updated = "2026-05-04T20:01:57Z"
 source_type = "local"
-source = "/Users/hart/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+source = "/Users/haku/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [notice.model_migrations]
 "gpt-5.3-codex" = "gpt-5.4"
