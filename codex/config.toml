@@ -7,10 +7,10 @@ sandbox_mode = "workspace-write"
 
 [approval_policy.granular]
 rules = true
-sandbox_approval = false
-mcp_elicitations = false
+sandbox_approval = true
+mcp_elicitations = true
 request_permissions = false
-skill_approval = false
+skill_approval = true
 
 [sandbox_workspace_write]
 network_access = true
@@ -158,19 +158,28 @@ trust_level = "trusted"
 [projects."/Users/haku/dotfiles"]
 trust_level = "trusted"
 
+[projects."/Users/hart/.codex"]
+trust_level = "trusted"
+
+[projects."/Users/hart"]
+trust_level = "trusted"
+
+[projects."/Users/hart/dotfiles"]
+trust_level = "trusted"
+
 [marketplaces.openai-bundled]
 last_updated = "2026-05-04T20:01:27Z"
 source_type = "local"
 source = "/Users/haku/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-05-05T13:15:56Z"
-last_revision = "ac45fdae4b7af187b5624599ab054090dedadd94"
+last_updated = "2026-05-07T14:42:08Z"
+last_revision = "d6947b6f35ada84a029349c76e9e44b1d35fb71e"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-codex]
-last_updated = "2026-05-05T13:15:57Z"
+last_updated = "2026-05-07T14:42:10Z"
 last_revision = "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
 source_type = "git"
 source = "https://github.com/openai/codex-plugin-cc.git"
