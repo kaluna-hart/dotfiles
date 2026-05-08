@@ -189,6 +189,7 @@ ensure_dir "$HOME/.claude"
 create_symlink "$HOME/dotfiles/claude/settings.json" "$HOME/.claude/settings.json"
 create_symlink "$HOME/dotfiles/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 create_symlink "$HOME/dotfiles/claude/agents" "$HOME/.claude/agents"
+create_symlink "$HOME/dotfiles/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
 echo ""
 
 # -------------------------------------------

@@ -106,5 +106,10 @@
       }
     }
   },
-  "skipDangerousModePermissionPrompt": false
+  "skipDangerousModePermissionPrompt": false,
+  "theme": "light-daltonized",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline-command.sh"
+  }
 }
