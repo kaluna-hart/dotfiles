@@ -25,6 +25,11 @@ starship/starship.toml →  \${SDG\_CONFIG\_HOME:\-$HOME/.config}/starship.toml
 ## snippets
 snippets →  $HOME/.snippets
 
+## claude
+claude/settings.json →  $HOME/.claude/settings.json
+claude/CLAUDE.md →  $HOME/.claude/CLAUDE.md
+claude/agents →  $HOME/.claude/agents
+
 ## codex
 codex/config.toml →  $HOME/.codex/config.toml
 codex/AGENTS.md →  $HOME/.codex/AGENTS.md

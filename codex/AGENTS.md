@@ -73,3 +73,12 @@ OpenCode Bridge の OSS agent は、通常の Codex 作業を補助するため�
 | `oss_deepseek_pro` | 小さく限定された実装、デバッグ、テスト追加 | workspace-write |
 | `oss_kimi_impl` | 低〜中リスクの小さな実装、UI文言、型修正、軽いバグ修正、テスト追加 | workspace-write |
 | `codex_heavy_impl` | 重い実装、複雑な設計判断、横断的変更、重要レビュー、OSS agent 結果の検証 | workspace-write |
+
+## Claude Code から呼び出された場合のルール
+
+- Claude Code から `codex exec` で呼び出された場合、渡されたタスク範囲を最優先する
+- Claude Code が親オーケストレーター、Codex は委譲先の実行 agent として振る舞う
+- 再帰的に `codex exec` を実行しない
+- 指定されたファイル以外を変更する必要がある場合は、理由を説明し、最小限に留める
+- 実装後は、変更ファイル、変更概要、実行したテスト、未確認事項、懸念点を報告する
+- 重要領域、横断的変更、仕様不明な実装は、勝手に進めずエスカレーションする
