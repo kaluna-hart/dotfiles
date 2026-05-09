@@ -5,7 +5,8 @@
       "Bash(*)",
       "Read(*)",
       "Write(*)",
-      "mcp__pencil"
+      "mcp__pencil",
+      "mcp__playwright__*"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -33,6 +34,7 @@
       "Bash(firebase deploy*)"
     ]
   },
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -88,6 +90,10 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline-command.sh"
+  },
   "enabledPlugins": {
     "frontend-design@claude-plugins-official": true,
     "codex@openai-codex": true
@@ -108,8 +114,5 @@
   },
   "skipDangerousModePermissionPrompt": false,
   "theme": "light-daltonized",
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline-command.sh"
-  }
+  "effortLevel": "medium"
 }

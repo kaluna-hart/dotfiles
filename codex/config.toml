@@ -18,33 +18,7 @@ network_access = true
 [mcp_servers.playwright]
 command = "npx"
 args = [ "@playwright/mcp@latest" ]
-
-[mcp_servers.playwright.tools.browser_run_code]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_resize]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_navigate]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_hover]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_evaluate]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_click]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_navigate_back]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_tabs]
-approval_mode = "approve"
-
-[mcp_servers.playwright.tools.browser_close]
-approval_mode = "approve"
+default_tools_approval_mode = "approve"
 
 [mcp_servers.figma]
 url = "https://mcp.figma.com/mcp"
@@ -173,13 +147,13 @@ source_type = "local"
 source = "/Users/haku/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-05-08T17:47:37Z"
+last_updated = "2026-05-08T18:22:09Z"
 last_revision = "76b35e91d1c99c090b1a08dade53bcc5e352c1b2"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-codex]
-last_updated = "2026-05-08T17:47:39Z"
+last_updated = "2026-05-08T18:22:11Z"
 last_revision = "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
 source_type = "git"
 source = "https://github.com/openai/codex-plugin-cc.git"
