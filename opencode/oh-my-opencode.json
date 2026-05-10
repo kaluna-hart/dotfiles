@@ -3,7 +3,7 @@
   "google_auth": false,
   "agents": {
     "prometheus": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/deepseek-v4-pro"
     },
     "sisyphus": {
       "model": "opencode-go/kimi-k2.6"
@@ -24,13 +24,13 @@
       "model": "opencode-go/deepseek-v4-flash"
     },
     "frontend-ui-ux-engineer": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/qwen3.6-plus"
     },
     "document-writer": {
       "model": "opencode-go/minimax-m2.5"
     },
     "multimodal-looker": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/qwen3.6-plus"
     },
     "atlas": {
       "model": "opencode-go/qwen3.6-plus"
@@ -38,7 +38,7 @@
   },
   "categories": {
     "visual-engineering": {
-      "model": "opencode-go/kimi-k2.6"
+      "model": "opencode-go/qwen3.6-plus"
     },
     "artistry": {
       "model": "opencode-go/kimi-k2.6"
