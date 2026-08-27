@@ -71,8 +71,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = function()
-			local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
-			ts_update()
+			require("nvim-treesitter.install").update({ with_sync = true })
 		end,
 	},
 	{ "nvim-telescope/telescope.nvim" },
@@ -177,23 +176,23 @@ return {
 			"nvim-tree/nvim-web-devicons",
 		},
 	},
-	{
-		"sourcegraph/sg.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("sg").setup({
-				-- Pass your own custom attach function
-				--    If you do not pass your own attach function, then the following maps are provide:
-				--        - gd -> goto definition
-				--        - gr -> goto references
-				-- on_attach = your_custom_lsp_attach_function,
-			})
-			-- " Example mapping for doing searches from within neovim (may change) using telescope.
-			-- " (requires telescope.nvim to be installed)
-			local keymap = vim.keymap.set
-			keymap("n", "<leader>ct", "<Cmd>CodyToggle<CR>")
-		end,
-	},
+	-- {
+	-- 	"sourcegraph/sg.nvim",
+	-- 	dependencies = { "nvim-lua/plenary.nvim" },
+	-- 	config = function()
+	-- 		require("sg").setup({
+	-- 			-- Pass your own custom attach function
+	-- 			--    If you do not pass your own attach function, then the following maps are provide:
+	-- 			--        - gd -> goto definition
+	-- 			--        - gr -> goto references
+	-- 			-- on_attach = your_custom_lsp_attach_function,
+	-- 		})
+	-- 		-- " Example mapping for doing searches from within neovim (may change) using telescope.
+	-- 		-- " (requires telescope.nvim to be installed)
+	-- 		local keymap = vim.keymap.set
+	-- 		keymap("n", "<leader>ct", "<Cmd>CodyToggle<CR>")
+	-- 	end,
+	-- },
 	{
 		"kevinhwang91/nvim-hlslens",
 		config = function()
