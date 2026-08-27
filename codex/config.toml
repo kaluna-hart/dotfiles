@@ -9,7 +9,7 @@ sandbox_mode = "workspace-write"
 rules = true
 sandbox_approval = true
 mcp_elicitations = true
-request_permissions = false
+request_permissions = true
 skill_approval = true
 
 [sandbox_workspace_write]
@@ -60,26 +60,6 @@ theme = "catppuccin-latte"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
-
-[model_providers.opencode_bridge]
-name = "OpenCode Bridge"
-base_url = "http://127.0.0.1:4000/v1"
-wire_api = "responses"
-request_max_retries = 2
-stream_max_retries = 2
-stream_idle_timeout_ms = 300000
-
-[model_providers.opencode_bridge.auth]
-command = "echo"
-args = ["sk-local-codex-bridge"]
-timeout_ms = 1000
-
-[profiles.oss_native]
-model_provider = "opencode_bridge"
-web_search = "disabled"
-
-[profiles.oss_native.features]
-apps = false
 
 [projects."/Users/hart/github/rakuweb/forjob"]
 trust_level = "trusted"
@@ -177,7 +157,7 @@ sandbox_mode = "read-only"
 rules = true
 sandbox_approval = true
 mcp_elicitations = true
-request_permissions = false
+request_permissions = true
 skill_approval = true
 
 [profiles.implement]
@@ -187,7 +167,7 @@ sandbox_mode = "workspace-write"
 rules = true
 sandbox_approval = true
 mcp_elicitations = true
-request_permissions = false
+request_permissions = true
 skill_approval = true
 
 [profiles.implement.sandbox_workspace_write]
