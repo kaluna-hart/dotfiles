@@ -34,20 +34,10 @@
       "Bash(firebase deploy*)"
     ]
   },
-  "model": "opus",
   "hooks": {
-    "UserPromptSubmit": [
+    "PermissionRequest": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
+        "matcher": "*",
         "hooks": [
           {
             "type": "command",
@@ -78,9 +68,30 @@
         ]
       }
     ],
-    "PermissionRequest": [
+    "SessionStart": [
       {
         "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/hart/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
         "hooks": [
           {
             "type": "command",
@@ -95,8 +106,8 @@
     "command": "~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true,
-    "codex@openai-codex": true
+    "codex@openai-codex": true,
+    "frontend-design@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "omc": {
@@ -112,7 +123,7 @@
       }
     }
   },
+  "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": false,
-  "theme": "light-daltonized",
-  "effortLevel": "medium"
+  "theme": "light-daltonized"
 }

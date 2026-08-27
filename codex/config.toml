@@ -1,9 +1,11 @@
-model_reasoning_effort = "medium"
+model_reasoning_effort = "low"
 hide_agent_reasoning = true
 personality = "pragmatic"
 web_search = "live"
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 sandbox_mode = "workspace-write"
+
+notify = ["/Users/hart/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 
 [approval_policy.granular]
 rules = true
@@ -27,8 +29,37 @@ url = "https://mcp.figma.com/mcp"
 command = "/Applications/Pencil.app/Contents/Resources/app.asar.unpacked/out/mcp-server-darwin-arm64"
 args = [ "--app", "desktop" ]
 
+[mcp_servers.node_repl]
+args = []
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
+
+[mcp_servers.node_repl.env]
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "/Users/hart/.codex"
+CODEX_HOME = "/Users/hart/.codex"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,cf732b4a285497bfd7e75a2ac14879bce9ae644eb4e1babeb17bb6a840dfc9bd"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.707.72221"
+SKY_CUA_SERVICE_PATH = "/Users/hart/.codex/plugins/cache/openai-bundled/computer-use/1.0.1000387/Codex Computer Use.app"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
 [features]
+hooks = true
 multi_agent = true
+js_repl = false
 
 [plugins."github@openai-curated"]
 enabled = true
@@ -37,9 +68,6 @@ enabled = true
 enabled = true
 
 [plugins."frontend-design@claude-plugins-official"]
-enabled = true
-
-[plugins."codex@openai-codex"]
 enabled = true
 
 [plugins."computer-use@openai-bundled"]
@@ -54,12 +82,29 @@ enabled = true
 [plugins."presentations@openai-primary-runtime"]
 enabled = true
 
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
 [tui]
-status_line = ["model-with-reasoning", "context-used", "five-hour-limit", "project-name", "run-state", "used-tokens", "task-progress"]
+status_line = ["model-with-reasoning", "context-used", "five-hour-limit", "project-name", "run-state", "used-tokens", "weekly-limit"]
 theme = "catppuccin-latte"
+status_line_use_colors = true
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
+"gpt-5.6-sol" = 4
 
 [projects."/Users/hart/github/rakuweb/forjob"]
 trust_level = "trusted"
@@ -121,30 +166,101 @@ trust_level = "trusted"
 [projects."/Users/hart/dotfiles"]
 trust_level = "trusted"
 
+[projects."/Users/hart/Downloads/cr-minor2026"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/pt-student-matching-repos/pt-student-matching"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/assessment-cms-repos/assessment-cms"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/sadoportlounge/sado-port-lounge-cms"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/sado-port-lounge-payments"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/sadoportlounge/sado-port-lounge-payments"]
+trust_level = "trusted"
+
+[projects."/Users/hart/projects"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/sadoportlounge/sado-port-lounge-cms-a"]
+trust_level = "trusted"
+
+[projects."/Users/hart/Local Sites/forjob-test/app/public"]
+trust_level = "trusted"
+
+[projects."/Users/hart/github/rakuweb/careernewday-gate"]
+trust_level = "trusted"
+
 [marketplaces.openai-bundled]
-last_updated = "2026-05-04T20:01:27Z"
+last_updated = "2026-07-14T15:13:45Z"
 source_type = "local"
-source = "/Users/haku/.codex/.tmp/bundled-marketplaces/openai-bundled"
+source = "/Users/hart/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.claude-plugins-official]
-last_updated = "2026-05-08T18:22:09Z"
-last_revision = "76b35e91d1c99c090b1a08dade53bcc5e352c1b2"
+last_updated = "2026-08-02T07:27:33Z"
+last_revision = "d620fb7d8349b66bbe281ea74cd346287abb6a48"
 source_type = "git"
 source = "https://github.com/anthropics/claude-plugins-official.git"
 
 [marketplaces.openai-codex]
-last_updated = "2026-05-08T18:22:11Z"
-last_revision = "807e03ac9d5aa23bc395fdec8c3767500a86b3cf"
+last_updated = "2026-07-09T16:58:34Z"
+last_revision = "db52e28f4d9ded852ab3942cea316258ae4ef346"
 source_type = "git"
 source = "https://github.com/openai/codex-plugin-cc.git"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-05-04T20:01:57Z"
+last_updated = "2026-07-14T14:33:54Z"
 source_type = "local"
-source = "/Users/haku/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+source = "/Users/hart/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 
 [notice.model_migrations]
 "gpt-5.3-codex" = "gpt-5.4"
+
+[hooks.state]
+
+[hooks.state."codex@openai-codex:hooks/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:e6b9df143de11443eb576c38874cf6e0c48358f948170948fdf630f1c047c098"
+enabled = true
+
+[hooks.state."/Users/hart/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:0178bc2c639f25f18f04eeedef2fbfe2dd26741963732ff519aa8fe73202adc8"
+enabled = true
+
+[hooks.state."/Users/hart/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:edeb6e8bc9983d2b36a87597fb83798fd6682aafd3e550f9ee83d058fd106674"
+
+[hooks.state."/Users/hart/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:328a153cb15f49e6d36ec1131115c7a5eb524d054952b481b493b4cb41819e45"
+
+[hooks.state."codex@openai-codex:hooks/hooks.json:stop:0:0"]
+trusted_hash = "sha256:3dfaa7e4f022570b260b8a8cf4ac7585c986175256b887a4723fac4f358a482f"
+
+[hooks.state."/Users/hart/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:47b8896dd1ae19d5f1964763adb733ef7a5ca26071eb88dd6f656fad7824a470"
+
+[desktop]
+ambient-suggestions-enabled = true
+sansFontSize = 12
+usePointerCursors = true
+composerEnterBehavior = "cmdIfMultiline"
+preventSleepWhileRunning = true
+keepRemoteControlAwakeWhilePluggedIn = true
+git-commit-instructions = "メッセージは日本語で記述して。"
+notifications-turn-mode = "always"
+conversationDetailMode = "STEPS_PROSE"
+followUpQueueMode = "queue"
+dock-icon-preference = "app-default"
+
+[desktop.open-in-target-preferences]
+global = "ghostty"
+
+[desktop.open-in-target-preferences.perPath]
+"/Users/hart/Documents/New project" = "ghostty"
 
 # -------------------------------------------------------------------
 # Claude Code delegation profiles
