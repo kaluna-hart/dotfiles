@@ -226,7 +226,6 @@ echo ""
 echo "--- Opencode ---"
 ensure_dir "$HOME/.config/opencode"
 create_symlink "$HOME/dotfiles/opencode/opencode.jsonc" "$HOME/.config/opencode/opencode.jsonc"
-create_symlink "$HOME/dotfiles/opencode/oh-my-opencode.json" "$HOME/.config/opencode/oh-my-opencode.json"
 echo ""
 
 # -------------------------------------------
