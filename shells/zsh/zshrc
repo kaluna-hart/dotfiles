@@ -214,3 +214,19 @@ export PATH="$HOME/.bun/bin:$PATH"
 
 # Hermes Agent — ensure ~/.local/bin is on PATH
 export PATH="$HOME/.local/bin:$PATH"
+
+# Hermes Agent + Herdr — keep the pane's agent identity for herdr-avatar.
+# Herdr identifies an agent from the pane's foreground process, but Hermes'
+# launcher ends in `exec python3 -c …` and the TUI runs node/python, so the pane
+# stops being `hermes` once the TUI is up (measured: identity dropped ~30s after
+# launch) and the avatar never attaches. HERDR_AGENT is Herdr's documented hint
+# for wrapper commands; it is set for this single command, never exported, so
+# other commands in the pane keep their own identity.
+# Details and measurements: herdr-avatar docs/HERDR_NOTES.md.
+hermes() {
+  if [[ "${HERDR_ENV:-}" == "1" ]]; then
+    HERDR_AGENT=hermes command hermes "$@"
+  else
+    command hermes "$@"
+  fi
+}
