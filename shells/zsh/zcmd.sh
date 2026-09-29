@@ -31,5 +31,20 @@ fzf-z-search() {
   fi
 }
 
+# for oh my pi
+omps () {
+    local root
+    root="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+        echo "Error: Git repository の中で omps を実行してください"
+        return 1
+    }
+
+    OMP_SANDBOX_WORKSPACE="$root" \
+    OMP_SANDBOX_YOLO=1 \
+    OMP_SANDBOX_PASS_ENV="HERDR_ENV:HERDR_BIN_PATH:HERDR_PANE_ID:HERDR_SOCKET_PATH:HERDR_TAB_ID:HERDR_WORKSPACE_ID" \
+    "$HOME/.omp/sandbox/omp-sandboxed" \
+    --config "$HOME/.omp/agent/sandbox.yml" "$@"
+}
+
 # for gh completion
 eval "$(gh completion -s zsh)"
