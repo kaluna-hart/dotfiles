@@ -1,0 +1,585 @@
+#!/bin/bash
+# omps-launcher — omps 上位互換ランチャー (Seatbelt + Git worktree + 起動時限定読み取り)
+#
+# 設計方針:
+#   * 既存 ~/.omp/sandbox/omp-sandboxed は変更しない。--print-profile（ラッパーの
+#     先頭引数）で生成された SBPL をそのまま基礎ポリシーとして使い、読み取り専用の
+#     追加ルールだけを「dotenv 保護ブロックの直前」に挿入したポリシーを起動時に生成する。
+#   * 追加するのは (allow file-read*) と (allow file-read-metadata) のみ。
+#     file-write* の追加許可は一切生成しない（生成したら内部エラーで中止する）。
+#   * 挿入位置を dotenv deny より前にすることで、.env の読み取り禁止は追加パス配下でも維持される
+#     （SBPL は後勝ちなので、後ろに追記すると deny を上書きしてしまう）。
+#   * sandbox-exec の適用に失敗したら中止する。Sandbox なしの omp へはフォールバックしない。
+#
+# 追加機能:
+#   A. Git worktree 検出 — rev-parse のみ使用（Git の書き込み操作は行わない）。
+#      通常リポジトリと linked worktree を区別し、Git 管理領域が workspace 外に
+#      ある場合 *だけ* 読み取りを追加する。書き込みは追加しない。
+#   B. 親ディレクトリのメタデータ — Git 管理領域/追加読み取り先へ到達するために
+#      必要な中間ディレクトリにだけ file-read-metadata (literal ...) を追加する。
+#      file-read* へは拡張しない。/Users/hart 全体の読み書き許可は付与しない。
+#   C. 起動時限定の読み取り — OMPS_EXTRA_READ="/a:/b" で明示指定されたパスのみ。
+#      実パス正規化・存在確認・シンボリックリンク解決・機密パス拒否（無条件）。
+#
+# 環境変数:
+#   OMP_SANDBOX_YOLO=1            --auto-approve を付与（omps 関数が既定で 1 を渡す）
+#   OMPS_AWS_MODE=1               既存挙動: ~/.aws の読み取りを許可（CONFIRM_SENSITIVE_READ=1）
+#   OMPS_EXTRA_READ="a:b"         起動時限定の追加読み取り（機密パスは拒否）
+#   OMP_SANDBOX_PASS_ENV          既存挙動: クリーン環境へ転送する変数（HERDR 等）
+#   OMPS_LAUNCHER_VERBOSE=1       起動計画を stderr に出力
+#   OMPS_GIT_GLOBAL_CONFIG=read   グローバル gitconfig (~/.gitconfig, ~/.config/git/config) を
+#                                 明示的に読み取り許可する。既定は許可せず、代わりに
+#                                 GIT_CONFIG_GLOBAL=/dev/null を渡して git の読み取り系を動かす
+#                                 （$HOME の設定ファイルから権限を自動拡大しないため）。
+#   OMP_SANDBOX_INHERIT_ENV=1     既存ラッパーと同じ抜け道（非推奨・警告あり）
+#   OMP_SANDBOX_SKIP_HOME_VERIFY=1 既存ラッパーと同じ抜け道（非推奨）
+#
+# サブコマンド（先頭引数のみ・omp へは転送しない）:
+#   --print-plan     正規化済みの起動計画を KEY=VALUE で出力
+#   --print-profile  合成後の SBPL ポリシーを出力
+#   --launcher-help  この説明（--help は omp へ転送するので横取りしない）
+#
+# 互換性: Apple 標準 /bin/bash 3.2 で動作（連想配列・mapfile 不使用）。
+set -euo pipefail
+
+MODE=launch
+case "${1:-}" in
+  --print-profile) MODE=profile ;;
+  --print-plan) MODE=plan ;;
+  --launcher-help) MODE=help ;;
+esac
+
+die() { printf 'omps-launcher: error: %s\n' "$*" >&2; exit 1; }
+warn() { printf 'omps-launcher: warning: %s\n' "$*" >&2; }
+
+if [ "$MODE" = help ]; then
+  /usr/bin/sed -n '2,45p' "$0" | /usr/bin/sed 's/^# \{0,1\}//'
+  exit 0
+fi
+
+# ---------------------------------------------------------------- 0. 前提確認
+[ -x /usr/bin/sandbox-exec ] || die "/usr/bin/sandbox-exec が見つかりません（macOS が必要）"
+[ -x /usr/bin/env ] || die "/usr/bin/env が見つかりません"
+OMP_BIN="$(command -v omp || true)"
+[ -n "$OMP_BIN" ] || die "'omp' が PATH 上にありません"
+
+# ------------------------------------------------- 1. HOME を dscl から解決
+# 継承 $HOME の汚染による読み取り拒否ポリシーの迂回を防ぐ（既存ラッパーと同じ方式）。
+_dscl_raw="$(/usr/bin/dscl . -read "/Users/$(/usr/bin/id -un)" NFSHomeDirectory 2>/dev/null)" || true
+HOME_DIR=""
+case "$_dscl_raw" in
+  "NFSHomeDirectory: "*)
+    _cand="${_dscl_raw#NFSHomeDirectory: }"
+    [ -d "$_cand" ] || die "dscl が返したホーム '$_cand' が存在しません"
+    HOME_DIR="$(cd "$_cand" && pwd -P)" ;;
+esac
+if [ -z "$HOME_DIR" ]; then
+  if [ "${OMP_SANDBOX_SKIP_HOME_VERIFY:-0}" = "1" ]; then
+    warn "dscl によるホーム解決に失敗。継承 HOME を使用（OMP_SANDBOX_SKIP_HOME_VERIFY=1）"
+    HOME_DIR="$(cd "${HOME:?HOME is unset}" && pwd -P)"
+  else
+    die "ホームを /usr/bin/dscl で検証できませんでした（OMP_SANDBOX_SKIP_HOME_VERIFY=1 で回避可・非推奨）"
+  fi
+fi
+if [ "${HOME:-}" != "$HOME_DIR" ]; then
+  if [ "${OMP_SANDBOX_SKIP_HOME_VERIFY:-0}" = "1" ]; then
+    warn "継承 HOME ('${HOME:-}') が実ホーム '$HOME_DIR' と異なります — 実ホームを使用"
+  else
+    die "継承 HOME ('${HOME:-}') が実ホーム '$HOME_DIR' と異なります — ポリシー迂回防止のため中止"
+  fi
+fi
+export HOME="$HOME_DIR"
+
+SANDBOXED="$HOME_DIR/.omp/sandbox/omp-sandboxed"
+OMP_CONFIG="$HOME_DIR/.omp/agent/sandbox.yml"
+[ -x "$SANDBOXED" ] || die "ラッパーが見つかりません: $SANDBOXED"
+[ -f "$OMP_CONFIG" ] || die "OmP 設定が見つかりません: $OMP_CONFIG"
+
+# 既存ラッパー側の追加許可を直接指定された場合は拒否（本ランチャーは write 拡大を扱わない）。
+if [ -n "${OMP_SANDBOX_EXTRA_WRITE:-}" ]; then
+  die "OMP_SANDBOX_EXTRA_WRITE は本ランチャーでは扱いません（write 拡大は禁止）。読み取りは OMPS_EXTRA_READ を使用してください"
+fi
+if [ -n "${OMP_SANDBOX_EXTRA_READ:-}" ]; then
+  die "OMP_SANDBOX_EXTRA_READ ではなく OMPS_EXTRA_READ を使用してください（委譲時のみ内部で使用）"
+fi
+
+# -------------------------------------------------------- 2. workspace 決定
+if ! _wt="$(/usr/bin/git rev-parse --show-toplevel 2>/dev/null)"; then
+  echo "Error: Git repository の中で実行してください"
+  exit 1
+fi
+[ -n "$_wt" ] && [ -d "$_wt" ] || die "Git リポジトリルートを解決できません"
+WORKSPACE="$(cd "$_wt" && pwd -P)"
+if [ "$WORKSPACE" = "/" ] || [ "$WORKSPACE" = "$HOME_DIR" ]; then
+  [ "${OMP_SANDBOX_CONFIRM_WIDE:-0}" = "1" ] || \
+    die "workspace '$WORKSPACE' は広すぎます（OMP_SANDBOX_CONFIRM_WIDE=1 で明示承認）"
+  warn "workspace '$WORKSPACE' — 広範なアクセスを OMP_SANDBOX_CONFIRM_WIDE=1 で承認済み"
+fi
+
+# TMPDIR は既存ラッパーと同じ検証・正規化を行う（clean env とポリシーの一致のため）。
+_tmpdir_raw="$(cd "${TMPDIR:-/tmp}" 2>/dev/null && pwd -P || echo '/private/tmp')"
+case "$_tmpdir_raw" in
+  /private/tmp|/private/tmp/*|/private/var/folders/*) TMPDIR_CANON="$_tmpdir_raw" ;;
+  *) warn "TMPDIR ('$_tmpdir_raw') は既知の一時領域ではありません — /private/tmp をポリシーに使用"
+     TMPDIR_CANON="/private/tmp" ;;
+esac
+export TMPDIR="$TMPDIR_CANON"
+
+# --------------------------------------------- 3. Git worktree / 管理領域の検出
+# rev-parse のみ（読み取り専用）。書き込み系 Git 操作は一切行わない。
+GIT_DIR="$(/usr/bin/git rev-parse --absolute-git-dir 2>/dev/null || true)"
+[ -n "$GIT_DIR" ] || die "Git 管理ディレクトリを検出できません（git rev-parse --absolute-git-dir）"
+
+GIT_COMMON_DIR="$(/usr/bin/git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+if [ -z "$GIT_COMMON_DIR" ]; then
+  GIT_COMMON_DIR="$(/usr/bin/git rev-parse --git-common-dir 2>/dev/null || true)"
+  case "$GIT_COMMON_DIR" in
+    /*) : ;;
+    ?*) GIT_COMMON_DIR="$PWD/$GIT_COMMON_DIR" ;;
+  esac
+fi
+[ -n "$GIT_COMMON_DIR" ] || die "Git 共通管理ディレクトリを検出できません"
+
+[ -d "$GIT_DIR" ] || die "Git 管理ディレクトリが実在しません: $GIT_DIR"
+[ -d "$GIT_COMMON_DIR" ] || die "Git 共通管理ディレクトリが実在しません: $GIT_COMMON_DIR"
+GIT_DIR="$(cd "$GIT_DIR" && pwd -P)"
+GIT_COMMON_DIR="$(cd "$GIT_COMMON_DIR" && pwd -P)"
+
+if [ "$GIT_DIR" = "$GIT_COMMON_DIR" ]; then
+  GIT_LAYOUT="repository"
+else
+  GIT_LAYOUT="linked-worktree"
+fi
+
+_under() {  # _under PATH ROOT — PATH が ROOT 自身または配下なら 0
+  local _p="$1" _r="$2"
+  [ "$_r" = "/" ] && return 0
+  _r="${_r%/}"
+  case "${_p%/}/" in "${_r}/"*) return 0 ;; esac
+  return 1
+}
+
+# ------------------------------------------------- 4. 追加読み取り（Git 管理領域）
+# workspace 外 かつ $HOME 配下のときだけ意味がある（$HOME 外は allow default で読める）。
+GIT_OUTSIDE_WS=0
+_under "$GIT_DIR" "$WORKSPACE" || GIT_OUTSIDE_WS=1
+
+GIT_READ_ROOTS=""
+if [ "$GIT_OUTSIDE_WS" = 1 ]; then
+  if _under "$GIT_DIR" "$GIT_COMMON_DIR"; then
+    _add_git_roots="$GIT_COMMON_DIR"        # 共通管理領域が git-dir を包含（linked worktree）
+  else
+    _add_git_roots="$GIT_COMMON_DIR
+$GIT_DIR"
+  fi
+  while IFS= read -r _r; do
+    [ -n "$_r" ] || continue
+    if ! _under "$_r" "$HOME_DIR"; then continue; fi   # $HOME 外は追加不要
+    GIT_READ_ROOTS="${GIT_READ_ROOTS}${_r}
+"
+  done <<EOF
+$_add_git_roots
+EOF
+  GIT_READ_ROOTS="$(printf '%s' "$GIT_READ_ROOTS" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+fi
+
+# --------------------------------------------- 5. 追加読み取り（起動時明示指定）
+sb_escape() {  # SBPL 文字列リテラル用エスケープ。安全に扱えないパスは拒否。
+  local _s
+  case "$1" in
+    *$'\n'*|*$'\r'*|*$'\t'*)
+      die "パスに制御文字（改行/CR/タブ）が含まれるためポリシーを安全に生成できません: '$1'" ;;
+  esac
+  _s="${1//\\/\\\\}"
+  printf '%s' "${_s//\"/\\\"}"
+}
+
+_omps_sensitive_path() {  # 0 = 機密（無条件拒否対象）
+  local _p="$1" _s _rest
+  case "$_p" in
+    "/"|"$HOME_DIR") return 0 ;;
+  esac
+  for _s in \
+      "$HOME_DIR/.ssh" "$HOME_DIR/.aws" "$HOME_DIR/.gnupg" \
+      "$HOME_DIR/.netrc" "$HOME_DIR/.netrc.gpg" "$HOME_DIR/.git-credentials" \
+      "$HOME_DIR/.password-store" "$HOME_DIR/.kube" "$HOME_DIR/.docker" \
+      "$HOME_DIR/.npmrc" "$HOME_DIR/.pypirc" "$HOME_DIR/.config/gcloud" \
+      "$HOME_DIR/.config/gh" "$HOME_DIR/.config/op" \
+      "$HOME_DIR/.local/share/keyrings" \
+      "$HOME_DIR/Library/Keychains" "$HOME_DIR/Library/LaunchAgents" \
+      "$HOME_DIR/Library/Cookies" "$HOME_DIR/Library/Safari" \
+      "$HOME_DIR/Library/Messages" "$HOME_DIR/Library/Mobile Documents" \
+      "$HOME_DIR/Library/Application Support/Google" \
+      "$HOME_DIR/.zshrc" "$HOME_DIR/.zprofile" "$HOME_DIR/.zshenv" \
+      "$HOME_DIR/.zsh_history" "$HOME_DIR/.bashrc" "$HOME_DIR/.bash_profile" \
+      "$HOME_DIR/.profile" "$HOME_DIR/.bash_history"
+  do
+    case "$_s/" in "$_p"/*) return 0 ;; esac   # 機密領域の祖先
+    case "$_p/" in "$_s"/*) return 0 ;; esac   # 機密領域の配下
+  done
+  _rest="/${_p#/}/"
+  case "$_rest" in
+    */.ssh/*|*/.aws/*|*/.gnupg/*|*/.netrc/*|*/Keychains/*|*/.password-store/*|*/.git-credentials/*|*/.kube/*|*/.docker/*|*/.config/gcloud/*)
+      return 0 ;;
+  esac
+  return 1
+}
+
+_meta_literals=""
+_add_meta_ancestors() {  # $1 = 追加読み取り先。親を $HOME 手前まで metadata-only で許可。
+  local _a
+  _a="$(/usr/bin/dirname "$1")"
+  while [ "$_a" != "/" ] && _under "$_a" "$HOME_DIR"; do
+    [ "$_a" = "$HOME_DIR" ] && break                    # $HOME ノードは基礎ポリシーで許可済み
+    if ! _under "$_a" "$WORKSPACE" && ! _under "$_a" "$HOME_DIR/.omp"; then
+      _meta_literals="${_meta_literals}${_a}
+"
+    fi
+    _a="$(/usr/bin/dirname "$_a")"
+  done
+}
+
+EXTRA_READ_ROOTS=""
+if [ -n "${OMPS_EXTRA_READ:-}" ]; then
+  _oldifs="$IFS"
+  IFS=':'
+  set -f
+  _er_list=($OMPS_EXTRA_READ)
+  set +f
+  IFS="$_oldifs"
+  _er_n=0
+  for _raw in ${_er_list[@]+"${_er_list[@]}"}; do
+    [ -n "$_raw" ] || continue
+    case "$_raw" in
+      "~") _raw="$HOME_DIR" ;;
+      "~/"*) _raw="$HOME_DIR/${_raw#\~/}" ;;
+    esac
+    case "$_raw" in
+      /*) : ;;
+      *) die "OMPS_EXTRA_READ は絶対パスで指定してください: '$_raw'" ;;
+    esac
+    case "$_raw" in
+      */../*|*/..|../*|..) die "OMPS_EXTRA_READ に '..' を含むパスは許可しません: '$_raw'" ;;
+    esac
+    if [ ! -e "$_raw" ] && [ ! -L "$_raw" ]; then
+      die "OMPS_EXTRA_READ のパスが存在しません（fail closed）: '$_raw'"
+    fi
+    if [ -L "$_raw" ]; then
+      _canon="$(/usr/bin/readlink -f "$_raw" 2>/dev/null || true)"
+      [ -n "$_canon" ] || die "シンボリックリンクを解決できません（fail closed）: '$_raw'"
+    elif _canon="$(cd "$_raw" 2>/dev/null && pwd -P)"; then
+      :
+    else
+      _canon="$(cd "$(/usr/bin/dirname "$_raw")" 2>/dev/null && pwd -P)/$(/usr/bin/basename "$_raw")" || \
+        die "実パスへ正規化できません（fail closed）: '$_raw'"
+    fi
+    [ -n "${_canon:-}" ] || die "実パスへ正規化できません（fail closed）: '$_raw'"
+    _canon="${_canon%/}"
+    [ "$_canon" = "/" ] && die "OMPS_EXTRA_READ=/ は許可しません"
+    if _omps_sensitive_path "$_canon"; then
+      die "OMPS_EXTRA_READ に機密パスは指定できません（無条件拒否）: '$_raw' -> '$_canon'"
+    fi
+    EXTRA_READ_ROOTS="${EXTRA_READ_ROOTS}${_canon}
+"
+    _er_n=$((_er_n + 1))
+  done
+  [ "$_er_n" -gt 0 ] || die "OMPS_EXTRA_READ が空です（未指定と同じ扱いにはしません）"
+  EXTRA_READ_ROOTS="$(printf '%s' "$EXTRA_READ_ROOTS" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+fi
+
+# ---------------- 5b. グローバル gitconfig（明示オプトイン時のみ literal 許可）
+# 既定では $HOME の設定ファイルを自動的に読み取り許可しない。その代わり既定で
+# GIT_CONFIG_GLOBAL=/dev/null を渡し、git の読み取り系（status/rev-parse/log）を動かす。
+# OMPS_GIT_GLOBAL_CONFIG=read を指定した場合のみ、当該ファイル *1個* の literal 読み取りを追加する。
+_literal_read_sources=""
+GIT_GLOBAL_MODE="${OMPS_GIT_GLOBAL_CONFIG:-none}"
+case "$GIT_GLOBAL_MODE" in
+  none|read) : ;;
+  *) die "OMPS_GIT_GLOBAL_CONFIG は 'read' のみ指定できます: '$GIT_GLOBAL_MODE'" ;;
+esac
+if [ "$GIT_GLOBAL_MODE" = "read" ]; then
+  for _c in "$HOME_DIR/.gitconfig" "$HOME_DIR/.config/git/config"; do
+    [ -f "$_c" ] || continue
+    _real="$(/usr/bin/readlink -f "$_c" 2>/dev/null || true)"
+    [ -n "$_real" ] || _real="$_c"
+    if _omps_sensitive_path "$_real"; then
+      die "グローバル gitconfig の実体が機密領域を指しています: '$_real'"
+    fi
+    _literal_read_sources="${_literal_read_sources}${_real}
+"
+  done
+  [ -n "$_literal_read_sources" ] || warn "OMPS_GIT_GLOBAL_CONFIG=read ですがグローバル gitconfig が見つかりません"
+else
+  # 設定ファイルを読ませない（権限は増やさない）。$HOME の既定 ignore/attributes も
+  # 読めないため /dev/null へ向けて警告ノイズを抑える（none モードのみ）。
+  export GIT_CONFIG_GLOBAL=/dev/null
+  export GIT_CONFIG_COUNT=2
+  export GIT_CONFIG_KEY_0=core.excludesFile
+  export GIT_CONFIG_VALUE_0=/dev/null
+  export GIT_CONFIG_KEY_1=core.attributesFile
+  export GIT_CONFIG_VALUE_1=/dev/null
+fi
+
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$GIT_READ_ROOTS
+EOF
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$EXTRA_READ_ROOTS
+EOF
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$_literal_read_sources
+EOF
+_meta_literals="$(printf '%s' "$_meta_literals" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+
+# --------------------------------- 6. AWS モード / 環境変数転送（既存実装の再現）
+PASS_ENV="HERDR_ENV:HERDR_BIN_PATH:HERDR_PANE_ID:HERDR_SOCKET_PATH:HERDR_TAB_ID:HERDR_WORKSPACE_ID"
+BASE_EXTRA_READ=""
+BASE_CONFIRM_READ=0
+AWS_MODE=0
+if [ "${OMPS_AWS_MODE:-0}" = "1" ]; then
+  AWS_MODE=1
+  BASE_EXTRA_READ="$HOME_DIR/.aws"        # 既存挙動: Bedrock 用に ~/.aws を読み取り許可
+  BASE_CONFIRM_READ=1
+else
+  # 既存挙動: 通常時は AWS 認証情報を遮断
+  export AWS_SHARED_CREDENTIALS_FILE=/dev/null
+  export AWS_CONFIG_FILE=/dev/null
+  PASS_ENV="$PASS_ENV:AWS_SHARED_CREDENTIALS_FILE:AWS_CONFIG_FILE"
+fi
+if [ "$GIT_GLOBAL_MODE" = "none" ]; then
+  # git が $HOME 配下の gitconfig / 既定 ignore を読まないようにする（読み取り権限は増やさない）
+  PASS_ENV="$PASS_ENV:GIT_CONFIG_GLOBAL:GIT_CONFIG_COUNT:GIT_CONFIG_KEY_0:GIT_CONFIG_VALUE_0:GIT_CONFIG_KEY_1:GIT_CONFIG_VALUE_1"
+fi
+export OMP_SANDBOX_PASS_ENV="$PASS_ENV"
+
+# --------------------------------------------------- 7. 基礎ポリシーの生成
+# --print-profile はラッパーの先頭引数に渡す（--config の後ろに置くと omp へ転送され失敗する）。
+BASE_PROFILE="$(/usr/bin/env \
+    "OMP_SANDBOX_WORKSPACE=$WORKSPACE" \
+    "OMP_SANDBOX_EXTRA_READ=$BASE_EXTRA_READ" \
+    "OMP_SANDBOX_CONFIRM_SENSITIVE_READ=$BASE_CONFIRM_READ" \
+    "$SANDBOXED" --print-profile)" || die "基礎ポリシーの生成に失敗しました（omp-sandboxed --print-profile）"
+[ -n "$BASE_PROFILE" ] || die "基礎ポリシーが空です"
+
+# ------------------------------------------- 8. 追加ルール（読み取りのみ）の合成
+_read_subpaths=""
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _esc="$(sb_escape "$_r")" || die "パスをエスケープできません: '$_r'"
+  _read_subpaths="${_read_subpaths}    (subpath \"${_esc}\")
+"
+done <<EOF
+$(printf '%s\n%s' "$GIT_READ_ROOTS" "$EXTRA_READ_ROOTS" | /usr/bin/sed '/^$/d')
+EOF
+_read_literals=""
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _esc="$(sb_escape "$_r")" || die "パスをエスケープできません: '$_r'"
+  _read_literals="${_read_literals}    (literal \"${_esc}\")
+"
+done <<EOF
+$_literal_read_sources
+EOF
+_meta_out=""
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  case "$_r" in *"/.env"|*"/.env."*) die "メタデータ許可の対象に .env を含められません: '$_r'" ;; esac
+  _esc="$(sb_escape "$_r")" || die "パスをエスケープできません: '$_r'"
+  _meta_out="${_meta_out}    (literal \"${_esc}\")
+"
+done <<EOF
+$_meta_literals
+EOF
+
+BLOCK=""
+if [ -n "$_read_subpaths" ] || [ -n "$_read_literals" ]; then
+  BLOCK="
+;; --- omps-launcher: 読み取り専用の追加許可（Git 管理領域 / 起動時指定） ---
+;; write 許可は意図的に一切追加しない（linked worktree 上の git add/commit は失敗し得る）
+(allow file-read*
+${_read_subpaths}${_read_literals})"
+fi
+if [ -n "$_meta_out" ]; then
+  BLOCK="${BLOCK}
+;; --- omps-launcher: 親ディレクトリのメタデータのみ許可（到達用・readdir は不可） ---
+(allow file-read-metadata
+${_meta_out})"
+fi
+case "$BLOCK" in
+  *"(allow file-write"*) die "内部エラー: 書き込み許可を生成しようとしました — 中止します" ;;
+esac
+
+# 挿入位置: dotenv 保護ブロックの直前（後勝ちの SBPL で .env 禁止を維持するため）
+_anchor=''
+if printf '%s\n' "$BASE_PROFILE" | /usr/bin/grep -q '^;; --- dotenv protection ---'; then
+  _anchor=';; --- dotenv protection ---'
+elif printf '%s\n' "$BASE_PROFILE" | /usr/bin/grep -q '^;; --- home-node metadata'; then
+  _anchor=';; --- home-node metadata'
+else
+  die "基礎ポリシーに挿入位置が見つかりません（フォーマット変更の可能性）— 中止します"
+fi
+
+MERGED=""
+if [ -n "$BLOCK" ]; then
+  _done=0
+  while IFS= read -r _line || [ -n "$_line" ]; do
+    if [ "$_done" = 0 ]; then
+      case "$_line" in
+        "$_anchor"*)
+          MERGED="${MERGED}${BLOCK}
+"
+          _done=1 ;;
+      esac
+    fi
+    MERGED="${MERGED}${_line}
+"
+  done <<EOF
+$BASE_PROFILE
+EOF
+  [ "$_done" = 1 ] || die "内部エラー: 追加ルールを挿入できませんでした"
+else
+  MERGED="${BASE_PROFILE}
+"
+fi
+
+PROFILE="$(/usr/bin/mktemp -t omps-launcher-profile)" || die "一時ポリシーファイルを作成できません"
+/bin/chmod 600 "$PROFILE"
+printf '%s' "$MERGED" > "$PROFILE"
+
+# 古い一時ポリシーの掃除（1日以上前・自前プレフィックスのみ）
+/usr/bin/find "$TMPDIR_CANON" -maxdepth 1 -name 'omps-launcher-profile.*' -mmin +180 \
+  -exec /bin/rm -f {} \; 2>/dev/null || true
+
+# ------------------------------------------- 9. ポリシー検証（fail closed）
+# (a) SBPL として適用できるか（= Seatbelt が実効で有効になることの確認）
+/usr/bin/sandbox-exec -f "$PROFILE" /usr/bin/true || \
+  die "生成ポリシーを sandbox-exec で適用できません — 起動を中止します（Sandbox なしへはフォールバックしません）"
+# (b) 権限が増えていないこと（write/deny の件数が基礎ポリシーと一致）
+_cnt() { printf '%s\n' "$2" | /usr/bin/grep -c "$1" || true; }
+_bw="$(/usr/bin/grep -c '(allow file-write\*' "$PROFILE" || true)"
+_deny="$(/usr/bin/grep -c '^(deny ' "$PROFILE" || true)"
+_bw_base="$(_cnt '^(allow file-write\*' "$BASE_PROFILE")"
+_deny_base="$(_cnt '^(deny ' "$BASE_PROFILE")"
+[ "$_bw" = "$_bw_base" ] || die "内部エラー: file-write* 許可の件数が変化しました ($_bw_base -> $_bw)"
+[ "$_deny" = "$_deny_base" ] || die "内部エラー: deny ルールの件数が変化しました ($_deny_base -> $_deny)"
+# (c) 追加ブロックに行の種類が file-read* / file-read-metadata 以外に無いこと（多重防御）。
+#     挿入したブロックだけを検査する（base の deny file-write* と混同しないため）。
+if [ -n "$BLOCK" ]; then
+  _blk_bad=0
+  while IFS= read -r _line; do
+    case "$_line" in
+      ''|';;'*|'(allow file-read*'|'(allow file-read-metadata'|'    (subpath "'*'")'|'    (literal "'*'")'|')') : ;;
+      *) _blk_bad=1 ;;
+    esac
+    case "$_line" in *file-write*|*'(deny '*) _blk_bad=1 ;; esac
+  done <<EOF
+$BLOCK
+EOF
+  [ "$_blk_bad" = 0 ] || die "内部エラー: 追加ブロックに想定外のルールがあります — 中止します"
+fi
+# (d) 合成結果が「基礎ポリシー＋追加ブロック」に一致すること（行数の整合）
+_sz_merged="$(/usr/bin/wc -l < "$PROFILE" | /usr/bin/tr -d ' ')"
+_sz_base="$(printf '%s\n' "$BASE_PROFILE" | /usr/bin/wc -l | /usr/bin/tr -d ' ')"
+_sz_block=0
+if [ -n "$BLOCK" ]; then _sz_block="$(printf '%s\n' "$BLOCK" | /usr/bin/wc -l | /usr/bin/tr -d ' ')"; fi
+if [ "$_sz_merged" != "$((_sz_base + _sz_block))" ]; then
+  die "内部エラー: 合成ポリシーの行数が不整合です (merged=$_sz_merged base=$_sz_base block=$_sz_block)"
+fi
+
+# ------------------------------------------------------------ 10. 起動計画出力
+_plan() {
+  printf 'OMPS_LAUNCHER=1\n'
+  printf 'WORKSPACE=%s\n' "$WORKSPACE"
+  printf 'GIT_LAYOUT=%s\n' "$GIT_LAYOUT"
+  printf 'GIT_DIR=%s\n' "$GIT_DIR"
+  printf 'GIT_COMMON_DIR=%s\n' "$GIT_COMMON_DIR"
+  printf 'GIT_DIR_OUTSIDE_WORKSPACE=%s\n' "$GIT_OUTSIDE_WS"
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'GIT_READ_ROOT=%s\n' "$_r"; fi; done <<EOF
+$GIT_READ_ROOTS
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'EXTRA_READ_PATH=%s\n' "$_r"; fi; done <<EOF
+$EXTRA_READ_ROOTS
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'METADATA_LITERAL=%s\n' "$_r"; fi; done <<EOF
+$_meta_literals
+EOF
+  printf 'AWS_MODE=%s\n' "$AWS_MODE"
+  printf 'CONFIRM_SENSITIVE_READ=%s\n' "$BASE_CONFIRM_READ"
+  printf 'YOLO=%s\n' "$([ "${OMP_SANDBOX_YOLO:-0}" = 1 ] && echo 1 || echo 0)"
+  printf 'PASS_ENV=%s\n' "$PASS_ENV"
+  printf 'PROFILE=%s\n' "$PROFILE"
+  printf 'PROFILE_LINES=%s\n' "$(/usr/bin/wc -l < "$PROFILE" | /usr/bin/tr -d ' ')"
+  printf 'BASE_PROFILE_LINES=%s\n' "$(printf '%s\n' "$BASE_PROFILE" | /usr/bin/wc -l | /usr/bin/tr -d ' ')"
+}
+
+case "$MODE" in
+  plan)
+    _plan
+    /bin/rm -f "$PROFILE"
+    exit 0 ;;
+  profile)
+    /bin/cat "$PROFILE"
+    /bin/rm -f "$PROFILE"
+    exit 0 ;;
+esac
+
+if [ "${OMPS_LAUNCHER_VERBOSE:-0}" = "1" ]; then
+  _plan >&2
+fi
+
+# ------------------------------------------------------ 11. クリーン環境で起動
+# 既存ラッパー _sbx_build_clean_env の再現（$HOME は検証済みの実ホームを使用）。
+_build_clean_env() {
+  local _sv _passval
+  _clean_env=("HOME=$HOME_DIR" "TMPDIR=$TMPDIR_CANON" \
+              "OMP_SANDBOX=seatbelt" "PI_SANDBOX=seatbelt")
+  for _sv in PATH USER LOGNAME SHELL LANG LC_ALL LC_CTYPE LC_MESSAGES \
+             TERM TERM_PROGRAM COLORTERM __CF_USER_TEXT_ENCODING COMMAND_MODE; do
+    if [ -n "${!_sv:-}" ]; then _clean_env+=("$_sv=${!_sv}"); fi
+  done
+  if [ -n "${OMP_SANDBOX_PASS_ENV:-}" ]; then
+    local _oldifs="$IFS"
+    IFS=':'
+    set -f
+    local _pv=($OMP_SANDBOX_PASS_ENV)
+    set +f
+    IFS="$_oldifs"
+    for _sv in ${_pv[@]+"${_pv[@]}"}; do
+      [ -n "$_sv" ] || continue
+      _passval="${!_sv:-}"
+      if [ -n "$_passval" ]; then
+        _clean_env+=("$_sv=$_passval")
+      else
+        warn "OMP_SANDBOX_PASS_ENV: '$_sv' は未設定または空です"
+      fi
+    done
+  fi
+  return 0
+}
+
+LAUNCH_ARGS=()
+if [ "${OMP_SANDBOX_YOLO:-0}" = "1" ]; then
+  LAUNCH_ARGS+=(--auto-approve)
+fi
+
+cd "$WORKSPACE" || die "workspace へ移動できません: $WORKSPACE"
+
+if [ "${OMP_SANDBOX_INHERIT_ENV:-0}" = "1" ]; then
+  warn "OMP_SANDBOX_INHERIT_ENV=1 — 親環境をそのまま渡します（非推奨）"
+  exec /usr/bin/sandbox-exec -f "$PROFILE" "$OMP_BIN" \
+    ${LAUNCH_ARGS[@]+"${LAUNCH_ARGS[@]}"} --config "$OMP_CONFIG" "$@"
+fi
+
+_build_clean_env
+exec /usr/bin/env -i "${_clean_env[@]}" \
+  /usr/bin/sandbox-exec -f "$PROFILE" "$OMP_BIN" \
+  ${LAUNCH_ARGS[@]+"${LAUNCH_ARGS[@]}"} --config "$OMP_CONFIG" "$@"

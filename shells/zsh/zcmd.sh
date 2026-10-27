@@ -32,43 +32,16 @@ fzf-z-search() {
 }
 
 # for oh my pi
+# omps は ~/.omp/sandbox/omps-launcher に委譲する。
+# ランチャーが担当: Git worktree 検出 / 起動時限定の読み取り許可 (OMPS_EXTRA_READ) /
+# AWS モード / HERDR 環境変数転送 / クリーン環境 / Seatbelt 適用と失敗時中止。
 omps() {
-    local root pass_env
-    local -a env_args
-
-    root="$(git rev-parse --show-toplevel 2>/dev/null)" || {
-        echo "Error: Git repository の中で実行してください"
+    local launcher="$HOME/.omp/sandbox/omps-launcher"
+    if [[ ! -x "$launcher" ]]; then
+        echo "Error: omps-launcher が見つかりません: $launcher" >&2
         return 1
-    }
-
-    pass_env="HERDR_ENV:HERDR_BIN_PATH:HERDR_PANE_ID:HERDR_SOCKET_PATH:HERDR_TAB_ID:HERDR_WORKSPACE_ID"
-
-    env_args=(
-        "OMP_SANDBOX_WORKSPACE=$root"
-        "OMP_SANDBOX_YOLO=1"
-    )
-
-    if [[ "${OMPS_AWS_MODE:-0}" == "1" ]]; then
-        # Bedrock用：AWSファイルの読み取りを許可
-        env_args+=(
-            "OMP_SANDBOX_EXTRA_READ=$HOME/.aws"
-            "OMP_SANDBOX_CONFIRM_SENSITIVE_READ=1"
-        )
-    else
-        # 通常用：AWSファイルへのアクセスを禁止
-        env_args+=(
-            "OMP_SANDBOX_EXTRA_READ="
-            "OMP_SANDBOX_CONFIRM_SENSITIVE_READ=0"
-            "AWS_SHARED_CREDENTIALS_FILE=/dev/null"
-            "AWS_CONFIG_FILE=/dev/null"
-        )
-        pass_env="${pass_env}:AWS_SHARED_CREDENTIALS_FILE:AWS_CONFIG_FILE"
     fi
-
-    /usr/bin/env "${env_args[@]}" \
-        "OMP_SANDBOX_PASS_ENV=$pass_env" \
-        "$HOME/.omp/sandbox/omp-sandboxed" \
-        --config "$HOME/.omp/agent/sandbox.yml" "$@"
+    OMP_SANDBOX_YOLO=1 "$launcher" "$@"
 }
 
 ompsaws() {
