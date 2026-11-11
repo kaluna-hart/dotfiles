@@ -5,7 +5,7 @@
 #   * 既存 ~/.omp/sandbox/omp-sandboxed は変更しない。--print-profile（ラッパーの
 #     先頭引数）で生成された SBPL をそのまま基礎ポリシーとして使い、読み取り専用の
 #     追加ルールだけを「dotenv 保護ブロックの直前」に挿入したポリシーを起動時に生成する。
-#   * 追加するのは (allow file-read*) と (allow file-read-metadata) のみ。
+#   * 追加するのは読み取り許可・既存 network 権限の限定復元・追加ルート限定 deny のみ。
 #     file-write* の追加許可は一切生成しない（生成したら内部エラーで中止する）。
 #   * 挿入位置を dotenv deny より前にすることで、.env の読み取り禁止は追加パス配下でも維持される
 #     （SBPL は後勝ちなので、後ろに追記すると deny を上書きしてしまう）。
@@ -20,6 +20,8 @@
 #      file-read* へは拡張しない。/Users/hart 全体の読み書き許可は付与しない。
 #   C. 起動時限定の読み取り — OMPS_EXTRA_READ="/a:/b" で明示指定されたパスのみ。
 #      実パス正規化・存在確認・シンボリックリンク解決・機密パス拒否（無条件）。
+#   D. 登録 worktree / 親 AGENTS.md — git worktree list（読み取りのみ）で列挙・検証し、
+#      通常ファイルは read-only 追加。socket/機密子孫は追加ルート限定 deny。失敗時は全自動 root を無効化。
 #
 # 環境変数:
 #   OMP_SANDBOX_YOLO=1            --auto-approve を付与（omps 関数が既定で 1 を渡す）
@@ -53,7 +55,7 @@ die() { printf 'omps-launcher: error: %s\n' "$*" >&2; exit 1; }
 warn() { printf 'omps-launcher: warning: %s\n' "$*" >&2; }
 
 if [ "$MODE" = help ]; then
-  /usr/bin/sed -n '2,45p' "$0" | /usr/bin/sed 's/^# \{0,1\}//'
+  /usr/bin/sed -n '2,44p' "$0" | /usr/bin/sed 's/^# \{0,1\}//'
   exit 0
 fi
 
@@ -159,6 +161,118 @@ _under() {  # _under PATH ROOT — PATH が ROOT 自身または配下なら 0
   return 1
 }
 
+_overlaps() {  # _overlaps A B — どちらかが他方を包含（同一含む）
+  _under "$1" "$2" || _under "$2" "$1"
+}
+
+_display_path() {  # 制御文字を含む untrusted path を安全に 1 行表示
+  printf '%s' "$1" | /usr/bin/tr '\001-\037\177' '?'
+}
+
+_canon_path() {  # 既存パスを実パスへ。失敗時 1（未存在・相対・制御文字・不正解決）
+  local _p="$1" _out
+  case "$_p" in
+    *$'\n'*|*$'\r'*|*$'\t'*|*[[:cntrl:]]*) return 1 ;;
+    /*) : ;;
+    *) return 1 ;;
+  esac
+  [ -e "$_p" ] || return 1
+  _out="$(/usr/bin/readlink -f "$_p" 2>/dev/null)" || return 1
+  [ -n "$_out" ] || return 1
+  case "$_out" in
+    *$'\n'*|*$'\r'*|*$'\t'*|*[[:cntrl:]]*) return 1 ;;
+  esac
+  printf '%s\n' "$_out"
+}
+
+# 登録 worktree の列挙結果（未検証）。flags<TAB>path を 1 行ずつ保持する。
+WORKTREE_ENUM="untrusted"
+WORKTREE_LIST=""
+WORKTREE_CANDIDATES=""
+_worktree_skips=""
+_wt_tab="$(printf '\t')"
+_wt_parse_ok=1
+_wt_have_worktree=0
+_wt_cur_path=""
+_wt_cur_flags=""
+_wt_count=0
+
+_wt_skip() {  # PATH REASON — 候補単位のスキップ（列挙全体は継続）
+  _worktree_skips="${_worktree_skips}$(_display_path "$1"):$2
+"
+  warn "worktree をスキップ: '$(_display_path "$1")' (reason: $2)"
+}
+
+_wt_emit_record() {  # porcelain 1 レコードを確定（空行/NUL 区切り・次レコード開始）
+  [ "$_wt_have_worktree" = 1 ] || return 0
+  _wt_have_worktree=0
+  if [ -z "$_wt_cur_path" ]; then
+    _wt_parse_ok=0
+    return 0
+  fi
+  case "$_wt_cur_path" in
+    *$'\n'*|*$'\r'*|*$'\t'*|*[[:cntrl:]]*)
+      _wt_skip "$_wt_cur_path" control-char
+      return 0 ;;
+    /*) : ;;
+    *)
+      _wt_skip "$_wt_cur_path" not-absolute
+      return 0 ;;
+  esac
+  WORKTREE_LIST="${WORKTREE_LIST}${_wt_cur_flags}${_wt_tab}${_wt_cur_path}
+"
+  _wt_count=$((_wt_count + 1))
+  return 0
+}
+
+_wt_enum_failed() {
+  WORKTREE_ENUM="untrusted"
+  warn "Git worktree 列挙を検証できないため、登録 worktree の自動読み取りをすべて無効化します"
+}
+
+# ------------------------------------- 3b. 登録 worktree の列挙（git 読み取りのみ）
+# 外部の GIT_* 環境や gitconfig に影響されないよう env -i で完全に隔離する。
+# -z（NUL 区切り）を使い、改行を含むパスによる行注入を防ぐ。
+_wt_tmpfile="$(/usr/bin/mktemp -t omps-launcher-worktrees 2>/dev/null || true)"
+if [ -n "$_wt_tmpfile" ]; then
+  if /usr/bin/env -i \
+      "HOME=$HOME_DIR" "TMPDIR=$TMPDIR_CANON" \
+      "PATH=/usr/bin:/bin:/usr/sbin:/sbin" "LANG=C" "LC_ALL=C" \
+      "GIT_CONFIG_NOSYSTEM=1" "GIT_CONFIG_GLOBAL=/dev/null" \
+      "GIT_CONFIG_SYSTEM=/dev/null" "GIT_TERMINAL_PROMPT=0" \
+      "GIT_OPTIONAL_LOCKS=0" \
+      /usr/bin/git -C "$WORKSPACE" worktree list --porcelain -z \
+      >"$_wt_tmpfile" 2>/dev/null; then
+    while IFS= read -r -d '' _tok; do
+      case "$_tok" in
+        "worktree "*)
+          _wt_emit_record
+          _wt_cur_path="${_tok#worktree }"
+          _wt_cur_flags=""
+          _wt_have_worktree=1 ;;
+        "HEAD "*) : ;;
+        "branch "*|"detached") : ;;
+        "bare") _wt_cur_flags="${_wt_cur_flags}bare," ;;
+        "locked"|"locked "*) _wt_cur_flags="${_wt_cur_flags}locked," ;;
+        "prunable"|"prunable "*) _wt_cur_flags="${_wt_cur_flags}prunable," ;;
+        "") _wt_emit_record ;;
+        *) _wt_parse_ok=0 ;;
+      esac
+    done <"$_wt_tmpfile"
+    _wt_emit_record
+    if [ "$_wt_parse_ok" = 1 ] && [ "$_wt_count" -gt 0 ]; then
+      WORKTREE_ENUM="ok"
+    else
+      _wt_enum_failed
+    fi
+  else
+    _wt_enum_failed
+  fi
+  /bin/rm -f "$_wt_tmpfile"
+else
+  _wt_enum_failed
+fi
+
 # ------------------------------------------------- 4. 追加読み取り（Git 管理領域）
 # workspace 外 かつ $HOME 配下のときだけ意味がある（$HOME 外は allow default で読める）。
 GIT_OUTSIDE_WS=0
@@ -187,36 +301,42 @@ fi
 sb_escape() {  # SBPL 文字列リテラル用エスケープ。安全に扱えないパスは拒否。
   local _s
   case "$1" in
-    *$'\n'*|*$'\r'*|*$'\t'*)
-      die "パスに制御文字（改行/CR/タブ）が含まれるためポリシーを安全に生成できません: '$1'" ;;
+    *$'\n'*|*$'\r'*|*$'\t'*|*[[:cntrl:]]*)
+      die "パスに制御文字が含まれるためポリシーを安全に生成できません: '$1'" ;;
   esac
   _s="${1//\\/\\\\}"
   printf '%s' "${_s//\"/\\\"}"
 }
 
-_omps_sensitive_path() {  # 0 = 機密（無条件拒否対象）
+_omps_sensitive_roots() {  # 1 行 1 パス。空白入りパスも安全に列挙する。
+  printf '%s\n' \
+    "$HOME_DIR/.ssh" "$HOME_DIR/.aws" "$HOME_DIR/.gnupg" \
+    "$HOME_DIR/.netrc" "$HOME_DIR/.netrc.gpg" "$HOME_DIR/.git-credentials" \
+    "$HOME_DIR/.password-store" "$HOME_DIR/.kube" "$HOME_DIR/.docker" \
+    "$HOME_DIR/.npmrc" "$HOME_DIR/.pypirc" "$HOME_DIR/.config/gcloud" \
+    "$HOME_DIR/.config/gh" "$HOME_DIR/.config/op" \
+    "$HOME_DIR/.local/share/keyrings" \
+    "$HOME_DIR/Library/Keychains" "$HOME_DIR/Library/LaunchAgents" \
+    "$HOME_DIR/Library/Cookies" "$HOME_DIR/Library/Safari" \
+    "$HOME_DIR/Library/Messages" "$HOME_DIR/Library/Mobile Documents" \
+    "$HOME_DIR/Library/Application Support/Google" \
+    "$HOME_DIR/.zshrc" "$HOME_DIR/.zprofile" "$HOME_DIR/.zshenv" \
+    "$HOME_DIR/.zsh_history" "$HOME_DIR/.bashrc" "$HOME_DIR/.bash_profile" \
+    "$HOME_DIR/.profile" "$HOME_DIR/.bash_history"
+}
+
+_omps_sensitive_path() {  # 0 = 機密（無条件拒否対象・字句判定）
   local _p="$1" _s _rest
   case "$_p" in
     "/"|"$HOME_DIR") return 0 ;;
   esac
-  for _s in \
-      "$HOME_DIR/.ssh" "$HOME_DIR/.aws" "$HOME_DIR/.gnupg" \
-      "$HOME_DIR/.netrc" "$HOME_DIR/.netrc.gpg" "$HOME_DIR/.git-credentials" \
-      "$HOME_DIR/.password-store" "$HOME_DIR/.kube" "$HOME_DIR/.docker" \
-      "$HOME_DIR/.npmrc" "$HOME_DIR/.pypirc" "$HOME_DIR/.config/gcloud" \
-      "$HOME_DIR/.config/gh" "$HOME_DIR/.config/op" \
-      "$HOME_DIR/.local/share/keyrings" \
-      "$HOME_DIR/Library/Keychains" "$HOME_DIR/Library/LaunchAgents" \
-      "$HOME_DIR/Library/Cookies" "$HOME_DIR/Library/Safari" \
-      "$HOME_DIR/Library/Messages" "$HOME_DIR/Library/Mobile Documents" \
-      "$HOME_DIR/Library/Application Support/Google" \
-      "$HOME_DIR/.zshrc" "$HOME_DIR/.zprofile" "$HOME_DIR/.zshenv" \
-      "$HOME_DIR/.zsh_history" "$HOME_DIR/.bashrc" "$HOME_DIR/.bash_profile" \
-      "$HOME_DIR/.profile" "$HOME_DIR/.bash_history"
-  do
+  while IFS= read -r _s; do
+    [ -n "$_s" ] || continue
     case "$_s/" in "$_p"/*) return 0 ;; esac   # 機密領域の祖先
     case "$_p/" in "$_s"/*) return 0 ;; esac   # 機密領域の配下
-  done
+  done <<EOF
+$(_omps_sensitive_roots)
+EOF
   _rest="/${_p#/}/"
   case "$_rest" in
     */.ssh/*|*/.aws/*|*/.gnupg/*|*/.netrc/*|*/Keychains/*|*/.password-store/*|*/.git-credentials/*|*/.kube/*|*/.docker/*|*/.config/gcloud/*)
@@ -224,6 +344,73 @@ _omps_sensitive_path() {  # 0 = 機密（無条件拒否対象）
   esac
   return 1
 }
+
+_omps_sensitive_resolved() {  # 0 = 機密（シンボリックリンク解決後も含む）
+  local _p="$1" _s
+  _omps_sensitive_path "$_p" && return 0
+  while IFS= read -r _s; do
+    [ -n "$_s" ] || continue
+    _overlaps "$_p" "$_s" && return 0
+  done <<EOF
+$_OMPS_SENSITIVE_RESOLVED
+EOF
+  return 1
+}
+
+_omps_sensitive_inside() {  # 0 = 候補自身が機密（または機密の配下/字句祖先）
+  local _p="$1" _s
+  _omps_sensitive_path "$_p" && return 0
+  while IFS= read -r _s; do
+    [ -n "$_s" ] || continue
+    _under "$_p" "$_s" && return 0
+  done <<EOF
+$_OMPS_SENSITIVE_RESOLVED
+EOF
+  return 1
+}
+
+_omps_collect_sensitive_descendants() {  # 候補が包含する解決済み機密パスを deny 対象に積む
+  local _p="$1" _s
+  while IFS= read -r _s; do
+    [ -n "$_s" ] || continue
+    if _under "$_s" "$_p"; then
+      WT_PROTECTED_DENIES="${WT_PROTECTED_DENIES}${_s}
+"
+    fi
+  done <<EOF
+$_OMPS_SENSITIVE_RESOLVED
+EOF
+}
+
+_omps_collect_gitconfig_descendants() {  # 既定で読まないグローバル gitconfig を候補内だけ deny
+  local _p="$1" _gc _gcc
+  while IFS= read -r _gc; do
+    [ -n "$_gc" ] || continue
+    _gcc="$(_canon_path "$_gc" || true)"
+    [ -n "$_gcc" ] || _gcc="$_gc"
+    if _under "$_gcc" "$_p"; then
+      WT_PROTECTED_DENIES="${WT_PROTECTED_DENIES}${_gcc}
+"
+    fi
+  done <<EOF
+$HOME_DIR/.gitconfig
+$HOME_DIR/.config/git
+EOF
+}
+
+# 起動時に一度だけ機密パスの実体を解決してキャッシュ（毎候補の再解決を避ける）。
+_OMPS_SENSITIVE_RESOLVED=""
+while IFS= read -r _s; do
+  [ -n "$_s" ] || continue
+  [ -e "$_s" ] || [ -L "$_s" ] || continue
+  _r="$(_canon_path "$_s" || true)"
+  [ -n "$_r" ] || continue
+  _OMPS_SENSITIVE_RESOLVED="${_OMPS_SENSITIVE_RESOLVED}${_r}
+"
+done <<EOF
+$(_omps_sensitive_roots)
+EOF
+_OMPS_SENSITIVE_RESOLVED="$(printf '%s' "$_OMPS_SENSITIVE_RESOLVED" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
 
 _meta_literals=""
 _add_meta_ancestors() {  # $1 = 追加読み取り先。親を $HOME 手前まで metadata-only で許可。
@@ -320,26 +507,6 @@ else
   export GIT_CONFIG_VALUE_1=/dev/null
 fi
 
-while IFS= read -r _r; do
-  [ -n "$_r" ] || continue
-  _add_meta_ancestors "$_r"
-done <<EOF
-$GIT_READ_ROOTS
-EOF
-while IFS= read -r _r; do
-  [ -n "$_r" ] || continue
-  _add_meta_ancestors "$_r"
-done <<EOF
-$EXTRA_READ_ROOTS
-EOF
-while IFS= read -r _r; do
-  [ -n "$_r" ] || continue
-  _add_meta_ancestors "$_r"
-done <<EOF
-$_literal_read_sources
-EOF
-_meta_literals="$(printf '%s' "$_meta_literals" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
-
 # --------------------------------- 6. AWS モード / 環境変数転送（既存実装の再現）
 PASS_ENV="HERDR_ENV:HERDR_BIN_PATH:HERDR_PANE_ID:HERDR_SOCKET_PATH:HERDR_TAB_ID:HERDR_WORKSPACE_ID"
 BASE_EXTRA_READ=""
@@ -361,6 +528,285 @@ if [ "$GIT_GLOBAL_MODE" = "none" ]; then
 fi
 export OMP_SANDBOX_PASS_ENV="$PASS_ENV"
 
+# ------------------------- 6b. 登録 worktree / 親 AGENTS.md の検証と追加ルート決定
+_wt_note() {  # PATH REASON — 計画にだけ残す（正常系のスキップは警告しない）
+  _worktree_skips="${_worktree_skips}$(_display_path "$1"):$2
+"
+}
+
+_git_in_repo() {  # DIR ARGS... — 外部 GIT_* 環境を排除して読み取り専用 git を実行
+  local _dir="$1"; shift
+  /usr/bin/env -i \
+    "HOME=$HOME_DIR" "TMPDIR=$TMPDIR_CANON" \
+    "PATH=/usr/bin:/bin:/usr/sbin:/sbin" "LANG=C" "LC_ALL=C" \
+    "GIT_CONFIG_NOSYSTEM=1" "GIT_CONFIG_GLOBAL=/dev/null" \
+    "GIT_CONFIG_SYSTEM=/dev/null" "GIT_TERMINAL_PROMPT=0" \
+    "GIT_OPTIONAL_LOCKS=0" \
+    /usr/bin/git -C "$_dir" "$@"
+}
+
+_wt_meta_mismatch() {  # PATH — 共有メタデータの相互リンクを含む検証
+  local _cand="$1" _common _top _gitdir _line _linked _back _expect
+  if [ ! -e "$_cand/.git" ]; then return 0; fi
+  if [ ! -f "$_cand/.git" ] && [ ! -d "$_cand/.git" ]; then return 0; fi
+  _common="$(_git_in_repo "$_cand" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+  _top="$(_git_in_repo "$_cand" rev-parse --show-toplevel 2>/dev/null || true)"
+  _gitdir="$(_git_in_repo "$_cand" rev-parse --absolute-git-dir 2>/dev/null || true)"
+  [ -n "$_common" ] && [ -n "$_top" ] && [ -n "$_gitdir" ] || return 0
+  _common="$(_canon_path "$_common" || true)"
+  _top="$(_canon_path "$_top" || true)"
+  _gitdir="$(_canon_path "$_gitdir" || true)"
+  [ "$_common" = "$GIT_COMMON_DIR" ] || return 0
+  [ "$_top" = "$_cand" ] || return 0
+  if [ "$_gitdir" != "$GIT_COMMON_DIR" ] && ! _under "$_gitdir" "$GIT_COMMON_DIR"; then
+    return 0
+  fi
+  # linked worktree は .git ファイルと共有 worktrees/<id>/gitdir の両方が必要
+  if [ "$_gitdir" != "$GIT_COMMON_DIR" ]; then
+    [ -f "$_cand/.git" ] || return 0
+    [ -f "$_gitdir/gitdir" ] || return 0
+  fi
+  # linked worktree の .git ファイル → 共有 worktrees/<id> の逆方向リンクを確認
+  if [ -f "$_cand/.git" ] && [ ! -L "$_cand/.git" ]; then
+    _line="$(/usr/bin/head -n 1 "$_cand/.git" 2>/dev/null || true)"
+    case "$_line" in
+      "gitdir: "*) _linked="${_line#gitdir: }" ;;
+      *) return 0 ;;
+    esac
+    case "$_linked" in
+      /*) : ;;
+      *) _linked="$_cand/$_linked" ;;
+    esac
+    _linked="$(_canon_path "$_linked" || true)"
+    [ "$_linked" = "$_gitdir" ] || return 0
+  fi
+  if [ -f "$_gitdir/gitdir" ]; then
+    _back="$(/usr/bin/head -n 1 "$_gitdir/gitdir" 2>/dev/null || true)"
+    case "$_back" in
+      /*) : ;;
+      ?*) _back="$_gitdir/$_back" ;;   # relative-paths worktree metadata
+    esac
+    _expect="$(_canon_path "$_cand/.git" || true)"
+    _back="$(_canon_path "$_back" || true)"
+    [ -n "$_back" ] && [ "$_back" = "$_expect" ] || return 0
+  fi
+  return 1  # 0 = mismatch, 1 = OK
+}
+
+WT_READ_ROOTS=""
+WT_DENY_ROOTS=""
+WT_PROTECTED_DENIES=""
+_worktree_auto_roots=0
+_wt_current_found=0
+
+if [ "$WORKTREE_ENUM" = "ok" ]; then
+  _oldifs="$IFS"
+  IFS=$'\n'
+  set -f
+  _wt_records=($WORKTREE_LIST)
+  set +f
+  IFS="$_oldifs"
+  for _rec in ${_wt_records[@]+"${_wt_records[@]}"}; do
+    [ -n "$_rec" ] || continue
+    _flags="${_rec%%"$_wt_tab"*}"
+    _raw="${_rec#*"$_wt_tab"}"
+    _cand="$(_canon_path "$_raw" || true)"
+    if [ -n "$_cand" ]; then
+      WORKTREE_CANDIDATES="${WORKTREE_CANDIDATES}${_cand}
+"
+    else
+      WORKTREE_CANDIDATES="${WORKTREE_CANDIDATES}$(_display_path "$_raw")
+"
+    fi
+    case ",$_flags," in
+      *,bare,*) _wt_skip "$_raw" bare; continue ;;
+    esac
+    case ",$_flags," in
+      *,prunable,*) _wt_skip "$_raw" prunable; continue ;;
+    esac
+    case "$_raw" in
+      *$'\n'*|*$'\r'*|*$'\t'*|*[[:cntrl:]]*) _wt_skip "$_raw" control-char; continue ;;
+      /*) : ;;
+      *) _wt_skip "$_raw" not-absolute; continue ;;
+    esac
+    [ -n "$_cand" ] || { _wt_skip "$_raw" missing; continue; }
+    [ -d "$_cand" ] || { _wt_skip "$_cand" not-directory; continue; }
+    if [ "$_cand" = "$WORKSPACE" ]; then
+      _wt_current_found=1
+      _wt_note "$_cand" current
+      continue
+    fi
+    if ! _under "$_cand" "$HOME_DIR"; then
+      _wt_note "$_cand" outside-home
+      continue
+    fi
+    if _omps_sensitive_inside "$_cand"; then
+      _wt_skip "$_cand" sensitive
+      continue
+    fi
+    # dotenv 保護はファイル名基準。worktree ルート自体が .env 系ディレクトリの場合、
+    # 配下の読み取りが保護を迂回し得るため追加しない（fail closed）。
+    case "${_cand}/" in
+      *"/.env/"*|*"/.env."*"/"*) _wt_skip "$_cand" sensitive; continue ;;
+    esac
+    if _overlaps "$_cand" "$WORKSPACE"; then
+      _wt_skip "$_cand" workspace-overlap
+      continue
+    fi
+    _wt_meta_ok=1
+    while IFS= read -r _g; do
+      [ -n "$_g" ] || continue
+      if _under "$_cand" "$_g"; then _wt_meta_ok=0; break; fi
+    done <<EOF
+$GIT_READ_ROOTS
+EOF
+    if [ "$_wt_meta_ok" = 0 ]; then
+      _wt_skip "$_cand" git-metadata-overlap
+      continue
+    fi
+    _wt_ov=0
+    while IFS= read -r _o; do
+      [ -n "$_o" ] || continue
+      if _overlaps "$_cand" "$_o"; then _wt_ov=1; break; fi
+    done <<EOF
+$EXTRA_READ_ROOTS
+EOF
+    if [ "$_wt_ov" = 1 ]; then
+      _wt_skip "$_cand" extra-read-overlap
+      continue
+    fi
+    if [ -n "$BASE_EXTRA_READ" ] && _overlaps "$_cand" "$BASE_EXTRA_READ"; then
+      _wt_skip "$_cand" aws-overlap
+      continue
+    fi
+    if _overlaps "$_cand" "$HOME_DIR/.omp"; then
+      _wt_skip "$_cand" omp-config-overlap
+      continue
+    fi
+    # 既定モードで読まないグローバル gitconfig の「配下」に入る候補は追加しない。
+    # 候補が gitconfig を「包含」する場合は、そのパスだけ後で scoped deny する。
+    _wt_gc_inside=0
+    while IFS= read -r _gc; do
+      [ -n "$_gc" ] || continue
+      _gcc="$(_canon_path "$_gc" || true)"
+      [ -n "$_gcc" ] || _gcc="$_gc"
+      if _under "$_cand" "$_gc" || _under "$_cand" "$_gcc"; then _wt_gc_inside=1; break; fi
+    done <<EOF
+$HOME_DIR/.gitconfig
+$HOME_DIR/.config/git
+EOF
+    if [ "$_wt_gc_inside" = 1 ]; then
+      _wt_skip "$_cand" gitconfig-overlap
+      continue
+    fi
+    _wt_ov=0
+    while IFS= read -r _o; do
+      [ -n "$_o" ] || continue
+      if _overlaps "$_cand" "$_o"; then _wt_ov=1; break; fi
+    done <<EOF
+$_literal_read_sources
+EOF
+    if [ "$_wt_ov" = 1 ]; then
+      _wt_skip "$_cand" gitconfig-overlap
+      continue
+    fi
+    if _wt_meta_mismatch "$_cand"; then
+      _wt_skip "$_cand" metadata-mismatch
+      continue
+    fi
+    # 追加が確定したルートについてのみ、内包する解決済み機密/gitconfig を
+    # scoped deny に積む（スキップ候補の deny が既存許可へ漏れないようにする）。
+    _omps_collect_sensitive_descendants "$_cand"
+    _omps_collect_gitconfig_descendants "$_cand"
+    WT_READ_ROOTS="${WT_READ_ROOTS}${_cand}
+"
+    WT_DENY_ROOTS="${WT_DENY_ROOTS}${_cand}
+"
+  done
+fi
+
+if [ "$WORKTREE_ENUM" = "ok" ] && [ "$_wt_current_found" = 0 ]; then
+  _wt_enum_failed
+fi
+if [ "$WORKTREE_ENUM" != "ok" ]; then
+  WT_READ_ROOTS=""
+  WT_DENY_ROOTS=""
+  WT_PROTECTED_DENIES=""
+fi
+WT_READ_ROOTS="$(printf '%s' "$WT_READ_ROOTS" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+WT_DENY_ROOTS="$(printf '%s' "$WT_DENY_ROOTS" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+WT_PROTECTED_DENIES="$(printf '%s' "$WT_PROTECTED_DENIES" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+# 保護 deny は必ず追加ルートの内側だけを対象にする（既存許可を狭めない）。
+if [ -n "$WT_PROTECTED_DENIES" ]; then
+  while IFS= read -r _p; do
+    [ -n "$_p" ] || continue
+    _prot_ok=0
+    while IFS= read -r _root; do
+      [ -n "$_root" ] || continue
+      if _under "$_p" "$_root"; then _prot_ok=1; break; fi
+    done <<EOF
+$WT_READ_ROOTS
+EOF
+    [ "$_prot_ok" = 1 ] || \
+      die "内部エラー: 保護 deny が追加ルートの外側にあります: '$_p'"
+  done <<EOF
+$WT_PROTECTED_DENIES
+EOF
+fi
+_worktree_auto_roots="$(printf '%s\n' "$WT_READ_ROOTS" | /usr/bin/grep -c . || true)"
+
+# 親 AGENTS.md（workspace の祖先・$HOME を含む・workspace 自身は除外）
+PARENT_AGENT_FILES=""
+PARENT_AGENT_SKIPS=""
+_agents_parent_skip() {
+  PARENT_AGENT_SKIPS="${PARENT_AGENT_SKIPS}$(_display_path "$1"):$2
+"
+  warn "親 AGENTS.md をスキップ: '$(_display_path "$1")' (reason: $2)"
+}
+_agents_d="$(/usr/bin/dirname "$WORKSPACE")"
+while _under "$_agents_d" "$HOME_DIR"; do
+  _af="$_agents_d/AGENTS.md"
+  if [ -L "$_af" ]; then
+    _agents_parent_skip "$_af" symlink
+  elif [ -f "$_af" ]; then
+    _af_real="$(_canon_path "$_af" || true)"
+    if [ -z "$_af_real" ] || [ "$_af_real" != "$_af" ] || _omps_sensitive_resolved "$_af"; then
+      _agents_parent_skip "$_af" sensitive
+    else
+      PARENT_AGENT_FILES="${PARENT_AGENT_FILES}${_af}
+"
+    fi
+  fi
+  [ "$_agents_d" = "$HOME_DIR" ] && break
+  _agents_next="$(/usr/bin/dirname "$_agents_d")"
+  [ "$_agents_next" = "$_agents_d" ] && break
+  _agents_d="$_agents_next"
+done
+PARENT_AGENT_FILES="$(printf '%s' "$PARENT_AGENT_FILES" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+
+# 到達に必要な中間ディレクトリの metadata のみ許可（readdir 不可）
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$GIT_READ_ROOTS
+EOF
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$EXTRA_READ_ROOTS
+$WT_READ_ROOTS
+EOF
+while IFS= read -r _r; do
+  [ -n "$_r" ] || continue
+  _add_meta_ancestors "$_r"
+done <<EOF
+$_literal_read_sources
+$PARENT_AGENT_FILES
+EOF
+_meta_literals="$(printf '%s' "$_meta_literals" | /usr/bin/sort -u | /usr/bin/sed '/^$/d')"
+
 # --------------------------------------------------- 7. 基礎ポリシーの生成
 # --print-profile はラッパーの先頭引数に渡す（--config の後ろに置くと omp へ転送され失敗する）。
 BASE_PROFILE="$(/usr/bin/env \
@@ -371,6 +817,33 @@ BASE_PROFILE="$(/usr/bin/env \
 [ -n "$BASE_PROFILE" ] || die "基礎ポリシーが空です"
 
 # ------------------------------------------- 8. 追加ルール（読み取りのみ）の合成
+# 追加 deny が既存許可を狭めないことを、生成前に再確認する（多重防御）。
+while IFS= read -r _root; do
+  [ -n "$_root" ] || continue
+  while IFS= read -r _p; do
+    [ -n "$_p" ] || continue
+    if _overlaps "$_root" "$_p"; then
+      die "内部エラー: worktree 追加ルートが既存許可と重なっています: '$_root'"
+    fi
+  done <<EOF
+$WORKSPACE
+$EXTRA_READ_ROOTS
+$BASE_EXTRA_READ
+$HOME_DIR/.omp
+$_literal_read_sources
+EOF
+  while IFS= read -r _g; do
+    [ -n "$_g" ] || continue
+    if _under "$_root" "$_g"; then
+      die "内部エラー: worktree 追加ルートが既存許可と重なっています: '$_root'"
+    fi
+  done <<EOF
+$GIT_READ_ROOTS
+EOF
+done <<EOF
+$WT_DENY_ROOTS
+EOF
+
 _read_subpaths=""
 while IFS= read -r _r; do
   [ -n "$_r" ] || continue
@@ -378,7 +851,7 @@ while IFS= read -r _r; do
   _read_subpaths="${_read_subpaths}    (subpath \"${_esc}\")
 "
 done <<EOF
-$(printf '%s\n%s' "$GIT_READ_ROOTS" "$EXTRA_READ_ROOTS" | /usr/bin/sed '/^$/d')
+$(printf '%s\n%s\n%s' "$GIT_READ_ROOTS" "$EXTRA_READ_ROOTS" "$WT_READ_ROOTS" | /usr/bin/sed '/^$/d')
 EOF
 _read_literals=""
 while IFS= read -r _r; do
@@ -387,7 +860,7 @@ while IFS= read -r _r; do
   _read_literals="${_read_literals}    (literal \"${_esc}\")
 "
 done <<EOF
-$_literal_read_sources
+$(printf '%s\n%s' "$_literal_read_sources" "$PARENT_AGENT_FILES" | /usr/bin/sed '/^$/d')
 EOF
 _meta_out=""
 while IFS= read -r _r; do
@@ -400,14 +873,153 @@ done <<EOF
 $_meta_literals
 EOF
 
+# 追加 worktree ルート限定の socket / 機密子孫 deny。パス述語なので、
+# ポリシー生成後に作られた socket にも適用される（スキャンではない）。
+# 追加ルートは workspace/EXTRA_READ/AWS/.omp/gitconfig と重ならないことを上で確認済み。
+#
+# SBPL は 1 ルール内に並置した複数フィルタを OR として解釈する
+# （例: base プロファイルの (allow file-read* (subpath A) (subpath B)) は
+#  A または B の許可）。したがって「ルート配下の socket」だけを対象にするには、
+# (subpath ...) と (vnode-type SOCKET) を require-all で交差させなければならない。
+# 素の並置 (deny file-read* (subpath R) (vnode-type SOCKET)) は
+# 「R 配下の全ファイル」または「全 socket」の拒否となり、追加 worktree の
+# 通常ファイル読み取りまで壊す（実際にその形で全 worktree 読み取りが失敗した）。
+# 復元 allow 側も同じ理由で require-all 必須: 並置すると全 socket の読み取りを
+# システム全体で許可してしまい、socket deny 自体を無効化する。
+_wt_socket_denies=""
+while IFS= read -r _root; do
+  [ -n "$_root" ] || continue
+  _esc="$(sb_escape "$_root")" || die "パスをエスケープできません: '$_root'"
+  _wt_socket_denies="${_wt_socket_denies}(deny file-read* (require-all (subpath \"${_esc}\") (vnode-type SOCKET)))
+(deny network-outbound (subpath \"${_esc}\"))
+(deny network-bind (subpath \"${_esc}\"))
+"
+  # 追加ルートが既存の Git 管理領域を包含する場合（main worktree の .git など）、
+  # 既存の読み取り/network 権限を狭めないよう、その部分だけ deny の後で復元する。
+  while IFS= read -r _g; do
+    [ -n "$_g" ] || continue
+    _under "$_g" "$_root" || continue
+    _gesc="$(sb_escape "$_g")" || die "パスをエスケープできません: '$_g'"
+    _wt_socket_denies="${_wt_socket_denies}(allow file-read* (require-all (subpath \"${_gesc}\") (vnode-type SOCKET)))
+(allow network-outbound (subpath \"${_gesc}\"))
+(allow network-bind (subpath \"${_gesc}\"))
+"
+  done <<EOF
+$GIT_READ_ROOTS
+EOF
+done <<EOF
+$WT_DENY_ROOTS
+EOF
+
+# ネストされた認証情報と一般的な秘密鍵も、追加 worktree の内側だけで拒否する。
+_wt_nested_denies=""
+while IFS= read -r _root; do
+  [ -n "$_root" ] || continue
+  _esc="$(sb_escape "$_root")" || die "パスをエスケープできません: '$_root'"
+  _wt_nested_denies="${_wt_nested_denies}(deny file-read* (require-all (subpath \"${_esc}\") (regex #\".*/([.]ssh|[.]aws|[.]gnupg|[.]kube|[.]docker|[.]npmrc|[.]netrc|[.]git-credentials)(/.*)?$\")))
+(deny file-read* (require-all (subpath \"${_esc}\") (regex #\".*/(id_rsa|id_dsa|id_ecdsa|id_ed25519|[^/]+[.](pem|key|p12|pfx))$\")))
+"
+done <<EOF
+$WT_DENY_ROOTS
+EOF
+
+_wt_sensitive_denies=""
+while IFS= read -r _rel; do
+  [ -n "$_rel" ] || continue
+  while IFS= read -r _root; do
+    [ -n "$_root" ] || continue
+    _esc="$(sb_escape "${_root}/${_rel}")" || die "パスをエスケープできません: '${_root}/${_rel}'"
+    _wt_sensitive_denies="${_wt_sensitive_denies}(deny file-read* (subpath \"${_esc}\"))
+"
+  done <<EOF
+$WT_DENY_ROOTS
+EOF
+done <<EOF
+.ssh
+.aws
+.gnupg
+.netrc
+.netrc.gpg
+.git-credentials
+.password-store
+.kube
+.docker
+.npmrc
+.pypirc
+.config/gcloud
+.config/gh
+.config/op
+.local/share/keyrings
+Library/Keychains
+Library/LaunchAgents
+Library/Cookies
+Library/Safari
+Library/Messages
+Library/Mobile Documents
+Library/Application Support/Google
+.zshrc
+.zprofile
+.zshenv
+.zsh_history
+.bashrc
+.bash_profile
+.profile
+.bash_history
+EOF
+
+_wt_protected_denies_out=""
+while IFS= read -r _p; do
+  [ -n "$_p" ] || continue
+  _esc="$(sb_escape "$_p")" || die "パスをエスケープできません: '$_p'"
+  _wt_protected_denies_out="${_wt_protected_denies_out}(deny file-read* (subpath \"${_esc}\"))
+"
+done <<EOF
+$WT_PROTECTED_DENIES
+EOF
+
 BLOCK=""
 if [ -n "$_read_subpaths" ] || [ -n "$_read_literals" ]; then
   BLOCK="
-;; --- omps-launcher: 読み取り専用の追加許可（Git 管理領域 / 起動時指定） ---
+;; --- omps-launcher: 読み取り専用の追加許可（Git 管理領域 / 登録 worktree / 親 AGENTS.md / 起動時指定） ---
 ;; write 許可は意図的に一切追加しない（linked worktree 上の git add/commit は失敗し得る）
 (allow file-read*
 ${_read_subpaths}${_read_literals})"
 fi
+if [ -n "$_wt_socket_denies" ]; then
+  BLOCK="${BLOCK}
+;; --- omps-launcher: 追加 worktree の socket を拒否（追加ルート限定・後勝ち） ---
+${_wt_socket_denies}"
+fi
+if [ -n "$_wt_sensitive_denies" ]; then
+  BLOCK="${BLOCK}
+;; --- omps-launcher: 追加 worktree 配下の機密子孫を拒否（追加ルート限定） ---
+${_wt_sensitive_denies}"
+fi
+if [ -n "$_wt_nested_denies" ]; then
+  BLOCK="${BLOCK}
+;; --- omps-launcher: worktree 内の認証情報・秘密鍵の名前を拒否 ---
+${_wt_nested_denies}"
+fi
+if [ -n "$_wt_protected_denies_out" ]; then
+  BLOCK="${BLOCK}
+;; --- omps-launcher: 解決済み機密パス / グローバル gitconfig を拒否（追加ルート内のみ） ---
+${_wt_protected_denies_out}"
+fi
+# 既に Git 管理領域として読み取り許可されていた部分は、追加 worktree の
+# scoped deny によって狭めない。dotenv deny はこの復元の後に適用される。
+while IFS= read -r _root; do
+  [ -n "$_root" ] || continue
+  while IFS= read -r _g; do
+    [ -n "$_g" ] && _under "$_g" "$_root" || continue
+    _gesc="$(sb_escape "$_g")" || die "Git 管理領域をエスケープできません: '$_g'"
+    BLOCK="${BLOCK}
+(allow file-read* (subpath \"${_gesc}\"))"
+  done <<EOF
+$GIT_READ_ROOTS
+EOF
+done <<EOF
+$WT_DENY_ROOTS
+EOF
 if [ -n "$_meta_out" ]; then
   BLOCK="${BLOCK}
 ;; --- omps-launcher: 親ディレクトリのメタデータのみ許可（到達用・readdir は不可） ---
@@ -415,8 +1027,9 @@ if [ -n "$_meta_out" ]; then
 ${_meta_out})"
 fi
 case "$BLOCK" in
-  *"(allow file-write"*) die "内部エラー: 書き込み許可を生成しようとしました — 中止します" ;;
+  *"file-write"*) die "内部エラー: 書き込み許可を生成しようとしました — 中止します" ;;
 esac
+while [ "${BLOCK%$'\n'}" != "$BLOCK" ]; do BLOCK="${BLOCK%$'\n'}"; done
 
 # 挿入位置: dotenv 保護ブロックの直前（後勝ちの SBPL で .env 禁止を維持するため）
 _anchor=''
@@ -469,28 +1082,46 @@ _bw="$(/usr/bin/grep -c '(allow file-write\*' "$PROFILE" || true)"
 _deny="$(/usr/bin/grep -c '^(deny ' "$PROFILE" || true)"
 _bw_base="$(_cnt '^(allow file-write\*' "$BASE_PROFILE")"
 _deny_base="$(_cnt '^(deny ' "$BASE_PROFILE")"
+_bw_deny="$(_cnt '^(deny file-write' "$BASE_PROFILE")"
+_bw_deny_final="$(/usr/bin/grep -c '^(deny file-write' "$PROFILE" || true)"
+_blk_deny="$(printf '%s\n' "$BLOCK" | /usr/bin/grep -c '^(deny ' || true)"
+[ -n "$_blk_deny" ] || _blk_deny=0
 [ "$_bw" = "$_bw_base" ] || die "内部エラー: file-write* 許可の件数が変化しました ($_bw_base -> $_bw)"
-[ "$_deny" = "$_deny_base" ] || die "内部エラー: deny ルールの件数が変化しました ($_deny_base -> $_deny)"
-# (c) 追加ブロックに行の種類が file-read* / file-read-metadata 以外に無いこと（多重防御）。
+[ "$_bw_deny_final" = "$_bw_deny" ] || die "内部エラー: file-write* deny の件数が変化しました ($_bw_deny -> $_bw_deny_final)"
+[ "$_deny" = "$((_deny_base + _blk_deny))" ] || \
+  die "内部エラー: deny ルールの件数が不整合です (base=$_deny_base block=$_blk_deny final=$_deny)"
+# (c) 追加ブロックに行の種類が読み取り許可 / 追加ルート限定 deny 以外に無いこと（多重防御）。
 #     挿入したブロックだけを検査する（base の deny file-write* と混同しないため）。
 if [ -n "$BLOCK" ]; then
   _blk_bad=0
   while IFS= read -r _line; do
     case "$_line" in
-      ''|';;'*|'(allow file-read*'|'(allow file-read-metadata'|'    (subpath "'*'")'|'    (literal "'*'")'|')') : ;;
+      ''|';;'*|'(allow file-read*'|'(allow file-read-metadata'|'    (subpath "'*'")'|'    (literal "'*'")'|')' \
+      |'(deny file-read* (require-all (subpath "'*'") (vnode-type SOCKET)))' \
+      |'(deny network-outbound (subpath "'*'"))' \
+      |'(deny network-bind (subpath "'*'"))' \
+      |'(allow file-read* (require-all (subpath "'*'") (vnode-type SOCKET)))' \
+      |'(allow network-outbound (subpath "'*'"))' \
+      |'(allow network-bind (subpath "'*'"))' \
+      |'(deny file-read* (require-all (subpath "'*'") (regex #"'*'")))' \
+      |'(allow file-read* (subpath "'*'"))' \
+      |'(deny file-read* (subpath "'*'"))') : ;;
       *) _blk_bad=1 ;;
     esac
-    case "$_line" in *file-write*|*'(deny '*) _blk_bad=1 ;; esac
+    case "$_line" in *file-write*) _blk_bad=1 ;; esac
   done <<EOF
 $BLOCK
 EOF
   [ "$_blk_bad" = 0 ] || die "内部エラー: 追加ブロックに想定外のルールがあります — 中止します"
 fi
 # (d) 合成結果が「基礎ポリシー＋追加ブロック」に一致すること（行数の整合）
-_sz_merged="$(/usr/bin/wc -l < "$PROFILE" | /usr/bin/tr -d ' ')"
-_sz_base="$(printf '%s\n' "$BASE_PROFILE" | /usr/bin/wc -l | /usr/bin/tr -d ' ')"
+#   grep -c '' は末尾改行の有無に依存せず行数を数える。
+_sz_merged="$(printf '%s' "$MERGED" | /usr/bin/grep -c '' || true)"
+_sz_base="$(printf '%s' "$BASE_PROFILE" | /usr/bin/grep -c '' || true)"
 _sz_block=0
-if [ -n "$BLOCK" ]; then _sz_block="$(printf '%s\n' "$BLOCK" | /usr/bin/wc -l | /usr/bin/tr -d ' ')"; fi
+if [ -n "$BLOCK" ]; then _sz_block="$(printf '%s' "$BLOCK" | /usr/bin/grep -c '' || true)"; fi
+[ -n "$_sz_merged" ] || _sz_merged=0
+[ -n "$_sz_base" ] || _sz_base=0
 if [ "$_sz_merged" != "$((_sz_base + _sz_block))" ]; then
   die "内部エラー: 合成ポリシーの行数が不整合です (merged=$_sz_merged base=$_sz_base block=$_sz_block)"
 fi
@@ -505,6 +1136,26 @@ _plan() {
   printf 'GIT_DIR_OUTSIDE_WORKSPACE=%s\n' "$GIT_OUTSIDE_WS"
   while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'GIT_READ_ROOT=%s\n' "$_r"; fi; done <<EOF
 $GIT_READ_ROOTS
+EOF
+  printf 'WORKTREE_ENUM=%s\n' "$WORKTREE_ENUM"
+  printf 'WORKTREE_AUTO_ROOTS=%s\n' "$_worktree_auto_roots"
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'WORKTREE_CANDIDATE=%s\n' "$_r"; fi; done <<EOF
+$WORKTREE_CANDIDATES
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'WORKTREE_READ=%s\n' "$_r"; fi; done <<EOF
+$WT_READ_ROOTS
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'WORKTREE_SKIP=%s\n' "$_r"; fi; done <<EOF
+$_worktree_skips
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'SOCKET_GUARD=%s\n' "$_r"; fi; done <<EOF
+$WT_DENY_ROOTS
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'PARENT_AGENTS=%s\n' "$_r"; fi; done <<EOF
+$PARENT_AGENT_FILES
+EOF
+  while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'PARENT_AGENTS_SKIP=%s\n' "$_r"; fi; done <<EOF
+$PARENT_AGENT_SKIPS
 EOF
   while IFS= read -r _r; do if [ -n "$_r" ]; then printf 'EXTRA_READ_PATH=%s\n' "$_r"; fi; done <<EOF
 $EXTRA_READ_ROOTS
